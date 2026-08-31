@@ -47,6 +47,6 @@ line-length = 100
 target-version = "py311"
 # Código vendorado/legado fora da governança de lint do núcleo
 extend-exclude = [
-    "skills/notebooklm-skill-master",
+    "skills/research/notebooklm",
     "inbox",
 ]

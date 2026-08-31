@@ -23,13 +23,17 @@ class SkillParser:
         self.reload_skills()
 
     def reload_skills(self) -> None:
-        """Varre o diretório de skills e mapeia os arquivos SKILL.md."""
+        """Varre recursivamente o diretório de skills e mapeia os arquivos SKILL.md.
+
+        Suporta bundles de sub-skills (parent/filho): o parent é descoberto como
+        skill normal e suas filhas em subdiretórios aninhados também.
+        """
         self._skills_cache.clear()
         if not self.skills_dir.exists():
             logger.warning(f"Diretório de skills não encontrado: {self.skills_dir}")
             return
 
-        for skill_path in self.skills_dir.glob("*/SKILL.md"):
+        for skill_path in sorted(self.skills_dir.glob("**/SKILL.md")):
             skill_name = skill_path.parent.name
             try:
                 content = skill_path.read_text(encoding="utf-8")

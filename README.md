@@ -26,9 +26,13 @@ meu-workspace-global/
 ├── 📁 skills/                        # Catálogo e Biblioteca Reutilizável de Habilidades
 │   ├── 📄 skill_parser.py            # Motor de descoberta e injeção dinâmica (Progressive Disclosure)
 │   ├── 📄 README.md                  # Índice e inventário do catálogo de skills
-│   ├── 📁 skill-repo-analyser/       # Pacote de habilidade modular isolada
-│   │   └── 📄 SKILL.md               # Especificação declarativa da skill
-│   └── 📁 skill-prompt-generator/
+│   ├── 📁 research/                  # Bundle de pesquisa (parent com has-sub-skill)
+│   │   ├── 📄 SKILL.md               # Especificação do parent
+│   │   ├── 📁 deep-research/         # Sub-skill de pesquisa web multi-fonte
+│   │   └── 📁 notebooklm/            # Sub-skill de consulta a cadernos NotebookLM
+│   ├── 📁 ui-engineering/            # Bundle de interface (frontend-design, accessibility)
+│   ├── 📁 auditoria/                 # Bundle de auditoria (code-validator, skill-repo-analyser)
+│   └── 📁 skill-prompt-generator/    # Skill standalone
 │       └── 📄 SKILL.md
 │
 ├── 📁 mcp_servers/                   # Servidores FastMCP (Model Context Protocol)
