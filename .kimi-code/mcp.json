@@ -1,0 +1,11 @@
+{
+  "mcpServers": {
+    "meu-workspace-tools": {
+      "command": "python",
+      "args": ["-m", "mcp_servers.server", "--transport", "stdio"],
+      "env": {
+        "PYTHONPATH": "."
+      }
+    }
+  }
+}

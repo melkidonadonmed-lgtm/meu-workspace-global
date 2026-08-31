@@ -13,7 +13,7 @@ authors = [
 ]
 dependencies = [
     "google-genai>=2.3.0",
-    "fastmcp>=0.4.0",
+    "fastmcp>=3.0,<4.0",
     "fastapi>=0.115.0",
     "uvicorn[standard]>=0.30.0",
     "pydantic>=2.8.0",

@@ -14,7 +14,7 @@ logger = get_logger("MCPUnifiedServer")
 # Inicialização do Servidor FastMCP com metadados do repositório global
 mcp = FastMCP(
     name="MeuWorkspaceGlobalTools",
-    description="Servidor de ferramentas unificadas para o ecossistema global de agentes"
+    instructions="Servidor de ferramentas unificadas para o ecossistema global de agentes"
 )
 
 # Registro dos módulos de ferramentas
