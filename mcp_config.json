@@ -1,0 +1,28 @@
+{
+  "$schema": "http://json-schema.org/draft-07/schema#",
+  "mcpServers": {
+    "meu-workspace-tools": {
+      "command": "python",
+      "args": [
+        "-m",
+        "mcp_servers.server"
+      ],
+      "env": {
+        "PYTHONPATH": "."
+      },
+      "description": "Servidor MCP Unificado via stdio para ferramentas do workspace e BigQuery"
+    },
+    "meu-workspace-sse": {
+      "url": "http://127.0.0.1:8080/sse",
+      "description": "Servidor MCP Unificado via SSE (porta 8080) para nuvem, contêineres e IDEs remotas"
+    },
+    "desktop-commander": {
+      "command": "npx",
+      "args": [
+        "-y",
+        "@wonderwhy-er/desktop-commander@latest"
+      ]
+    }
+  }
+}
+

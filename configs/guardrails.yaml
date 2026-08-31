@@ -1,0 +1,35 @@
+version: "1.0.0"
+policy_name: "Zero-Trust Agent Security & OWASP LLM01 Guardrails"
+
+prompt_injection_protection:
+  enabled: true
+  strict_mode: true
+  blocked_patterns:
+    - "(?i)ignore previous instructions"
+    - "(?i)disregard system prompt"
+    - "(?i)reveal api key"
+    - "(?i)dump credentials"
+    - "(?i)sudo rm -rf"
+  action_on_match: "block_and_alert" # block_and_alert, sanitize, log_only
+
+pii_sanitization:
+  enabled: true
+  anonymize_fields:
+    - "cpf"
+    - "credit_card"
+    - "email"
+    - "api_key"
+  replacement_strategy: "mask" # mask, redact, placeholder
+
+execution_safety:
+  enforce_hitl_for_destructive_ops: true
+  destructive_operations:
+    - "file_delete"
+    - "table_drop"
+    - "database_truncate"
+    - "execute_arbitrary_shell"
+  safe_workspace_boundary: "./"
+
+output_validation:
+  max_character_length: 50000
+  scan_for_secrets_leakage: true

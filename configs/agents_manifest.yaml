@@ -1,0 +1,57 @@
+version: "1.0.0"
+environment: "development"
+
+global_settings:
+  default_model: "gemini-3.7-flash"
+  fallback_model: "gemini-3.5-flash-lite"
+  reasoning_model: "gemini-3.1-pro-preview"
+  max_context_tokens: 1000000
+  token_budget_per_turn: 50000
+  temperature: 0.2
+  top_p: 0.95
+  timeout_seconds: 60
+
+orchestrator:
+  name: "MasterOrchestrator"
+  description: "Orquestrador Stateful central de tarefas e delegação especializada"
+  model: "gemini-3.7-flash"
+  stateful: true
+  session_storage: "in_memory" # Suporta in_memory, redis, sqlite
+  allowed_subagents:
+    - "sql_specialist"
+    - "workspace_specialist"
+    - "security_guard"
+  tools_enabled:
+    - "mcp_tool_execution"
+    - "skill_injection"
+
+specialized_agents:
+  sql_specialist:
+    name: "SqlSpecialistAgent"
+    description: "Especialista stateless em consultas, schemas e otimizações SQL"
+    model: "gemini-3.7-flash"
+    stateless: true
+    max_tokens_output: 8192
+    temperature: 0.1
+    mcp_tools:
+      - "bigquery_execute_query"
+      - "bigquery_get_schema"
+
+  workspace_specialist:
+    name: "WorkspaceSpecialistAgent"
+    description: "Especialista stateless em inspeção de arquivos, diretórios e migrações"
+    model: "gemini-3.7-flash"
+    stateless: true
+    max_tokens_output: 8192
+    temperature: 0.1
+    mcp_tools:
+      - "workspace_list_files"
+      - "workspace_read_file"
+
+  security_guard:
+    name: "SecurityGuardAgent"
+    description: "Guardrail Zero-Trust para sanitização de prompts e detecção de PII"
+    model: "gemini-3.5-flash-lite"
+    stateless: true
+    max_tokens_output: 2048
+    temperature: 0.0
