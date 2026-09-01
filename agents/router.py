@@ -74,11 +74,13 @@ ROUTING_MATRIX: list[tuple[str, str, tuple[str, ...]]] = [
     ("color-palette-and-depth-architect", "ui", ("paleta de cores", "gradiente", "profundidade", "tema dark")),
     ("minimal-ui-menu-icon-architect", "ui", ("menu minimalista", "sidebar", "dock", "navbar", "icone svg")),
     ("responsive-html-ui-master", "ui", ("responsivo", "mobile-first", "menu movel", "html5")),
+    ("skill-html-modular-builder", "ui", ("montagem de pages", "montagem html", "html modular", "pagina html", "construir tela html", "atomic design html")),
     ("design-interface-medica-minimalista", "medico", ("medico", "prontuario", "prescricao", "clinica", "cfm", "a4")),
     # Dados & Analytics
     ("workspace-data-analytics-architect", "dados", ("kpi", "dashboard", "metricas", "planilha", "chat analitico")),
     ("sql_specialist", "dados", ("sql", "bigquery", "query", "tabela", "schema")),
     ("workspace_specialist", "arquitetura", ("pastas", "diretorio", "arquivos locais", "scan")),
+    ("html_modular_specialist", "ui", ("especialista html", "gerador html", "montador de componentes")),
 ]
 
 

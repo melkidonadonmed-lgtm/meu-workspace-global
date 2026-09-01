@@ -23,11 +23,20 @@ orchestrator:
     - "sql_specialist"
     - "workspace_specialist"
     - "security_guard"
+    - "html_modular_specialist"
   tools_enabled:
     - "mcp_tool_execution"
     - "skill_injection"
 
 specialized_agents:
+  html_modular_specialist:
+    name: "HTMLModularSpecialistAgent"
+    description: "Especialista stateless em montagem de páginas HTML5 modular, Atomic Design e WCAG 2.1 AA"
+    model: "gemini-3.7-flash"
+    stateless: true
+    max_tokens_output: 8192
+    temperature: 0.2
+
   sql_specialist:
     name: "SqlSpecialistAgent"
     description: "Especialista stateless em consultas, schemas e otimizações SQL no BigQuery"
