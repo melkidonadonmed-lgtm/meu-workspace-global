@@ -4,26 +4,28 @@
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>Meu Workspace Global</title>
+  <meta name="description" content="Painel de produtividade pessoal, busca multi-mecanismo e atalhos diários.">
   <style>
     :root {
       --bg-gradient: radial-gradient(circle at 10% 20%, #111827 0%, #030712 100%);
-      --card-bg: rgba(31, 41, 55, 0.65);
+      --card-bg: rgba(31, 41, 55, 0.7);
       --card-border: rgba(255, 255, 255, 0.08);
-      --card-hover: rgba(55, 65, 81, 0.7);
+      --card-hover: rgba(55, 65, 81, 0.75);
       --text-main: #f3f4f6;
       --text-muted: #9ca3af;
       --accent: #3b82f6;
       --accent-hover: #2563eb;
       --accent-glow: rgba(59, 130, 246, 0.3);
-      --input-bg: rgba(17, 24, 39, 0.8);
+      --input-bg: rgba(17, 24, 39, 0.85);
       --success: #10b981;
       --danger: #ef4444;
+      --focus-ring: #60a5fa;
       --font-family: system-ui, -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, Cantarell, sans-serif;
     }
 
     [data-theme="light"] {
       --bg-gradient: radial-gradient(circle at 10% 20%, #f8fafc 0%, #e2e8f0 100%);
-      --card-bg: rgba(255, 255, 255, 0.85);
+      --card-bg: rgba(255, 255, 255, 0.88);
       --card-border: rgba(0, 0, 0, 0.08);
       --card-hover: rgba(241, 245, 249, 0.95);
       --text-main: #0f172a;
@@ -32,13 +34,13 @@
       --accent-hover: #1d4ed8;
       --accent-glow: rgba(37, 99, 235, 0.2);
       --input-bg: rgba(255, 255, 255, 0.95);
+      --focus-ring: #3b82f6;
     }
 
     * {
       box-sizing: border-box;
       margin: 0;
       padding: 0;
-      transition: background-color 0.25s, border-color 0.25s, color 0.25s;
     }
 
     body {
@@ -50,6 +52,16 @@
       display: flex;
       flex-direction: column;
       align-items: center;
+      transition: background 0.3s ease, color 0.3s ease;
+    }
+
+    @media (prefers-reduced-motion: reduce) {
+      *, *::before, *::after {
+        animation-duration: 0.01ms !important;
+        animation-iteration-count: 1 !important;
+        transition-duration: 0.01ms !important;
+        scroll-behavior: auto !important;
+      }
     }
 
     .container {
@@ -74,17 +86,17 @@
     }
 
     .brand-icon {
-      width: 38px;
-      height: 38px;
+      width: 40px;
+      height: 40px;
       background: linear-gradient(135deg, #3b82f6, #8b5cf6);
-      border-radius: 10px;
+      border-radius: 12px;
       display: flex;
       align-items: center;
       justify-content: center;
       color: #fff;
       font-weight: 700;
-      font-size: 1.2rem;
-      box-shadow: 0 4px 12px var(--accent-glow);
+      font-size: 1.3rem;
+      box-shadow: 0 4px 14px var(--accent-glow);
     }
 
     .brand-title h1 {
@@ -94,14 +106,14 @@
     }
 
     .brand-title p {
-      font-size: 0.8rem;
+      font-size: 0.82rem;
       color: var(--text-muted);
     }
 
     .header-controls {
       display: flex;
       align-items: center;
-      gap: 1rem;
+      gap: 1.25rem;
     }
 
     .clock-widget {
@@ -112,6 +124,7 @@
       font-size: 1.25rem;
       font-weight: 700;
       letter-spacing: -0.01em;
+      font-variant-numeric: tabular-nums;
     }
 
     .clock-date {
@@ -123,18 +136,34 @@
       background: var(--card-bg);
       border: 1px solid var(--card-border);
       color: var(--text-main);
-      border-radius: 10px;
-      width: 40px;
-      height: 40px;
+      border-radius: 12px;
+      width: 42px;
+      height: 42px;
       display: flex;
       align-items: center;
       justify-content: center;
       cursor: pointer;
       backdrop-filter: blur(12px);
+      font-size: 1.1rem;
+      transition: background-color 0.2s ease, transform 0.15s ease, border-color 0.2s ease;
     }
 
     .theme-toggle-btn:hover {
       background: var(--card-hover);
+      transform: scale(1.05);
+    }
+
+    .theme-toggle-btn:focus-visible,
+    .search-btn:focus-visible,
+    .add-btn:focus-visible,
+    .del-btn:focus-visible,
+    .search-input:focus-visible,
+    .engine-select:focus-visible,
+    .app-item:focus-visible,
+    .bookmark-row a:focus-visible,
+    .notes-textarea:focus-visible {
+      outline: 2px solid var(--focus-ring);
+      outline-offset: 2px;
     }
 
     /* Search Container */
@@ -142,10 +171,11 @@
       background: var(--card-bg);
       backdrop-filter: blur(16px);
       border: 1px solid var(--card-border);
-      border-radius: 16px;
+      border-radius: 18px;
       padding: 1.5rem;
       margin-bottom: 2.5rem;
-      box-shadow: 0 10px 25px rgba(0, 0, 0, 0.1);
+      box-shadow: 0 10px 25px rgba(0, 0, 0, 0.12);
+      transition: border-color 0.2s ease, box-shadow 0.2s ease;
     }
 
     .search-form {
@@ -163,6 +193,7 @@
       font-size: 0.95rem;
       outline: none;
       cursor: pointer;
+      transition: border-color 0.2s ease;
     }
 
     .search-input-wrapper {
@@ -180,6 +211,7 @@
       border-radius: 12px;
       font-size: 1rem;
       outline: none;
+      transition: border-color 0.2s ease, box-shadow 0.2s ease;
     }
 
     .search-input:focus, .engine-select:focus {
@@ -199,10 +231,12 @@
       display: flex;
       align-items: center;
       gap: 0.5rem;
+      transition: background-color 0.2s ease, transform 0.15s ease;
     }
 
     .search-btn:hover {
       background: var(--accent-hover);
+      transform: translateY(-1px);
     }
 
     /* Grid Layout for Sections */
@@ -210,18 +244,19 @@
       display: grid;
       grid-template-columns: repeat(auto-fit, minmax(340px, 1fr));
       gap: 1.5rem;
-      margin-bottom: 2rem;
+      margin-bottom: 2.5rem;
     }
 
     .card {
       background: var(--card-bg);
       backdrop-filter: blur(16px);
       border: 1px solid var(--card-border);
-      border-radius: 16px;
+      border-radius: 18px;
       padding: 1.5rem;
-      box-shadow: 0 8px 20px rgba(0,0,0,0.08);
+      box-shadow: 0 8px 22px rgba(0,0,0,0.08);
       display: flex;
       flex-direction: column;
+      transition: border-color 0.2s ease, transform 0.2s ease;
     }
 
     .card-header {
@@ -232,18 +267,29 @@
     }
 
     .card-header h2 {
-      font-size: 1.1rem;
+      font-size: 1.15rem;
       font-weight: 600;
       display: flex;
       align-items: center;
       gap: 0.5rem;
     }
 
+    .card-header a {
+      font-size: 0.82rem;
+      color: var(--accent);
+      text-decoration: none;
+      transition: color 0.2s ease;
+    }
+
+    .card-header a:hover {
+      text-decoration: underline;
+    }
+
     /* Google Workspace App Tiles */
     .app-grid {
       display: grid;
       grid-template-columns: repeat(auto-fill, minmax(80px, 1fr));
-      gap: 1rem;
+      gap: 0.85rem;
     }
 
     .app-item {
@@ -257,13 +303,13 @@
       background: var(--input-bg);
       border: 1px solid var(--card-border);
       text-align: center;
-      transition: transform 0.2s, background-color 0.2s, box-shadow 0.2s;
+      transition: transform 0.2s ease, background-color 0.2s ease, box-shadow 0.2s ease, border-color 0.2s ease;
     }
 
     .app-item:hover {
       transform: translateY(-3px);
       background: var(--card-hover);
-      box-shadow: 0 6px 15px rgba(0,0,0,0.15);
+      box-shadow: 0 6px 16px rgba(0,0,0,0.15);
       border-color: var(--accent);
     }
 
@@ -274,6 +320,7 @@
       display: flex;
       align-items: center;
       justify-content: center;
+      font-size: 1.4rem;
     }
 
     .app-name {
@@ -295,10 +342,15 @@
       display: flex;
       align-items: center;
       justify-content: space-between;
-      padding: 0.6rem 0.8rem;
+      padding: 0.65rem 0.85rem;
       background: var(--input-bg);
       border-radius: 10px;
       border: 1px solid var(--card-border);
+      transition: background-color 0.2s ease, border-color 0.2s ease;
+    }
+
+    .bookmark-row:hover {
+      border-color: var(--accent);
     }
 
     .bookmark-row a {
@@ -323,40 +375,55 @@
       border: none;
       color: var(--text-muted);
       cursor: pointer;
-      padding: 0.2rem;
-      border-radius: 4px;
+      padding: 0.3rem 0.5rem;
+      border-radius: 6px;
+      font-size: 0.9rem;
+      transition: color 0.2s ease, background-color 0.2s ease;
     }
 
     .del-btn:hover {
       color: var(--danger);
+      background: rgba(239, 68, 68, 0.1);
     }
 
-    .add-bookmark-form {
+    .add-bookmark-form, .add-todo-form {
       display: flex;
       gap: 0.5rem;
       margin-top: 1rem;
     }
 
-    .add-bookmark-form input {
+    .add-bookmark-form input, .add-todo-form input {
       flex: 1;
       background: var(--input-bg);
       border: 1px solid var(--card-border);
       color: var(--text-main);
-      padding: 0.5rem 0.75rem;
+      padding: 0.55rem 0.75rem;
       border-radius: 8px;
       font-size: 0.85rem;
       outline: none;
+      transition: border-color 0.2s ease;
+    }
+
+    .add-bookmark-form input:focus, .add-todo-form input:focus {
+      border-color: var(--accent);
     }
 
     .add-btn {
       background: var(--accent);
       color: white;
       border: none;
-      padding: 0.5rem 0.9rem;
+      padding: 0.55rem 0.95rem;
       border-radius: 8px;
       font-weight: 600;
       font-size: 0.85rem;
       cursor: pointer;
+      transition: background-color 0.2s ease, transform 0.15s ease;
+      white-space: nowrap;
+    }
+
+    .add-btn:hover {
+      background: var(--accent-hover);
+      transform: translateY(-1px);
     }
 
     /* To-Do List & Notes */
@@ -367,17 +434,19 @@
       max-height: 220px;
       overflow-y: auto;
       margin-bottom: 0.75rem;
+      padding-right: 4px;
     }
 
     .todo-item {
       display: flex;
       align-items: center;
       gap: 0.6rem;
-      padding: 0.5rem 0.75rem;
+      padding: 0.55rem 0.75rem;
       background: var(--input-bg);
       border-radius: 8px;
       border: 1px solid var(--card-border);
       font-size: 0.9rem;
+      transition: background-color 0.2s ease;
     }
 
     .todo-item.done span {
@@ -387,6 +456,14 @@
 
     .todo-item span {
       flex: 1;
+      word-break: break-word;
+    }
+
+    .todo-checkbox {
+      cursor: pointer;
+      width: 16px;
+      height: 16px;
+      accent-color: var(--accent);
     }
 
     .notes-textarea {
@@ -395,16 +472,19 @@
       background: var(--input-bg);
       border: 1px solid var(--card-border);
       color: var(--text-main);
-      padding: 0.75rem;
-      border-radius: 10px;
+      padding: 0.85rem;
+      border-radius: 12px;
       font-family: inherit;
       font-size: 0.9rem;
+      line-height: 1.5;
       resize: vertical;
       outline: none;
+      transition: border-color 0.2s ease;
     }
 
     .notes-textarea:focus {
       border-color: var(--accent);
+      box-shadow: 0 0 0 3px var(--accent-glow);
     }
 
     .notes-status {
@@ -428,25 +508,25 @@
     <!-- Header -->
     <header>
       <div class="brand">
-        <div class="brand-icon">🌐</div>
+        <div class="brand-icon" aria-hidden="true">🌐</div>
         <div class="brand-title">
           <h1>Meu Workspace Global</h1>
           <p>Painel de Produtividade & Pesquisa Diária</p>
         </div>
       </div>
       <div class="header-controls">
-        <div class="clock-widget">
+        <div class="clock-widget" aria-live="polite">
           <div class="clock-time" id="clock-time">--:--:--</div>
           <div class="clock-date" id="clock-date">Carregando data...</div>
         </div>
-        <button class="theme-toggle-btn" id="theme-btn" title="Alternar tema">🌓</button>
+        <button class="theme-toggle-btn" id="theme-btn" title="Alternar tema" aria-label="Alternar tema claro ou escuro">🌓</button>
       </div>
     </header>
 
     <!-- Search Bar -->
-    <section class="search-section">
+    <section class="search-section" aria-label="Pesquisa rápida">
       <form class="search-form" id="search-form">
-        <select class="engine-select" id="search-engine">
+        <select class="engine-select" id="search-engine" aria-label="Selecione o mecanismo de busca">
           <option value="google">Google</option>
           <option value="scholar">Google Scholar</option>
           <option value="youtube">YouTube</option>
@@ -461,116 +541,122 @@
             id="search-query" 
             class="search-input" 
             placeholder="Digite o que deseja pesquisar e pressione Enter (ou use '/')" 
+            aria-label="Termo de pesquisa"
             autofocus 
             required
           />
         </div>
-        <button type="submit" class="search-btn">
+        <button type="submit" class="search-btn" aria-label="Buscar na web">
           <span>🔍 Buscar</span>
         </button>
       </form>
     </section>
 
     <!-- Grid Cards -->
-    <div class="dashboard-grid">
+    <main class="dashboard-grid">
       <!-- Google Workspace Card -->
-      <div class="card">
+      <section class="card" aria-labelledby="heading-workspace">
         <div class="card-header">
-          <h2>📁 Google Workspace</h2>
-          <a href="https://accounts.google.com" target="_blank" style="font-size: 0.8rem; color: var(--accent); text-decoration: none;">Trocar Conta ↗</a>
+          <h2 id="heading-workspace">📁 Google Workspace</h2>
+          <a href="https://accounts.google.com" target="_blank" rel="noopener noreferrer" title="Trocar de conta Google">Trocar Conta ↗</a>
         </div>
         <div class="app-grid">
-          <a class="app-item" href="https://mail.google.com" target="_blank" rel="noopener">
-            <div class="app-icon">✉️</div>
+          <a class="app-item" href="https://mail.google.com" target="_blank" rel="noopener noreferrer">
+            <div class="app-icon" aria-hidden="true">✉️</div>
             <span class="app-name">Gmail</span>
           </a>
-          <a class="app-item" href="https://drive.google.com" target="_blank" rel="noopener">
-            <div class="app-icon">💾</div>
+          <a class="app-item" href="https://drive.google.com" target="_blank" rel="noopener noreferrer">
+            <div class="app-icon" aria-hidden="true">💾</div>
             <span class="app-name">Drive</span>
           </a>
-          <a class="app-item" href="https://calendar.google.com" target="_blank" rel="noopener">
-            <div class="app-icon">📅</div>
+          <a class="app-item" href="https://calendar.google.com" target="_blank" rel="noopener noreferrer">
+            <div class="app-icon" aria-hidden="true">📅</div>
             <span class="app-name">Agenda</span>
           </a>
-          <a class="app-item" href="https://meet.google.com" target="_blank" rel="noopener">
-            <div class="app-icon">📹</div>
+          <a class="app-item" href="https://meet.google.com" target="_blank" rel="noopener noreferrer">
+            <div class="app-icon" aria-hidden="true">📹</div>
             <span class="app-name">Meet</span>
           </a>
-          <a class="app-item" href="https://docs.google.com" target="_blank" rel="noopener">
-            <div class="app-icon">📄</div>
+          <a class="app-item" href="https://docs.google.com" target="_blank" rel="noopener noreferrer">
+            <div class="app-icon" aria-hidden="true">📄</div>
             <span class="app-name">Docs</span>
           </a>
-          <a class="app-item" href="https://sheets.google.com" target="_blank" rel="noopener">
-            <div class="app-icon">📊</div>
+          <a class="app-item" href="https://sheets.google.com" target="_blank" rel="noopener noreferrer">
+            <div class="app-icon" aria-hidden="true">📊</div>
             <span class="app-name">Planilhas</span>
           </a>
-          <a class="app-item" href="https://slides.google.com" target="_blank" rel="noopener">
-            <div class="app-icon">📑</div>
+          <a class="app-item" href="https://slides.google.com" target="_blank" rel="noopener noreferrer">
+            <div class="app-icon" aria-hidden="true">📑</div>
             <span class="app-name">Slides</span>
           </a>
-          <a class="app-item" href="https://keep.google.com" target="_blank" rel="noopener">
-            <div class="app-icon">💡</div>
+          <a class="app-item" href="https://keep.google.com" target="_blank" rel="noopener noreferrer">
+            <div class="app-icon" aria-hidden="true">💡</div>
             <span class="app-name">Keep</span>
           </a>
-          <a class="app-item" href="https://chat.google.com" target="_blank" rel="noopener">
-            <div class="app-icon">💬</div>
+          <a class="app-item" href="https://chat.google.com" target="_blank" rel="noopener noreferrer">
+            <div class="app-icon" aria-hidden="true">💬</div>
             <span class="app-name">Chat</span>
           </a>
-          <a class="app-item" href="https://admin.google.com" target="_blank" rel="noopener">
-            <div class="app-icon">⚙️</div>
+          <a class="app-item" href="https://admin.google.com" target="_blank" rel="noopener noreferrer">
+            <div class="app-icon" aria-hidden="true">⚙️</div>
             <span class="app-name">Admin</span>
           </a>
-          <a class="app-item" href="https://contacts.google.com" target="_blank" rel="noopener">
-            <div class="app-icon">👥</div>
+          <a class="app-item" href="https://contacts.google.com" target="_blank" rel="noopener noreferrer">
+            <div class="app-icon" aria-hidden="true">👥</div>
             <span class="app-name">Contatos</span>
           </a>
-          <a class="app-item" href="https://console.cloud.google.com" target="_blank" rel="noopener">
-            <div class="app-icon">☁️</div>
+          <a class="app-item" href="https://console.cloud.google.com" target="_blank" rel="noopener noreferrer">
+            <div class="app-icon" aria-hidden="true">☁️</div>
             <span class="app-name">GCP</span>
           </a>
         </div>
-      </div>
+      </section>
 
       <!-- Quick Bookmarks Card -->
-      <div class="card">
+      <section class="card" aria-labelledby="heading-bookmarks">
         <div class="card-header">
-          <h2>⭐ Favoritos & Links Rápidos</h2>
+          <h2 id="heading-bookmarks">⭐ Favoritos & Links Rápidos</h2>
           <span style="font-size:0.75rem; color:var(--text-muted);">Salvo localmente</span>
         </div>
-        <div class="bookmarks-container" id="bookmarks-list">
-          <!-- Dynamically populated -->
+        <div class="bookmarks-container" id="bookmarks-list" role="list">
+          <!-- Populated securely via DOM -->
         </div>
         <form class="add-bookmark-form" id="bookmark-form">
-          <input type="text" id="bm-title" placeholder="Nome (Ex: GitHub)" required />
-          <input type="url" id="bm-url" placeholder="URL (https://...)" required />
-          <button type="submit" class="add-btn">+ Adicionar</button>
+          <input type="text" id="bm-title" placeholder="Nome (Ex: GitHub)" aria-label="Nome do favorito" required />
+          <input type="url" id="bm-url" placeholder="https://..." aria-label="URL do favorito" required />
+          <button type="submit" class="add-btn" aria-label="Adicionar novo favorito">+ Adicionar</button>
         </form>
-      </div>
+      </section>
 
       <!-- Quick Notepad Card -->
-      <div class="card">
+      <section class="card" aria-labelledby="heading-notes">
         <div class="card-header">
-          <h2>📝 Bloco de Notas Rápido</h2>
-          <span class="notes-status" id="notes-status">Salvo automaticamente</span>
+          <h2 id="heading-notes">📝 Bloco de Notas Rápido</h2>
+          <span class="notes-status" id="notes-status" aria-live="polite">Salvo automaticamente</span>
         </div>
-        <textarea id="quick-notes" class="notes-textarea" placeholder="Digite notas, ideias, links temporários ou tarefas do dia..."></textarea>
-      </div>
+        <textarea 
+          id="quick-notes" 
+          class="notes-textarea" 
+          placeholder="Digite notas, ideias, links temporários ou tarefas do dia..." 
+          aria-label="Bloco de notas com salvamento automático"
+        ></textarea>
+      </section>
 
       <!-- To-Do Card -->
-      <div class="card">
+      <section class="card" aria-labelledby="heading-todos">
         <div class="card-header">
-          <h2>✅ Tarefas do Dia</h2>
-          <span id="todo-count" style="font-size: 0.8rem; color: var(--text-muted);">0 tarefas</span>
+          <h2 id="heading-todos">✅ Tarefas do Dia</h2>
+          <span id="todo-count" style="font-size: 0.8rem; color: var(--text-muted);" aria-live="polite">0 pendentes</span>
         </div>
-        <div class="todo-list" id="todo-list">
-          <!-- Dynamically populated -->
+        <div class="todo-list" id="todo-list" role="list">
+          <!-- Populated securely via DOM -->
         </div>
-        <form class="add-bookmark-form" id="todo-form">
-          <input type="text" id="todo-input" placeholder="Nova tarefa..." required />
-          <button type="submit" class="add-btn">+ Adicionar</button>
+        <form class="add-todo-form" id="todo-form">
+          <input type="text" id="todo-input" placeholder="Nova tarefa..." aria-label="Descrição da nova tarefa" required />
+          <button type="submit" class="add-btn" aria-label="Adicionar tarefa">+ Adicionar</button>
         </form>
-      </div>
-    </div>
+      </section>
+    </main>
 
     <footer>
       Meu Workspace Global • Personal Dashboard • Salvo no seu navegador
@@ -578,167 +664,315 @@
   </div>
 
   <script>
-    // 1. Clock Update
-    function updateClock() {
-      const now = new Date();
-      document.getElementById('clock-time').textContent = now.toLocaleTimeString('pt-BR');
-      document.getElementById('clock-date').textContent = now.toLocaleDateString('pt-BR', {
-        weekday: 'short',
-        day: '2-digit',
-        month: 'short',
-        year: 'numeric'
-      });
-    }
-    setInterval(updateClock, 1000);
-    updateClock();
+    (function () {
+      'use strict';
 
-    // 2. Search Engine Handler
-    const searchEngines = {
-      google: 'https://www.google.com/search?q=',
-      scholar: 'https://scholar.google.com/scholar?q=',
-      youtube: 'https://www.youtube.com/results?search_query=',
-      pubmed: 'https://pubmed.ncbi.nlm.nih.gov/?term=',
-      duckduckgo: 'https://duckduckgo.com/?q=',
-      github: 'https://github.com/search?q=',
-      wikipedia: 'https://pt.wikipedia.org/wiki/Special:Search?search='
-    };
-
-    document.getElementById('search-form').addEventListener('submit', (e) => {
-      e.preventDefault();
-      const engine = document.getElementById('search-engine').value;
-      const query = document.getElementById('search-query').value.trim();
-      if (query) {
-        window.open(searchEngines[engine] + encodeURIComponent(query), '_blank');
+      // Safe LocalStorage helpers with defensive JSON parsing
+      function getStorageItem(key, fallbackValue) {
+        try {
+          const item = localStorage.getItem(key);
+          if (item === null) return fallbackValue;
+          return JSON.parse(item);
+        } catch (e) {
+          console.warn('[Workspace] Erro ao ler ' + key + ' do localStorage:', e);
+          return fallbackValue;
+        }
       }
-    });
 
-    // Keyboard shortcut to focus search with '/'
-    window.addEventListener('keydown', (e) => {
-      if (e.key === '/' && document.activeElement.tagName !== 'INPUT' && document.activeElement.tagName !== 'TEXTAREA') {
-        e.preventDefault();
-        document.getElementById('search-query').focus();
+      function setStorageItem(key, value) {
+        try {
+          localStorage.setItem(key, JSON.stringify(value));
+        } catch (e) {
+          console.error('[Workspace] Erro ao salvar ' + key + ' no localStorage:', e);
+        }
       }
-    });
 
-    // 3. Theme Toggle
-    const themeBtn = document.getElementById('theme-btn');
-    const savedTheme = localStorage.getItem('workspace_theme') || 'dark';
-    document.documentElement.setAttribute('data-theme', savedTheme);
+      // Safe URL Sanitizer (prevents javascript: / vbscript: / data: URI attacks)
+      function sanitizeUrl(urlString) {
+        try {
+          const parsed = new URL(urlString);
+          if (parsed.protocol === 'http:' || parsed.protocol === 'https:') {
+            return parsed.href;
+          }
+        } catch (e) {
+          // If relative or invalid, fallback
+        }
+        return '#';
+      }
 
-    themeBtn.addEventListener('click', () => {
-      const currentTheme = document.documentElement.getAttribute('data-theme');
-      const newTheme = currentTheme === 'dark' ? 'light' : 'dark';
-      document.documentElement.setAttribute('data-theme', newTheme);
-      localStorage.setItem('workspace_theme', newTheme);
-    });
+      // 1. Clock Update
+      function updateClock() {
+        const now = new Date();
+        const timeEl = document.getElementById('clock-time');
+        const dateEl = document.getElementById('clock-date');
+        if (timeEl) timeEl.textContent = now.toLocaleTimeString('pt-BR');
+        if (dateEl) {
+          dateEl.textContent = now.toLocaleDateString('pt-BR', {
+            weekday: 'short',
+            day: '2-digit',
+            month: 'short',
+            year: 'numeric'
+          });
+        }
+      }
+      setInterval(updateClock, 1000);
+      updateClock();
 
-    // 4. Bookmarks Logic
-    const defaultBookmarks = [
-      { title: 'Google Workspace', url: 'https://workspace.google.com' },
-      { title: 'Google Gemini', url: 'https://gemini.google.com' },
-      { title: 'GitHub', url: 'https://github.com' },
-      { title: 'PubMed Central', url: 'https://www.ncbi.nlm.nih.gov/pmc/' },
-      { title: 'Notion', url: 'https://www.notion.so' }
-    ];
+      // 2. Search Engine Handler
+      const searchEngines = {
+        google: 'https://www.google.com/search?q=',
+        scholar: 'https://scholar.google.com/scholar?q=',
+        youtube: 'https://www.youtube.com/results?search_query=',
+        pubmed: 'https://pubmed.ncbi.nlm.nih.gov/?term=',
+        duckduckgo: 'https://duckduckgo.com/?q=',
+        github: 'https://github.com/search?q=',
+        wikipedia: 'https://pt.wikipedia.org/wiki/Special:Search?search='
+      };
 
-    let bookmarks = JSON.parse(localStorage.getItem('workspace_bookmarks')) || defaultBookmarks;
+      const searchForm = document.getElementById('search-form');
+      if (searchForm) {
+        searchForm.addEventListener('submit', function (e) {
+          e.preventDefault();
+          const engineEl = document.getElementById('search-engine');
+          const queryEl = document.getElementById('search-query');
+          const engine = engineEl ? engineEl.value : 'google';
+          const query = queryEl ? queryEl.value.trim() : '';
+          if (query && searchEngines[engine]) {
+            window.open(searchEngines[engine] + encodeURIComponent(query), '_blank', 'noopener,noreferrer');
+          }
+        });
+      }
 
-    function renderBookmarks() {
-      const list = document.getElementById('bookmarks-list');
-      list.innerHTML = '';
-      bookmarks.forEach((bm, idx) => {
-        const row = document.createElement('div');
-        row.className = 'bookmark-row';
-        row.innerHTML = `
-          <a href="${bm.url}" target="_blank" rel="noopener">
-            <span>🔗</span>
-            <span>${bm.title}</span>
-          </a>
-          <button class="del-btn" onclick="deleteBookmark(${idx})" title="Remover">✕</button>
-        `;
-        list.appendChild(row);
+      // Keyboard shortcut to focus search with '/'
+      window.addEventListener('keydown', function (e) {
+        if (e.key === '/' && document.activeElement.tagName !== 'INPUT' && document.activeElement.tagName !== 'TEXTAREA') {
+          e.preventDefault();
+          const searchInput = document.getElementById('search-query');
+          if (searchInput) searchInput.focus();
+        }
       });
-      localStorage.setItem('workspace_bookmarks', JSON.stringify(bookmarks));
-    }
 
-    window.deleteBookmark = (index) => {
-      bookmarks.splice(index, 1);
+      // 3. Theme Toggle
+      const themeBtn = document.getElementById('theme-btn');
+      const savedTheme = localStorage.getItem('workspace_theme') || 'dark';
+      document.documentElement.setAttribute('data-theme', savedTheme);
+
+      if (themeBtn) {
+        themeBtn.addEventListener('click', function () {
+          const currentTheme = document.documentElement.getAttribute('data-theme');
+          const newTheme = currentTheme === 'dark' ? 'light' : 'dark';
+          document.documentElement.setAttribute('data-theme', newTheme);
+          try {
+            localStorage.setItem('workspace_theme', newTheme);
+          } catch (e) {}
+        });
+      }
+
+      // 4. Bookmarks Logic (Secured DOM Creation & Event Delegation)
+      const defaultBookmarks = [
+        { title: 'Google Workspace', url: 'https://workspace.google.com' },
+        { title: 'Google Gemini', url: 'https://gemini.google.com' },
+        { title: 'GitHub', url: 'https://github.com' },
+        { title: 'PubMed Central', url: 'https://www.ncbi.nlm.nih.gov/pmc/' },
+        { title: 'Notion', url: 'https://www.notion.so' }
+      ];
+
+      let bookmarks = getStorageItem('workspace_bookmarks', defaultBookmarks);
+      const bookmarksList = document.getElementById('bookmarks-list');
+
+      function renderBookmarks() {
+        if (!bookmarksList) return;
+        bookmarksList.innerHTML = '';
+
+        bookmarks.forEach(function (bm, idx) {
+          const row = document.createElement('div');
+          row.className = 'bookmark-row';
+          row.setAttribute('role', 'listitem');
+
+          const link = document.createElement('a');
+          link.href = sanitizeUrl(bm.url);
+          link.target = '_blank';
+          link.rel = 'noopener noreferrer';
+
+          const icon = document.createElement('span');
+          icon.textContent = '🔗';
+          icon.setAttribute('aria-hidden', 'true');
+
+          const titleSpan = document.createElement('span');
+          titleSpan.textContent = bm.title || 'Sem título';
+
+          link.appendChild(icon);
+          link.appendChild(titleSpan);
+
+          const delBtn = document.createElement('button');
+          delBtn.className = 'del-btn';
+          delBtn.type = 'button';
+          delBtn.dataset.action = 'delete-bookmark';
+          delBtn.dataset.index = idx.toString();
+          delBtn.setAttribute('aria-label', 'Remover favorito ' + (bm.title || ''));
+          delBtn.textContent = '✕';
+
+          row.appendChild(link);
+          row.appendChild(delBtn);
+          bookmarksList.appendChild(row);
+        });
+
+        setStorageItem('workspace_bookmarks', bookmarks);
+      }
+
+      if (bookmarksList) {
+        bookmarksList.addEventListener('click', function (e) {
+          const target = e.target.closest('button[data-action="delete-bookmark"]');
+          if (target && target.dataset.index !== undefined) {
+            const index = parseInt(target.dataset.index, 10);
+            if (!isNaN(index) && index >= 0 && index < bookmarks.length) {
+              bookmarks.splice(index, 1);
+              renderBookmarks();
+            }
+          }
+        });
+      }
+
+      const bookmarkForm = document.getElementById('bookmark-form');
+      if (bookmarkForm) {
+        bookmarkForm.addEventListener('submit', function (e) {
+          e.preventDefault();
+          const titleInput = document.getElementById('bm-title');
+          const urlInput = document.getElementById('bm-url');
+          if (titleInput && urlInput) {
+            const title = titleInput.value.trim();
+            const rawUrl = urlInput.value.trim();
+            if (title && rawUrl) {
+              const safeUrl = sanitizeUrl(rawUrl);
+              if (safeUrl !== '#') {
+                bookmarks.push({ title: title, url: safeUrl });
+                titleInput.value = '';
+                urlInput.value = '';
+                renderBookmarks();
+              } else {
+                alert('Por favor insira uma URL válida iniciando com http:// ou https://');
+              }
+            }
+          }
+        });
+      }
+
       renderBookmarks();
-    };
 
-    document.getElementById('bookmark-form').addEventListener('submit', (e) => {
-      e.preventDefault();
-      const titleInput = document.getElementById('bm-title');
-      const urlInput = document.getElementById('bm-url');
-      bookmarks.push({ title: titleInput.value, url: urlInput.value });
-      titleInput.value = '';
-      urlInput.value = '';
-      renderBookmarks();
-    });
+      // 5. Quick Notepad Logic
+      const notesArea = document.getElementById('quick-notes');
+      const notesStatus = document.getElementById('notes-status');
+      if (notesArea) {
+        try {
+          notesArea.value = localStorage.getItem('workspace_notes') || '';
+        } catch (e) {}
 
-    renderBookmarks();
-
-    // 5. Quick Notepad Logic
-    const notesArea = document.getElementById('quick-notes');
-    const notesStatus = document.getElementById('notes-status');
-    notesArea.value = localStorage.getItem('workspace_notes') || '';
-
-    let noteTimeout;
-    notesArea.addEventListener('input', () => {
-      notesStatus.textContent = 'Salvando...';
-      clearTimeout(noteTimeout);
-      noteTimeout = setTimeout(() => {
-        localStorage.setItem('workspace_notes', notesArea.value);
-        notesStatus.textContent = 'Salvo automaticamente';
-      }, 500);
-    });
-
-    // 6. To-Do Logic
-    let todos = JSON.parse(localStorage.getItem('workspace_todos')) || [
-      { text: 'Organizar pastas do Google Drive', done: false },
-      { text: 'Conferir e-mails pendentes', done: false }
-    ];
-
-    function renderTodos() {
-      const list = document.getElementById('todo-list');
-      const count = document.getElementById('todo-count');
-      list.innerHTML = '';
-      todos.forEach((todo, idx) => {
-        const item = document.createElement('div');
-        item.className = `todo-item ${todo.done ? 'done' : ''}`;
-        item.innerHTML = `
-          <input type="checkbox" ${todo.done ? 'checked' : ''} onchange="toggleTodo(${idx})" />
-          <span>${todo.text}</span>
-          <button class="del-btn" onclick="deleteTodo(${idx})" title="Remover">✕</button>
-        `;
-        list.appendChild(item);
-      });
-      const pending = todos.filter(t => !t.done).length;
-      count.textContent = `${pending} pendente${pending !== 1 ? 's' : ''}`;
-      localStorage.setItem('workspace_todos', JSON.stringify(todos));
-    }
-
-    window.toggleTodo = (index) => {
-      todos[index].done = !todos[index].done;
-      renderTodos();
-    };
-
-    window.deleteTodo = (index) => {
-      todos.splice(index, 1);
-      renderTodos();
-    };
-
-    document.getElementById('todo-form').addEventListener('submit', (e) => {
-      e.preventDefault();
-      const input = document.getElementById('todo-input');
-      if (input.value.trim()) {
-        todos.push({ text: input.value.trim(), done: false });
-        input.value = '';
-        renderTodos();
+        let noteTimeout;
+        notesArea.addEventListener('input', function () {
+          if (notesStatus) notesStatus.textContent = 'Salvando...';
+          clearTimeout(noteTimeout);
+          noteTimeout = setTimeout(function () {
+            try {
+              localStorage.setItem('workspace_notes', notesArea.value);
+              if (notesStatus) notesStatus.textContent = 'Salvo automaticamente';
+            } catch (e) {
+              if (notesStatus) notesStatus.textContent = 'Erro ao salvar';
+            }
+          }, 400);
+        });
       }
-    });
 
-    renderTodos();
+      // 6. To-Do Logic (Secured DOM Creation & Event Delegation)
+      const defaultTodos = [
+        { text: 'Organizar pastas do Google Drive', done: false },
+        { text: 'Conferir e-mails pendentes', done: false }
+      ];
+
+      let todos = getStorageItem('workspace_todos', defaultTodos);
+      const todoList = document.getElementById('todo-list');
+      const todoCount = document.getElementById('todo-count');
+
+      function renderTodos() {
+        if (!todoList) return;
+        todoList.innerHTML = '';
+
+        todos.forEach(function (todo, idx) {
+          const item = document.createElement('div');
+          item.className = 'todo-item' + (todo.done ? ' done' : '');
+          item.setAttribute('role', 'listitem');
+
+          const checkbox = document.createElement('input');
+          checkbox.type = 'checkbox';
+          checkbox.className = 'todo-checkbox';
+          checkbox.checked = !!todo.done;
+          checkbox.dataset.action = 'toggle-todo';
+          checkbox.dataset.index = idx.toString();
+          checkbox.setAttribute('aria-label', 'Marcar como concluída: ' + todo.text);
+
+          const textSpan = document.createElement('span');
+          textSpan.textContent = todo.text || '';
+
+          const delBtn = document.createElement('button');
+          delBtn.className = 'del-btn';
+          delBtn.type = 'button';
+          delBtn.dataset.action = 'delete-todo';
+          delBtn.dataset.index = idx.toString();
+          delBtn.setAttribute('aria-label', 'Remover tarefa ' + todo.text);
+          delBtn.textContent = '✕';
+
+          item.appendChild(checkbox);
+          item.appendChild(textSpan);
+          item.appendChild(delBtn);
+          todoList.appendChild(item);
+        });
+
+        if (todoCount) {
+          const pending = todos.filter(function (t) { return !t.done; }).length;
+          todoCount.textContent = pending + ' pendente' + (pending !== 1 ? 's' : '');
+        }
+
+        setStorageItem('workspace_todos', todos);
+      }
+
+      if (todoList) {
+        todoList.addEventListener('change', function (e) {
+          const target = e.target.closest('input[data-action="toggle-todo"]');
+          if (target && target.dataset.index !== undefined) {
+            const index = parseInt(target.dataset.index, 10);
+            if (!isNaN(index) && index >= 0 && index < todos.length) {
+              todos[index].done = target.checked;
+              renderTodos();
+            }
+          }
+        });
+
+        todoList.addEventListener('click', function (e) {
+          const target = e.target.closest('button[data-action="delete-todo"]');
+          if (target && target.dataset.index !== undefined) {
+            const index = parseInt(target.dataset.index, 10);
+            if (!isNaN(index) && index >= 0 && index < todos.length) {
+              todos.splice(index, 1);
+              renderTodos();
+            }
+          }
+        });
+      }
+
+      const todoForm = document.getElementById('todo-form');
+      if (todoForm) {
+        todoForm.addEventListener('submit', function (e) {
+          e.preventDefault();
+          const input = document.getElementById('todo-input');
+          if (input && input.value.trim()) {
+            todos.push({ text: input.value.trim(), done: false });
+            input.value = '';
+            renderTodos();
+          }
+        });
+      }
+
+      renderTodos();
+    })();
   </script>
 </body>
 </html>
