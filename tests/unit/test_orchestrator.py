@@ -19,10 +19,12 @@ class TestOrchestratorUnit(unittest.TestCase):
         """Valida se o SkillParser detecta as habilidades em skills/."""
         parser = SkillParser()
         skills = parser.list_available_skills()
-        self.assertGreaterEqual(len(skills), 2)
+        self.assertGreaterEqual(len(skills), 4)
         skill_ids = [s["id"] for s in skills]
         self.assertIn("skill-repo-analyser", skill_ids)
         self.assertIn("skill-prompt-generator", skill_ids)
+        self.assertIn("api-auditor", skill_ids)
+        self.assertIn("code-reviewer", skill_ids)
 
     def test_security_guard_blocks_injection(self):
         """Valida se os guardrails barram instruções maliciosas de override de prompt."""

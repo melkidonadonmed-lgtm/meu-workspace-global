@@ -5,6 +5,8 @@ from mcp_servers.server import mcp
 EXPECTED_TOOLS = {
     "list_workspace_documents",
     "get_document_content",
+    "list_upcoming_calendar_events",
+    "list_storage_files",
     "bigquery_execute_query",
     "bigquery_get_schema",
     "get_system_health",
@@ -26,3 +28,16 @@ async def test_bigquery_tool_blocks_destructive_query():
     result = tool.fn(query="DROP TABLE analytics.agent_telemetry")
     assert result["status"] == "error"
     assert "bloqueadas" in result["error"]
+
+
+async def test_calendar_and_storage_tools():
+    """Garante a execução resiliente das ferramentas de Calendar e Cloud Storage."""
+    cal_tool = await mcp.get_tool("list_upcoming_calendar_events")
+    cal_result = cal_tool.fn(max_results=3)
+    assert isinstance(cal_result, list)
+    assert len(cal_result) > 0
+
+    storage_tool = await mcp.get_tool("list_storage_files")
+    storage_result = storage_tool.fn(bucket_name="agent-md-506215-backups", max_results=2)
+    assert isinstance(storage_result, list)
+    assert len(storage_result) > 0

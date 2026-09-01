@@ -1,13 +1,17 @@
-"""Orquestrador Stateful Principal com Gemini Interactions API e Delegação Especializada."""
+"""Orquestrador Stateful Principal com Gemini Interactions API, Router e Circuit Breaker."""
 
 import os
 from typing import Any
 
+from agents.router import AutoSkillRouter
 from agents.specialized.security_guard import SecurityGuardAgent
 from agents.specialized.sql_specialist import SqlSpecialistAgent
 from agents.specialized.workspace_specialist import WorkspaceSpecialistAgent
+from shared.circuit_breaker import CircuitTripException, ResilienceCircuitBreaker
 from shared.context_utils import TokenBudgetManager, extract_skills_summary
 from shared.logger import get_logger
+from shared.state_orchestrator import StateOrchestrator
+from skills.skill_factory import SkillFactory
 from skills.skill_parser import SkillParser
 
 logger = get_logger("MasterOrchestrator")
@@ -32,11 +36,15 @@ class MasterOrchestrator:
     def __init__(
         self,
         model_name: str = "gemini-3.7-flash",
-        api_key: str | None = None
+        api_key: str | None = None,
     ):
         self.model_name = model_name
         self.api_key = api_key or os.getenv("GEMINI_API_KEY")
         self.skill_parser = SkillParser()
+        self.skill_factory = SkillFactory()
+        self.router = AutoSkillRouter()
+        self.circuit_breaker = ResilienceCircuitBreaker()
+        self.state_orchestrator = StateOrchestrator()
         self.security_guard = SecurityGuardAgent()
         self.sql_specialist = SqlSpecialistAgent(model_name=self.model_name)
         self.workspace_specialist = WorkspaceSpecialistAgent()
@@ -50,6 +58,7 @@ class MasterOrchestrator:
         if self.api_key:
             try:
                 from google import genai
+
                 self.client = genai.Client(api_key=self.api_key)
                 logger.info(f"Cliente Google GenAI inicializado com sucesso (Modelo: {self.model_name}).")
             except Exception as e:  # noqa: BLE001 - fallback proposital para modo local
@@ -72,7 +81,7 @@ class MasterOrchestrator:
             "Você opera sob o princípio da separação estrita de responsabilidades.",
             "",
             skills_summary,
-            ""
+            "",
         ]
 
         if matched_skills:
@@ -88,29 +97,76 @@ class MasterOrchestrator:
     def process_message(
         self,
         session_id: str,
-        user_message: str
+        user_message: str,
     ) -> dict[str, Any]:
         """Processa a mensagem do usuário executando guardrails, roteamento e interação com o modelo."""
         session = self.get_or_create_session(session_id)
-        
-        # 1. Auditoria de Segurança Zero-Trust (Guardrail)
+
+        # 1. Sentinela de Resiliência: Interceptor pré-execução
+        estimated_input_tokens = self.budget_manager.estimate_tokens(user_message)
+        try:
+            self.circuit_breaker.before_node_execution(
+                session_id=session_id,
+                node_id="MasterOrchestrator",
+                input_payload=user_message,
+                estimated_tokens=estimated_input_tokens,
+            )
+        except CircuitTripException as trip_err:
+            return {
+                "session_id": session_id,
+                "response": f"🚨 Execução interrompida pelo Circuit Breaker: {trip_err.reason}",
+                "status": "circuit_breaker_tripped",
+                "circuit_payload": trip_err.payload,
+                "tokens_estimated": 0,
+            }
+
+        # 2. Auditoria de Segurança Zero-Trust (Guardrail)
         audit_result = self.security_guard.audit_input(user_message)
         if not audit_result["is_safe"]:
+            self.circuit_breaker.after_node_execution(
+                session_id, "MasterOrchestrator", is_error=True, error_msg="Blocked by guardrail"
+            )
             return {
                 "session_id": session_id,
                 "response": audit_result["reason"],
                 "status": "blocked_by_guardrails",
-                "tokens_estimated": 0
+                "tokens_estimated": 0,
             }
 
         sanitized_input = audit_result["sanitized_text"]
         session.add_message("user", sanitized_input)
+        self.state_orchestrator.save_checkpoint(
+            session_id=session_id,
+            step_index=len(session.history),
+            agent_name="MasterOrchestrator",
+            role="user",
+            content=sanitized_input,
+        )
 
-        # 2. Descoberta Dinâmica de Skills Relevantes
+        # 3. Roteamento Inteligente de Intenções (AutoSkillRouter)
+        routing_decision = self.router.route(sanitized_input)
+        if routing_decision.get("is_destructive"):
+            return {
+                "session_id": session_id,
+                "response": (
+                    "⚠️ **Operação Destrutiva Bloqueada pelos Guardrails Zero-Trust**\n\n"
+                    "A ação solicitada envolve exclusão ou mutação potencialmente irreversível. "
+                    "Por favor, confirme explicitamente se deseja prosseguir com a execução."
+                ),
+                "status": "blocked_by_guardrails",
+                "routing_decision": routing_decision,
+                "tokens_estimated": 0,
+            }
+
+        # 4. Descoberta e injeção de skills relevantes
         matched_skills = self.skill_parser.match_skills_by_query(sanitized_input)
+        target_skill = routing_decision.get("target_skill")
+        if target_skill and target_skill not in matched_skills and target_skill != "orchestrator":
+            matched_skills.append(target_skill)
+
         system_instruction = self.build_system_prompt(matched_skills)
 
-        # 3. Roteamento Especializado (Se aplicável)
+        # 5. Roteamento Especializado de Subagentes
         specialist_results = []
         if any(w in sanitized_input.lower() for w in ["sql", "bigquery", "tabela", "query"]):
             logger.info("Delegando subtarefa para SqlSpecialistAgent...")
@@ -122,13 +178,12 @@ class MasterOrchestrator:
             ws_res = self.workspace_specialist.scan_workspace()
             specialist_results.append(ws_res)
 
-        # 4. Geração de Resposta via Gemini Interactions API ou Fallback
+        # 6. Geração de Resposta via Gemini Interactions API ou Fallback
         response_text = ""
         interaction_id = None
 
         if self.client:
             try:
-                # Utiliza o Gemini Interactions API (Stateful com previous_interaction_id)
                 kwargs: dict[str, Any] = {
                     "model": self.model_name,
                     "input": sanitized_input,
@@ -143,14 +198,29 @@ class MasterOrchestrator:
                 interaction_id = interaction.id
             except Exception as e:  # noqa: BLE001 - fallback proposital para modo local
                 logger.error(f"Falha na chamada ao Gemini Interactions API: {e}")
-                response_text = self._generate_local_fallback(sanitized_input, specialist_results, matched_skills)
+                response_text = self._generate_local_fallback(
+                    sanitized_input, specialist_results, matched_skills, routing_decision
+                )
         else:
-            response_text = self._generate_local_fallback(sanitized_input, specialist_results, matched_skills)
+            response_text = self._generate_local_fallback(
+                sanitized_input, specialist_results, matched_skills, routing_decision
+            )
 
-        # 5. Auditoria de Saída
+        # 7. Auditoria de Saída
         output_audit = self.security_guard.audit_output(response_text)
         final_output = output_audit["output_text"]
         session.add_message("assistant", final_output)
+
+        # 8. Checkpointing Transacional e Conclusão no Circuit Breaker
+        self.state_orchestrator.save_checkpoint(
+            session_id=session_id,
+            step_index=len(session.history),
+            agent_name="MasterOrchestrator",
+            role="assistant",
+            content=final_output,
+            metadata={"matched_skills": matched_skills, "routing_mode": routing_decision.get("execution_mode")},
+        )
+        self.circuit_breaker.after_node_execution(session_id, "MasterOrchestrator", is_error=False)
 
         tokens_est = self.budget_manager.estimate_tokens(sanitized_input + final_output)
 
@@ -159,20 +229,26 @@ class MasterOrchestrator:
             "interaction_id": interaction_id,
             "response": final_output,
             "matched_skills": matched_skills,
+            "routing_decision": routing_decision,
             "delegated_subagents": [r.get("agent") for r in specialist_results],
             "tokens_estimated": tokens_est,
-            "status": "success"
+            "status": "success",
         }
 
     def _generate_local_fallback(
         self,
         user_input: str,
         specialist_results: list[dict[str, Any]],
-        matched_skills: list[str]
+        matched_skills: list[str],
+        routing_decision: dict[str, Any],
     ) -> str:
         """Gera resposta estruturada local quando executando offline."""
+        complexity = routing_decision.get("complexity", "INTERMEDIARIO")
+        mode = routing_decision.get("execution_mode", "SINGLE_SKILL")
+
         output_lines = [
             f"**[MasterOrchestrator - Modelo: {self.model_name}]**",
+            f"📊 *Modo de Roteamento:* `{mode}` | *Complexidade:* `{complexity}`",
             "",
             "Sua requisição foi processada com sucesso no ecossistema global unificado.",
         ]
@@ -190,5 +266,5 @@ class MasterOrchestrator:
                 if "total_items_scanned" in res:
                     output_lines.append(f"Varredura concluída: {res['total_items_scanned']} itens inspecionados.")
 
-        output_lines.append("\n✅ *Separação estrita de responsabilidades e guardrails Zero-Trust aplicados com sucesso.*")
+        output_lines.append("\n✅ *Separação estrita de responsabilidades, Circuit Breaker e guardrails Zero-Trust aplicados.*")
         return "\n".join(output_lines)

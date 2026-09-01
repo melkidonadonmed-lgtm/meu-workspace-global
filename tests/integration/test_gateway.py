@@ -36,3 +36,16 @@ def test_gateway_chat_endpoint():
     data = response.json()
     assert data["status"] == "success"
     assert data["session_id"] == "test_integration_session"
+
+
+def test_gateway_antigravity_chat_endpoint():
+    """Valida o endpoint /antigravity/chat com mensagem válida."""
+    payload = {
+        "message": "Quais arquivos existem no diretório?"
+    }
+    response = client.post("/antigravity/chat", json=payload)
+    assert response.status_code == 200
+    data = response.json()
+    assert data["status"] == "success"
+    assert "response" in data
+    assert "workspace_root" in data

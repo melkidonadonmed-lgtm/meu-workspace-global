@@ -22,6 +22,17 @@
         "-y",
         "@wonderwhy-er/desktop-commander@latest"
       ]
+    },
+    "gdrive": {
+      "command": "npx",
+      "args": [
+        "-y",
+        "@modelcontextprotocol/server-gdrive"
+      ],
+      "env": {
+        "GDRIVE_CREDENTIALS_PATH": "C:/Users/melki/.gdrive-server-credentials.json"
+      },
+      "description": "Servidor MCP do Google Drive para navegação, busca e leitura de documentos"
     }
   }
 }

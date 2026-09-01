@@ -46,6 +46,8 @@ service_account.json
 # IDEs e Ferramentas
 .vscode/
 .idea/
+.gemini/
+*.skill
 *.swp
 *.swo
 .DS_Store
@@ -58,6 +60,20 @@ htmlcov/
 .mypy_cache/
 .ruff_cache/
 
+# Banco de Dados e Estado Local
+*.db
+*.db-wal
+*.db-shm
+*.sqlite
+*.sqlite3
+shared/state/*.db
+!shared/state/.gitkeep
+
 # Inbox e Temporários
 inbox/*
 !inbox/.gitkeep
+
+# Links e Pastas Locais do Usuário
+google-drive-ia/
+skills-e-agentes/
+

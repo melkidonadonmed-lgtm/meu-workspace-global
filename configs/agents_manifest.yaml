@@ -1,4 +1,4 @@
-version: "1.0.0"
+version: "1.1.0"
 environment: "development"
 
 global_settings:
@@ -10,6 +10,8 @@ global_settings:
   temperature: 0.2
   top_p: 0.95
   timeout_seconds: 60
+  gcp_project_id: "agent-md-506215"
+  gcp_region: "us-central1"
 
 orchestrator:
   name: "MasterOrchestrator"
@@ -28,7 +30,7 @@ orchestrator:
 specialized_agents:
   sql_specialist:
     name: "SqlSpecialistAgent"
-    description: "Especialista stateless em consultas, schemas e otimizações SQL"
+    description: "Especialista stateless em consultas, schemas e otimizações SQL no BigQuery"
     model: "gemini-3.7-flash"
     stateless: true
     max_tokens_output: 8192
@@ -39,14 +41,16 @@ specialized_agents:
 
   workspace_specialist:
     name: "WorkspaceSpecialistAgent"
-    description: "Especialista stateless em inspeção de arquivos, diretórios e migrações"
+    description: "Especialista stateless em inspeção de arquivos, Google Drive, Calendar e Storage"
     model: "gemini-3.7-flash"
     stateless: true
     max_tokens_output: 8192
     temperature: 0.1
     mcp_tools:
-      - "workspace_list_files"
-      - "workspace_read_file"
+      - "list_workspace_documents"
+      - "get_document_content"
+      - "list_upcoming_calendar_events"
+      - "list_storage_files"
 
   security_guard:
     name: "SecurityGuardAgent"
@@ -55,3 +59,16 @@ specialized_agents:
     stateless: true
     max_tokens_output: 2048
     temperature: 0.0
+
+  antigravity_bridge:
+    name: "AntigravityAgentBridge"
+    description: "Agente oficial integrado com o Google Antigravity SDK e ferramentas locais"
+    model: "gemini-3.7-flash"
+    stateless: false
+    max_tokens_output: 8192
+    temperature: 0.2
+    tools_enabled:
+      - "list_workspace_files"
+      - "read_workspace_file"
+      - "execute_sql_query"
+      - "get_system_health"
