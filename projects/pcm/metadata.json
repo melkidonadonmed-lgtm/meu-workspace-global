@@ -1,0 +1,8 @@
+{
+  "name": "Remix PresCMed new",
+  "description": "Sistema de prescrição médica digital, calculadora automática de doses pediátricas por peso, solicitação de exames, atestados médicos e emissão de documentos com design tátil profissional.",
+  "requestFramePermissions": [],
+  "majorCapabilities": [
+    "MAJOR_CAPABILITY_SERVER_SIDE_GEMINI_API"
+  ]
+}
