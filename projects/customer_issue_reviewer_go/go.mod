@@ -1,6 +1,7 @@
 module customer-issue-reviewer
 
-go 1.26.6
+go 1.24
+
 
 require (
 	google.golang.org/adk/v2 v2.3.0

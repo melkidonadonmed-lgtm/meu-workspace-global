@@ -1,4 +1,3 @@
-#!/usr/bin/env python3
 """Script utilitário para gerar o Refresh Token OAuth 2.0 do Google Workspace.
 
 Executa o fluxo local de consentimento no navegador para a conta pessoal
