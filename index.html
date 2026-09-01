@@ -3,41 +3,105 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Meu Workspace Global</title>
-  <meta name="description" content="Painel de produtividade pessoal, busca multi-mecanismo e atalhos diários.">
+  <title>Meu Workspace Global • Luxury Edition</title>
+  <meta name="description" content="Painel de Produtividade, Hub de Busca Multi-mecanismo e Acesso Rápido ao Google Workspace em Luxury Obsidian & Brushed Gold.">
   <style>
+    /* ==========================================================================
+       1. LUXURY DESIGN TOKENS & DEPTH SYSTEM (Obsidian & Brushed Gold)
+       ========================================================================== */
     :root {
-      --bg-gradient: radial-gradient(circle at 10% 20%, #111827 0%, #030712 100%);
-      --card-bg: rgba(31, 41, 55, 0.7);
-      --card-border: rgba(255, 255, 255, 0.08);
-      --card-hover: rgba(55, 65, 81, 0.75);
-      --text-main: #f3f4f6;
-      --text-muted: #9ca3af;
-      --accent: #3b82f6;
-      --accent-hover: #2563eb;
-      --accent-glow: rgba(59, 130, 246, 0.3);
-      --input-bg: rgba(17, 24, 39, 0.85);
-      --success: #10b981;
-      --danger: #ef4444;
-      --focus-ring: #60a5fa;
-      --font-family: system-ui, -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, Cantarell, sans-serif;
+      /* Base & Surfaces (60%) */
+      --bg-canvas: #09090b;
+      --bg-surface: #0e0e13;
+      --bg-card: rgba(18, 18, 24, 0.78);
+      --bg-card-hover: rgba(28, 28, 38, 0.88);
+      --bg-input: rgba(14, 14, 20, 0.92);
+
+      /* Borders, Glare & Bevels (30%) */
+      --border-subtle: rgba(255, 255, 255, 0.07);
+      --border-highlight: rgba(255, 255, 255, 0.14);
+      --border-metallic: rgba(212, 175, 55, 0.35);
+      --border-metallic-hover: rgba(212, 175, 55, 0.65);
+      --inner-glare: inset 0 1px 0 0 rgba(255, 255, 255, 0.12);
+      --inner-glare-gold: inset 0 1px 0 0 rgba(255, 235, 170, 0.3);
+
+      /* Accents & Metallic Highlights (10%) */
+      --accent-gold-champagne: #d4af37;
+      --accent-gold-light: #f3d47d;
+      --accent-gold-glow: rgba(212, 175, 55, 0.22);
+      --accent-bronze: #a38047;
+      --status-success: #00f0ff;
+      --status-danger: #ff4d6d;
+      --focus-ring: #d4af37;
+
+      /* Typography */
+      --text-main: #f4f4f7;
+      --text-muted: #9c9ca8;
+      --text-gold: #e5c378;
+      --font-family: -apple-system, BlinkMacSystemFont, 'SF Pro Display', 'Segoe UI', Roboto, Helvetica, Arial, sans-serif;
+
+      /* Multi-layer Tactile Shadows (Ambient Occlusion) */
+      --shadow-resting: 
+        0 2px 4px rgba(0, 0, 0, 0.4),
+        0 8px 24px rgba(0, 0, 0, 0.6),
+        inset 0 1px 0 0 rgba(255, 255, 255, 0.08);
+      --shadow-elevated: 
+        0 4px 12px rgba(0, 0, 0, 0.5),
+        0 16px 36px -4px rgba(0, 0, 0, 0.8),
+        0 0 24px var(--accent-gold-glow),
+        inset 0 1px 0 0 rgba(255, 255, 255, 0.18);
+      --shadow-pressed: 
+        inset 0 2px 6px rgba(0, 0, 0, 0.8),
+        0 1px 2px rgba(0, 0, 0, 0.3);
+
+      /* Motion Curves */
+      --ease-snappy: cubic-bezier(0.16, 1, 0.3, 1);
+      --ease-smooth: cubic-bezier(0.4, 0, 0.2, 1);
     }
 
+    /* Light Theme (Titanium Pearl & Champagne) */
     [data-theme="light"] {
-      --bg-gradient: radial-gradient(circle at 10% 20%, #f8fafc 0%, #e2e8f0 100%);
-      --card-bg: rgba(255, 255, 255, 0.88);
-      --card-border: rgba(0, 0, 0, 0.08);
-      --card-hover: rgba(241, 245, 249, 0.95);
-      --text-main: #0f172a;
-      --text-muted: #64748b;
-      --accent: #2563eb;
-      --accent-hover: #1d4ed8;
-      --accent-glow: rgba(37, 99, 235, 0.2);
-      --input-bg: rgba(255, 255, 255, 0.95);
-      --focus-ring: #3b82f6;
+      --bg-canvas: #f6f7f9;
+      --bg-surface: #ffffff;
+      --bg-card: rgba(255, 255, 255, 0.88);
+      --bg-card-hover: rgba(255, 255, 255, 0.98);
+      --bg-input: rgba(248, 249, 251, 0.95);
+
+      --border-subtle: rgba(0, 0, 0, 0.08);
+      --border-highlight: rgba(0, 0, 0, 0.14);
+      --border-metallic: rgba(184, 134, 11, 0.35);
+      --border-metallic-hover: rgba(184, 134, 11, 0.7);
+      --inner-glare: inset 0 1px 0 0 rgba(255, 255, 255, 0.9);
+      --inner-glare-gold: inset 0 1px 0 0 rgba(255, 255, 255, 1);
+
+      --accent-gold-champagne: #b8860b;
+      --accent-gold-light: #d4af37;
+      --accent-gold-glow: rgba(184, 134, 11, 0.16);
+      --accent-bronze: #8c6d31;
+      --status-success: #0284c7;
+      --status-danger: #e11d48;
+      --focus-ring: #b8860b;
+
+      --text-main: #111827;
+      --text-muted: #576175;
+      --text-gold: #996515;
+
+      --shadow-resting: 
+        0 1px 3px rgba(0, 0, 0, 0.05),
+        0 10px 25px -5px rgba(0, 0, 0, 0.08),
+        inset 0 1px 0 0 rgba(255, 255, 255, 0.9);
+      --shadow-elevated: 
+        0 4px 14px rgba(0, 0, 0, 0.08),
+        0 20px 35px -5px rgba(0, 0, 0, 0.12),
+        0 0 20px rgba(184, 134, 11, 0.15),
+        inset 0 1px 0 0 #ffffff;
+      --shadow-pressed: 
+        inset 0 2px 5px rgba(0, 0, 0, 0.1),
+        0 1px 2px rgba(0, 0, 0, 0.05);
     }
 
-    * {
+    /* Reset & Base Setup */
+    *, *::before, *::after {
       box-sizing: border-box;
       margin: 0;
       padding: 0;
@@ -45,14 +109,18 @@
 
     body {
       font-family: var(--font-family);
-      background: var(--bg-gradient);
+      background-color: var(--bg-canvas);
+      background-image: 
+        radial-gradient(circle at 15% 10%, rgba(212, 175, 55, 0.04) 0%, transparent 40%),
+        radial-gradient(circle at 85% 85%, rgba(0, 240, 255, 0.02) 0%, transparent 40%);
       color: var(--text-main);
       min-height: 100vh;
-      padding: 2rem 1.5rem 4rem;
+      padding: 2rem 1.25rem 4rem;
       display: flex;
       flex-direction: column;
       align-items: center;
-      transition: background 0.3s ease, color 0.3s ease;
+      transition: background-color 0.3s var(--ease-smooth), color 0.3s var(--ease-smooth);
+      -webkit-font-smoothing: antialiased;
     }
 
     @media (prefers-reduced-motion: reduce) {
@@ -66,229 +134,297 @@
 
     .container {
       width: 100%;
-      max-width: 1200px;
+      max-width: 1240px;
     }
 
-    /* Header Bar */
+    /* ==========================================================================
+       2. HEADER & BRANDING (Luxury Bevels & Tabular Clock)
+       ========================================================================== */
     header {
       display: flex;
       justify-content: space-between;
       align-items: center;
-      margin-bottom: 2rem;
+      margin-bottom: 2.25rem;
       flex-wrap: wrap;
-      gap: 1rem;
+      gap: 1.25rem;
     }
 
     .brand {
       display: flex;
       align-items: center;
-      gap: 0.75rem;
+      gap: 1rem;
     }
 
     .brand-icon {
-      width: 40px;
-      height: 40px;
-      background: linear-gradient(135deg, #3b82f6, #8b5cf6);
-      border-radius: 12px;
+      width: 48px;
+      height: 48px;
+      background: linear-gradient(145deg, #242430 0%, #121218 100%);
+      border: 1px solid var(--border-metallic);
+      border-radius: 14px;
       display: flex;
       align-items: center;
       justify-content: center;
-      color: #fff;
-      font-weight: 700;
-      font-size: 1.3rem;
-      box-shadow: 0 4px 14px var(--accent-glow);
+      font-size: 1.5rem;
+      box-shadow: var(--shadow-resting), 0 0 16px var(--accent-gold-glow);
+      position: relative;
+    }
+
+    .brand-icon::after {
+      content: '';
+      position: absolute;
+      top: 0; left: 0; right: 0; height: 50%;
+      background: linear-gradient(180deg, rgba(255, 255, 255, 0.12) 0%, transparent 100%);
+      border-top-left-radius: 13px;
+      border-top-right-radius: 13px;
+      pointer-events: none;
     }
 
     .brand-title h1 {
-      font-size: 1.4rem;
+      font-size: 1.5rem;
       font-weight: 700;
       letter-spacing: -0.02em;
+      background: linear-gradient(135deg, var(--text-main) 60%, var(--accent-gold-champagne) 100%);
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
     }
 
     .brand-title p {
-      font-size: 0.82rem;
+      font-size: 0.85rem;
       color: var(--text-muted);
+      letter-spacing: 0.01em;
     }
 
     .header-controls {
       display: flex;
       align-items: center;
-      gap: 1.25rem;
+      gap: 1.5rem;
     }
 
     .clock-widget {
       text-align: right;
+      padding: 0.4rem 0.9rem;
+      background: var(--bg-card);
+      border: 1px solid var(--border-subtle);
+      border-radius: 12px;
+      backdrop-filter: blur(12px);
+      box-shadow: var(--shadow-resting);
     }
 
     .clock-time {
-      font-size: 1.25rem;
+      font-size: 1.3rem;
       font-weight: 700;
-      letter-spacing: -0.01em;
       font-variant-numeric: tabular-nums;
+      color: var(--text-gold);
+      letter-spacing: 0.02em;
     }
 
     .clock-date {
-      font-size: 0.8rem;
+      font-size: 0.75rem;
       color: var(--text-muted);
+      text-transform: capitalize;
     }
 
     .theme-toggle-btn {
-      background: var(--card-bg);
-      border: 1px solid var(--card-border);
-      color: var(--text-main);
+      background: linear-gradient(180deg, #242430 0%, #15151e 100%);
+      border: 1px solid var(--border-metallic);
+      color: var(--accent-gold-champagne);
       border-radius: 12px;
-      width: 42px;
-      height: 42px;
+      width: 46px;
+      height: 46px;
+      min-width: 44px;
+      min-height: 44px;
       display: flex;
       align-items: center;
       justify-content: center;
       cursor: pointer;
-      backdrop-filter: blur(12px);
-      font-size: 1.1rem;
-      transition: background-color 0.2s ease, transform 0.15s ease, border-color 0.2s ease;
+      font-size: 1.25rem;
+      box-shadow: var(--shadow-resting);
+      transition: all 0.2s var(--ease-snappy);
     }
 
     .theme-toggle-btn:hover {
-      background: var(--card-hover);
-      transform: scale(1.05);
+      transform: translateY(-2px);
+      border-color: var(--border-metallic-hover);
+      box-shadow: var(--shadow-elevated);
+      color: var(--accent-gold-light);
     }
 
-    .theme-toggle-btn:focus-visible,
-    .search-btn:focus-visible,
-    .add-btn:focus-visible,
-    .del-btn:focus-visible,
-    .search-input:focus-visible,
-    .engine-select:focus-visible,
-    .app-item:focus-visible,
-    .bookmark-row a:focus-visible,
-    .notes-textarea:focus-visible {
-      outline: 2px solid var(--focus-ring);
-      outline-offset: 2px;
+    .theme-toggle-btn:active {
+      transform: translateY(1px) scale(0.97);
+      box-shadow: var(--shadow-pressed);
     }
 
-    /* Search Container */
+    /* ==========================================================================
+       3. SEARCH BAR (Glassmorphism & Tactical Search Controls)
+       ========================================================================== */
     .search-section {
-      background: var(--card-bg);
-      backdrop-filter: blur(16px);
-      border: 1px solid var(--card-border);
-      border-radius: 18px;
+      background: var(--bg-card);
+      backdrop-filter: blur(20px);
+      -webkit-backdrop-filter: blur(20px);
+      border: 1px solid var(--border-subtle);
+      border-radius: 20px;
       padding: 1.5rem;
       margin-bottom: 2.5rem;
-      box-shadow: 0 10px 25px rgba(0, 0, 0, 0.12);
-      transition: border-color 0.2s ease, box-shadow 0.2s ease;
+      box-shadow: var(--shadow-resting);
+      position: relative;
+      overflow: hidden;
+    }
+
+    .search-section::before {
+      content: '';
+      position: absolute;
+      top: 0; left: 0; right: 0; height: 1px;
+      background: linear-gradient(90deg, transparent, rgba(212, 175, 55, 0.4), transparent);
     }
 
     .search-form {
       display: flex;
-      gap: 0.75rem;
+      gap: 0.85rem;
       flex-wrap: wrap;
+      align-items: center;
     }
 
     .engine-select {
-      background: var(--input-bg);
-      border: 1px solid var(--card-border);
-      color: var(--text-main);
-      padding: 0.85rem 1rem;
+      background: var(--bg-input);
+      border: 1px solid var(--border-subtle);
+      color: var(--text-gold);
+      padding: 0.85rem 1.2rem;
       border-radius: 12px;
       font-size: 0.95rem;
+      font-weight: 500;
       outline: none;
       cursor: pointer;
-      transition: border-color 0.2s ease;
+      box-shadow: var(--inner-glare);
+      min-height: 48px;
+      transition: all 0.2s var(--ease-snappy);
+    }
+
+    .engine-select:focus, .engine-select:hover {
+      border-color: var(--border-metallic);
+      box-shadow: 0 0 12px var(--accent-gold-glow);
     }
 
     .search-input-wrapper {
       flex: 1;
-      min-width: 250px;
+      min-width: 260px;
       position: relative;
     }
 
     .search-input {
       width: 100%;
-      background: var(--input-bg);
-      border: 1px solid var(--card-border);
+      background: var(--bg-input);
+      border: 1px solid var(--border-subtle);
       color: var(--text-main);
-      padding: 0.85rem 1.25rem;
+      padding: 0.85rem 1.35rem;
       border-radius: 12px;
       font-size: 1rem;
       outline: none;
-      transition: border-color 0.2s ease, box-shadow 0.2s ease;
+      min-height: 48px;
+      box-shadow: var(--inner-glare);
+      transition: all 0.2s var(--ease-snappy);
     }
 
-    .search-input:focus, .engine-select:focus {
-      border-color: var(--accent);
-      box-shadow: 0 0 0 3px var(--accent-glow);
+    .search-input:focus {
+      border-color: var(--accent-gold-champagne);
+      box-shadow: 0 0 0 3px var(--accent-gold-glow), var(--inner-glare);
     }
 
     .search-btn {
-      background: var(--accent);
-      color: #fff;
-      border: none;
+      background: linear-gradient(180deg, #d4af37 0%, #a38047 100%);
+      color: #0b0b0e;
+      border: 1px solid rgba(255, 235, 170, 0.4);
       padding: 0.85rem 1.75rem;
       border-radius: 12px;
-      font-weight: 600;
+      font-weight: 700;
       font-size: 0.95rem;
+      letter-spacing: 0.01em;
       cursor: pointer;
+      min-height: 48px;
+      min-width: 44px;
       display: flex;
       align-items: center;
       gap: 0.5rem;
-      transition: background-color 0.2s ease, transform 0.15s ease;
+      box-shadow: 0 4px 14px var(--accent-gold-glow), inset 0 1px 0 rgba(255, 255, 255, 0.4);
+      transition: all 0.2s var(--ease-snappy);
     }
 
     .search-btn:hover {
-      background: var(--accent-hover);
-      transform: translateY(-1px);
+      transform: translateY(-2px);
+      box-shadow: 0 6px 20px rgba(212, 175, 55, 0.35), inset 0 1px 0 rgba(255, 255, 255, 0.6);
+      filter: brightness(1.06);
     }
 
-    /* Grid Layout for Sections */
+    .search-btn:active {
+      transform: translateY(1px) scale(0.98);
+    }
+
+    /* ==========================================================================
+       4. BENTO DASHBOARD GRID & LUXURY CARDS
+       ========================================================================== */
     .dashboard-grid {
       display: grid;
       grid-template-columns: repeat(auto-fit, minmax(340px, 1fr));
-      gap: 1.5rem;
+      gap: 1.75rem;
       margin-bottom: 2.5rem;
     }
 
     .card {
-      background: var(--card-bg);
-      backdrop-filter: blur(16px);
-      border: 1px solid var(--card-border);
-      border-radius: 18px;
-      padding: 1.5rem;
-      box-shadow: 0 8px 22px rgba(0,0,0,0.08);
+      background: var(--bg-card);
+      backdrop-filter: blur(20px);
+      -webkit-backdrop-filter: blur(20px);
+      border: 1px solid var(--border-subtle);
+      border-radius: 20px;
+      padding: 1.6rem;
+      box-shadow: var(--shadow-resting);
       display: flex;
       flex-direction: column;
-      transition: border-color 0.2s ease, transform 0.2s ease;
+      position: relative;
+      transition: transform 0.2s var(--ease-snappy), border-color 0.2s var(--ease-snappy), box-shadow 0.2s var(--ease-snappy);
+    }
+
+    .card:hover {
+      border-color: var(--border-highlight);
+      box-shadow: var(--shadow-elevated);
     }
 
     .card-header {
       display: flex;
       justify-content: space-between;
       align-items: center;
-      margin-bottom: 1.25rem;
+      margin-bottom: 1.35rem;
+      padding-bottom: 0.75rem;
+      border-bottom: 1px solid var(--border-subtle);
     }
 
     .card-header h2 {
       font-size: 1.15rem;
       font-weight: 600;
+      letter-spacing: -0.01em;
       display: flex;
       align-items: center;
-      gap: 0.5rem;
+      gap: 0.6rem;
+      color: var(--text-main);
     }
 
     .card-header a {
       font-size: 0.82rem;
-      color: var(--accent);
+      color: var(--accent-gold-champagne);
       text-decoration: none;
-      transition: color 0.2s ease;
+      font-weight: 500;
+      padding: 0.25rem 0.5rem;
+      border-radius: 6px;
+      transition: all 0.2s ease;
     }
 
     .card-header a:hover {
+      background: var(--accent-gold-glow);
       text-decoration: underline;
     }
 
-    /* Google Workspace App Tiles */
+    /* Google Workspace Tiles */
     .app-grid {
       display: grid;
-      grid-template-columns: repeat(auto-fill, minmax(80px, 1fr));
+      grid-template-columns: repeat(auto-fill, minmax(82px, 1fr));
       gap: 0.85rem;
     }
 
@@ -298,41 +434,48 @@
       align-items: center;
       text-decoration: none;
       color: var(--text-main);
-      padding: 0.75rem 0.5rem;
-      border-radius: 12px;
-      background: var(--input-bg);
-      border: 1px solid var(--card-border);
+      padding: 0.85rem 0.5rem;
+      border-radius: 14px;
+      background: var(--bg-input);
+      border: 1px solid var(--border-subtle);
+      box-shadow: var(--inner-glare);
       text-align: center;
-      transition: transform 0.2s ease, background-color 0.2s ease, box-shadow 0.2s ease, border-color 0.2s ease;
+      min-height: 44px;
+      transition: all 0.2s var(--ease-snappy);
     }
 
     .app-item:hover {
-      transform: translateY(-3px);
-      background: var(--card-hover);
-      box-shadow: 0 6px 16px rgba(0,0,0,0.15);
-      border-color: var(--accent);
+      transform: translateY(-3px) scale(1.02);
+      background: var(--bg-card-hover);
+      border-color: var(--border-metallic);
+      box-shadow: 0 8px 20px rgba(0, 0, 0, 0.4), 0 0 14px var(--accent-gold-glow);
+      color: var(--text-gold);
+    }
+
+    .app-item:active {
+      transform: translateY(1px) scale(0.98);
     }
 
     .app-icon {
-      width: 32px;
-      height: 32px;
-      margin-bottom: 0.4rem;
+      font-size: 1.5rem;
+      margin-bottom: 0.45rem;
       display: flex;
       align-items: center;
       justify-content: center;
-      font-size: 1.4rem;
+      filter: drop-shadow(0 2px 4px rgba(0,0,0,0.3));
     }
 
     .app-name {
       font-size: 0.75rem;
-      font-weight: 500;
+      font-weight: 600;
+      letter-spacing: 0.01em;
     }
 
     /* Custom Bookmarks List */
     .bookmarks-container {
       display: flex;
       flex-direction: column;
-      gap: 0.5rem;
+      gap: 0.6rem;
       max-height: 280px;
       overflow-y: auto;
       padding-right: 4px;
@@ -342,32 +485,37 @@
       display: flex;
       align-items: center;
       justify-content: space-between;
-      padding: 0.65rem 0.85rem;
-      background: var(--input-bg);
-      border-radius: 10px;
-      border: 1px solid var(--card-border);
-      transition: background-color 0.2s ease, border-color 0.2s ease;
+      padding: 0.65rem 0.95rem;
+      background: var(--bg-input);
+      border-radius: 12px;
+      border: 1px solid var(--border-subtle);
+      box-shadow: var(--inner-glare);
+      transition: all 0.2s var(--ease-snappy);
     }
 
     .bookmark-row:hover {
-      border-color: var(--accent);
+      border-color: var(--border-metallic);
+      background: var(--bg-card-hover);
+      transform: translateX(2px);
     }
 
     .bookmark-row a {
       color: var(--text-main);
       text-decoration: none;
-      font-size: 0.9rem;
+      font-size: 0.92rem;
+      font-weight: 500;
       display: flex;
       align-items: center;
-      gap: 0.6rem;
+      gap: 0.7rem;
       flex: 1;
       overflow: hidden;
       text-overflow: ellipsis;
       white-space: nowrap;
+      min-height: 38px;
     }
 
     .bookmark-row a:hover {
-      color: var(--accent);
+      color: var(--text-gold);
     }
 
     .del-btn {
@@ -375,83 +523,106 @@
       border: none;
       color: var(--text-muted);
       cursor: pointer;
-      padding: 0.3rem 0.5rem;
-      border-radius: 6px;
-      font-size: 0.9rem;
-      transition: color 0.2s ease, background-color 0.2s ease;
+      padding: 0.4rem 0.6rem;
+      border-radius: 8px;
+      font-size: 0.95rem;
+      min-width: 38px;
+      min-height: 38px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      transition: all 0.18s ease;
     }
 
     .del-btn:hover {
-      color: var(--danger);
-      background: rgba(239, 68, 68, 0.1);
+      color: var(--status-danger);
+      background: rgba(255, 77, 109, 0.12);
+      transform: scale(1.1);
     }
 
     .add-bookmark-form, .add-todo-form {
       display: flex;
-      gap: 0.5rem;
-      margin-top: 1rem;
+      gap: 0.6rem;
+      margin-top: 1.1rem;
     }
 
     .add-bookmark-form input, .add-todo-form input {
       flex: 1;
-      background: var(--input-bg);
-      border: 1px solid var(--card-border);
+      background: var(--bg-input);
+      border: 1px solid var(--border-subtle);
       color: var(--text-main);
-      padding: 0.55rem 0.75rem;
-      border-radius: 8px;
-      font-size: 0.85rem;
+      padding: 0.65rem 0.9rem;
+      border-radius: 10px;
+      font-size: 0.88rem;
       outline: none;
+      min-height: 44px;
+      box-shadow: var(--inner-glare);
       transition: border-color 0.2s ease;
     }
 
     .add-bookmark-form input:focus, .add-todo-form input:focus {
-      border-color: var(--accent);
+      border-color: var(--accent-gold-champagne);
     }
 
     .add-btn {
-      background: var(--accent);
-      color: white;
-      border: none;
-      padding: 0.55rem 0.95rem;
-      border-radius: 8px;
-      font-weight: 600;
-      font-size: 0.85rem;
+      background: linear-gradient(180deg, #2a2a38 0%, #1a1a24 100%);
+      border: 1px solid var(--border-metallic);
+      color: var(--accent-gold-champagne);
+      padding: 0.65rem 1.1rem;
+      border-radius: 10px;
+      font-weight: 700;
+      font-size: 0.88rem;
       cursor: pointer;
-      transition: background-color 0.2s ease, transform 0.15s ease;
+      min-height: 44px;
+      min-width: 44px;
       white-space: nowrap;
+      box-shadow: var(--shadow-resting);
+      transition: all 0.2s var(--ease-snappy);
     }
 
     .add-btn:hover {
-      background: var(--accent-hover);
+      border-color: var(--border-metallic-hover);
+      color: var(--accent-gold-light);
+      box-shadow: 0 0 14px var(--accent-gold-glow);
       transform: translateY(-1px);
+    }
+
+    .add-btn:active {
+      transform: translateY(1px) scale(0.97);
     }
 
     /* To-Do List & Notes */
     .todo-list {
       display: flex;
       flex-direction: column;
-      gap: 0.5rem;
+      gap: 0.6rem;
       max-height: 220px;
       overflow-y: auto;
-      margin-bottom: 0.75rem;
+      margin-bottom: 0.85rem;
       padding-right: 4px;
     }
 
     .todo-item {
       display: flex;
       align-items: center;
-      gap: 0.6rem;
-      padding: 0.55rem 0.75rem;
-      background: var(--input-bg);
-      border-radius: 8px;
-      border: 1px solid var(--card-border);
-      font-size: 0.9rem;
-      transition: background-color 0.2s ease;
+      gap: 0.75rem;
+      padding: 0.65rem 0.85rem;
+      background: var(--bg-input);
+      border-radius: 10px;
+      border: 1px solid var(--border-subtle);
+      font-size: 0.92rem;
+      box-shadow: var(--inner-glare);
+      transition: all 0.2s var(--ease-snappy);
+    }
+
+    .todo-item:hover {
+      border-color: var(--border-highlight);
     }
 
     .todo-item.done span {
       text-decoration: line-through;
       color: var(--text-muted);
+      opacity: 0.75;
     }
 
     .todo-item span {
@@ -461,37 +632,45 @@
 
     .todo-checkbox {
       cursor: pointer;
-      width: 16px;
-      height: 16px;
-      accent-color: var(--accent);
+      width: 18px;
+      height: 18px;
+      accent-color: var(--accent-gold-champagne);
     }
 
     .notes-textarea {
       width: 100%;
       height: 180px;
-      background: var(--input-bg);
-      border: 1px solid var(--card-border);
+      background: var(--bg-input);
+      border: 1px solid var(--border-subtle);
       color: var(--text-main);
-      padding: 0.85rem;
-      border-radius: 12px;
+      padding: 0.95rem;
+      border-radius: 14px;
       font-family: inherit;
-      font-size: 0.9rem;
-      line-height: 1.5;
+      font-size: 0.92rem;
+      line-height: 1.6;
       resize: vertical;
       outline: none;
-      transition: border-color 0.2s ease;
+      box-shadow: var(--inner-glare);
+      transition: border-color 0.2s ease, box-shadow 0.2s ease;
     }
 
     .notes-textarea:focus {
-      border-color: var(--accent);
-      box-shadow: 0 0 0 3px var(--accent-glow);
+      border-color: var(--accent-gold-champagne);
+      box-shadow: 0 0 0 3px var(--accent-gold-glow), var(--inner-glare);
     }
 
     .notes-status {
       font-size: 0.75rem;
-      color: var(--text-muted);
+      color: var(--accent-gold-light);
       margin-top: 0.4rem;
       text-align: right;
+      font-weight: 500;
+    }
+
+    /* Accessibility Focus Outline */
+    :focus-visible {
+      outline: 2px solid var(--focus-ring) !important;
+      outline-offset: 2px !important;
     }
 
     /* Footer */
@@ -500,6 +679,12 @@
       margin-top: auto;
       color: var(--text-muted);
       font-size: 0.85rem;
+      letter-spacing: 0.02em;
+    }
+
+    footer span {
+      color: var(--accent-gold-champagne);
+      font-weight: 600;
     }
   </style>
 </head>
@@ -511,7 +696,7 @@
         <div class="brand-icon" aria-hidden="true">🌐</div>
         <div class="brand-title">
           <h1>Meu Workspace Global</h1>
-          <p>Painel de Produtividade & Pesquisa Diária</p>
+          <p>Luxury Obsidian & Champagne Gold Dashboard</p>
         </div>
       </div>
       <div class="header-controls">
@@ -519,12 +704,12 @@
           <div class="clock-time" id="clock-time">--:--:--</div>
           <div class="clock-date" id="clock-date">Carregando data...</div>
         </div>
-        <button class="theme-toggle-btn" id="theme-btn" title="Alternar tema" aria-label="Alternar tema claro ou escuro">🌓</button>
+        <button class="theme-toggle-btn" id="theme-btn" title="Alternar tema visual" aria-label="Alternar tema claro ou escuro">🌓</button>
       </div>
     </header>
 
     <!-- Search Bar -->
-    <section class="search-section" aria-label="Pesquisa rápida">
+    <section class="search-section" aria-label="Hub de busca multi-mecanismo">
       <form class="search-form" id="search-form">
         <select class="engine-select" id="search-engine" aria-label="Selecione o mecanismo de busca">
           <option value="google">Google</option>
@@ -540,19 +725,19 @@
             type="text" 
             id="search-query" 
             class="search-input" 
-            placeholder="Digite o que deseja pesquisar e pressione Enter (ou use '/')" 
+            placeholder="Digite sua pesquisa e pressione Enter (ou use '/')" 
             aria-label="Termo de pesquisa"
             autofocus 
             required
           />
         </div>
-        <button type="submit" class="search-btn" aria-label="Buscar na web">
+        <button type="submit" class="search-btn" aria-label="Executar busca">
           <span>🔍 Buscar</span>
         </button>
       </form>
     </section>
 
-    <!-- Grid Cards -->
+    <!-- Grid Cards (Bento System) -->
     <main class="dashboard-grid">
       <!-- Google Workspace Card -->
       <section class="card" aria-labelledby="heading-workspace">
@@ -616,10 +801,10 @@
       <section class="card" aria-labelledby="heading-bookmarks">
         <div class="card-header">
           <h2 id="heading-bookmarks">⭐ Favoritos & Links Rápidos</h2>
-          <span style="font-size:0.75rem; color:var(--text-muted);">Salvo localmente</span>
+          <span style="font-size:0.75rem; color:var(--text-gold); font-weight:500;">Salvo localmente</span>
         </div>
         <div class="bookmarks-container" id="bookmarks-list" role="list">
-          <!-- Populated securely via DOM -->
+          <!-- Dynamically populated securely -->
         </div>
         <form class="add-bookmark-form" id="bookmark-form">
           <input type="text" id="bm-title" placeholder="Nome (Ex: GitHub)" aria-label="Nome do favorito" required />
@@ -637,7 +822,7 @@
         <textarea 
           id="quick-notes" 
           class="notes-textarea" 
-          placeholder="Digite notas, ideias, links temporários ou tarefas do dia..." 
+          placeholder="Digite notas, ideias, links temporários ou planos do dia..." 
           aria-label="Bloco de notas com salvamento automático"
         ></textarea>
       </section>
@@ -646,10 +831,10 @@
       <section class="card" aria-labelledby="heading-todos">
         <div class="card-header">
           <h2 id="heading-todos">✅ Tarefas do Dia</h2>
-          <span id="todo-count" style="font-size: 0.8rem; color: var(--text-muted);" aria-live="polite">0 pendentes</span>
+          <span id="todo-count" style="font-size: 0.8rem; color: var(--text-gold); font-weight:600;" aria-live="polite">0 pendentes</span>
         </div>
         <div class="todo-list" id="todo-list" role="list">
-          <!-- Populated securely via DOM -->
+          <!-- Dynamically populated securely -->
         </div>
         <form class="add-todo-form" id="todo-form">
           <input type="text" id="todo-input" placeholder="Nova tarefa..." aria-label="Descrição da nova tarefa" required />
@@ -659,7 +844,7 @@
     </main>
 
     <footer>
-      Meu Workspace Global • Personal Dashboard • Salvo no seu navegador
+      Meu Workspace Global • <span>Luxury Obsidian & Gold</span> • Salvo no seu navegador
     </footer>
   </div>
 
@@ -694,9 +879,7 @@
           if (parsed.protocol === 'http:' || parsed.protocol === 'https:') {
             return parsed.href;
           }
-        } catch (e) {
-          // If relative or invalid, fallback
-        }
+        } catch (e) {}
         return '#';
       }
 
