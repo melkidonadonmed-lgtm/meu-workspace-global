@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect, useRef } from 'react';
 import { UserCheck, Check, X, Shield, Eraser, Building2, Phone, MapPin } from 'lucide-react';
 import { DoctorProfile } from '../types';
 
@@ -15,6 +15,8 @@ export const DoctorProfileModal: React.FC<DoctorProfileModalProps> = ({
   onSaveDoctor,
   onClose
 }) => {
+  const nameInputRef = useRef<HTMLInputElement>(null);
+
   const [formData, setFormData] = useState<DoctorProfile>({
     name: doctor?.name || '',
     crm: doctor?.crm || '',
@@ -30,6 +32,19 @@ export const DoctorProfileModal: React.FC<DoctorProfileModalProps> = ({
     signatureText: doctor?.signatureText || '',
     stampText: doctor?.stampText || ''
   });
+
+  // Acessibilidade WCAG 2.1: Foco inicial e listener da tecla Escape
+  useEffect(() => {
+    nameInputRef.current?.focus();
+    const handleKeyDown = (e: KeyboardEvent) => {
+      if (e.key === 'Escape') {
+        e.preventDefault();
+        onClose();
+      }
+    };
+    window.addEventListener('keydown', handleKeyDown);
+    return () => window.removeEventListener('keydown', handleKeyDown);
+  }, [onClose]);
 
   const [showAdvancedClinic, setShowAdvancedClinic] = useState(
     Boolean(doctor?.clinicName || doctor?.address || doctor?.cityState || doctor?.phone)
@@ -67,10 +82,11 @@ export const DoctorProfileModal: React.FC<DoctorProfileModalProps> = ({
 
   return (
     <div 
-      className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-black/70 backdrop-blur-xs isolate"
+      className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-black/70 backdrop-blur-xs isolate animate-tab-fade"
       role="dialog"
       aria-modal="true"
       aria-labelledby="doctor-modal-title"
+      onClick={onClose}
     >
       <div 
         className="w-full max-w-lg rounded-2xl border overflow-hidden shadow-tactile-lg animate-in fade-in zoom-in-95 duration-200"
@@ -79,6 +95,7 @@ export const DoctorProfileModal: React.FC<DoctorProfileModalProps> = ({
           borderColor: darkMode ? 'rgba(255, 255, 255, 0.12)' : '#E3D7BD',
           boxShadow: darkMode ? '0 24px 50px -8px rgba(0,0,0,0.85), inset 0 1px 0 rgba(255,255,255,0.1)' : '0 20px 40px -8px rgba(20,32,50,0.18), inset 0 1px 0 rgba(255,255,255,0.95)'
         }}
+        onClick={(e) => e.stopPropagation()}
       >
         {/* Header */}
         <div 
@@ -135,6 +152,7 @@ export const DoctorProfileModal: React.FC<DoctorProfileModalProps> = ({
                 Nome Completo com Título *
               </label>
               <input
+                ref={nameInputRef}
                 id="doc-input-name"
                 type="text"
                 required

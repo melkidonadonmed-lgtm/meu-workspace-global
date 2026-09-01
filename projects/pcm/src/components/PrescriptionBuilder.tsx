@@ -1,4 +1,4 @@
-import React, { useState, useEffect, useMemo } from 'react';
+import React, { useState, useEffect, useMemo, useRef } from 'react';
 import {
   Plus,
   Trash2,
@@ -57,6 +57,8 @@ export const PrescriptionBuilder: React.FC<PrescriptionBuilderProps> = ({
   onNavigateToPediatricCalc,
   onOpenPatientModal
 }) => {
+  const searchInputRef = useRef<HTMLInputElement>(null);
+
   // Mobile active tab ('composer' | 'preview')
   const [mobileSection, setMobileSection] = useState<'composer' | 'preview'>('composer');
 
@@ -64,6 +66,36 @@ export const PrescriptionBuilder: React.FC<PrescriptionBuilderProps> = ({
   const [searchTerm, setSearchTerm] = useState('');
   const [activeCategory, setActiveCategory] = useState<string>('all');
   const [showSuggestions, setShowSuggestions] = useState(false);
+
+  // Atalho de Teclado Global: '/' ou 'Ctrl+K' / 'Cmd+K' para focar na busca rápida de fármacos
+  useEffect(() => {
+    const handleGlobalKeyDown = (e: KeyboardEvent) => {
+      const activeTag = (document.activeElement?.tagName || '').toLowerCase();
+      const isEditing = activeTag === 'input' || activeTag === 'textarea' || activeTag === 'select';
+
+      // Ctrl+K ou Cmd+K sempre foca na busca
+      if ((e.ctrlKey || e.metaKey) && e.key.toLowerCase() === 'k') {
+        e.preventDefault();
+        setMobileSection('composer');
+        searchInputRef.current?.focus();
+        searchInputRef.current?.select();
+        setShowSuggestions(true);
+        return;
+      }
+
+      // Tecla '/' foca na busca apenas quando o usuário não estiver editando outro input
+      if (e.key === '/' && !isEditing) {
+        e.preventDefault();
+        setMobileSection('composer');
+        searchInputRef.current?.focus();
+        searchInputRef.current?.select();
+        setShowSuggestions(true);
+      }
+    };
+
+    window.addEventListener('keydown', handleGlobalKeyDown);
+    return () => window.removeEventListener('keydown', handleGlobalKeyDown);
+  }, []);
 
   // Active form fields for adding/editing
   const [selectedMedName, setSelectedMedName] = useState('');
@@ -119,22 +151,6 @@ export const PrescriptionBuilder: React.FC<PrescriptionBuilderProps> = ({
   const patientWeight = patient?.weightKg && patient.weightKg > 0 ? patient.weightKg : 0;
   const hasWeight = patientWeight > 0;
   const patientName = patient?.name?.trim() || '';
-
-  // Quick frequent drugs chips for 1-click loading
-  const quickMedChips = [
-    { label: 'Dipirona 500mg', query: 'Dipirona Sódica 500mg comprimido' },
-    { label: 'Paracetamol 750mg', query: 'Paracetamol 750mg comprimido' },
-    { label: 'Ibuprofeno 600mg', query: 'Ibuprofeno 600mg comprimido' },
-    { label: 'Amoxicilina 500mg', query: 'Amoxicilina 500mg cápsulas' },
-    { label: 'Amox + Clav 875mg', query: 'Amoxicilina + Clavulanato 875' },
-    { label: 'Losartana 50mg', query: 'Losartana Potássica 50mg' },
-    { label: 'Omeprazol 20mg', query: 'Omeprazol 20mg' },
-    { label: 'Prednisolona 3mg/mL', query: 'Prednisolona 3mg/mL' },
-    { label: 'Azitromicina 500mg', query: 'Azitromicina 500mg' },
-    { label: 'Ondansetrona 4mg', query: 'Ondansetrona 4mg' },
-    { label: 'Metformina 850mg', query: 'Cloridrato de Metformina 850mg' },
-    { label: 'SRO Envelopes', query: 'Sais de Reidratação Oral' }
-  ];
 
   // Quick Posology text shortcuts
   const posologyShortcuts = [
@@ -340,16 +356,6 @@ export const PrescriptionBuilder: React.FC<PrescriptionBuilderProps> = ({
     setSelectedIsSpecial(Boolean(med.isSpecialControl));
     setSearchTerm('');
     setShowSuggestions(false);
-  };
-
-  // Select by quick pill
-  const handleSelectByQuery = (query: string) => {
-    const found = UNIFIED_MEDICATIONS.find(m => m.name.toLowerCase().includes(query.toLowerCase()));
-    if (found) {
-      handleSelectMedication(found);
-    } else {
-      setSelectedMedName(query);
-    }
   };
 
   // Add Item to Prescription
@@ -718,12 +724,18 @@ export const PrescriptionBuilder: React.FC<PrescriptionBuilderProps> = ({
 
             {/* Search Input with Instant Autocomplete */}
             <div className="relative">
-              <label htmlFor="med-search-input" className="flex items-center gap-1.5 text-xs font-bold text-slate-700 dark:text-slate-300 mb-1">
-                <span className="w-4 h-4 rounded-full bg-navy-800 dark:bg-cream-100 text-white dark:text-navy-950 text-[9px] font-black flex items-center justify-center shrink-0">1</span>
-                Buscar Fármaco, Princípio Ativo ou Nome Comercial
+              <label htmlFor="med-search-input" className="flex items-center justify-between text-xs font-bold text-slate-700 dark:text-slate-300 mb-1">
+                <span className="flex items-center gap-1.5">
+                  <span className="w-4 h-4 rounded-full bg-navy-800 dark:bg-cream-100 text-white dark:text-navy-950 text-[9px] font-black flex items-center justify-center shrink-0">1</span>
+                  Buscar Fármaco, Princípio Ativo ou Nome Comercial
+                </span>
+                <span className="text-[10px] font-semibold text-slate-400 hidden sm:inline-flex items-center gap-1">
+                  Atalho: <kbd className="px-1.5 py-0.5 rounded bg-slate-100 dark:bg-navy-800 border border-slate-300 dark:border-navy-700 font-mono text-[9px] text-slate-600 dark:text-slate-300">Ctrl+K</kbd> ou <kbd className="px-1.5 py-0.5 rounded bg-slate-100 dark:bg-navy-800 border border-slate-300 dark:border-navy-700 font-mono text-[9px] text-slate-600 dark:text-slate-300">/</kbd>
+                </span>
               </label>
               <div className="relative">
                 <input
+                  ref={searchInputRef}
                   id="med-search-input"
                   type="text"
                   value={searchTerm}
@@ -771,23 +783,6 @@ export const PrescriptionBuilder: React.FC<PrescriptionBuilderProps> = ({
                   ))}
                 </div>
               )}
-            </div>
-
-            {/* Quick Pills (1-Click Shortcuts) */}
-            <div className="flex flex-wrap items-center gap-1.5 pt-1">
-              <span className="text-[10px] font-extrabold uppercase tracking-wider text-slate-400 mr-1">
-                Atalhos Rápidos:
-              </span>
-              {quickMedChips.map((chip, idx) => (
-                <button
-                  key={idx}
-                  type="button"
-                  onClick={() => handleSelectByQuery(chip.query)}
-                  className="px-2.5 py-1 rounded-lg bg-slate-100 dark:bg-navy-800 hover:bg-sky-50 dark:hover:bg-sky-950/40 hover:border-sky-500/40 border border-slate-200 dark:border-navy-700 text-xs font-semibold text-slate-700 dark:text-slate-300 transition active:scale-95 cursor-pointer"
-                >
-                  {chip.label}
-                </button>
-              ))}
             </div>
 
             {/* Form de Edição e Adição Direta */}

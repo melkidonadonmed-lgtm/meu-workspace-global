@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect, useRef } from 'react';
 import { User, Check, X, Eraser } from 'lucide-react';
 import { Patient } from '../types';
 
@@ -17,6 +17,8 @@ export const PatientModal: React.FC<PatientModalProps> = ({
   onClearPatient,
   onClose
 }) => {
+  const nameInputRef = useRef<HTMLInputElement>(null);
+
   const [formData, setFormData] = useState<Patient>({
     id: patient?.id || 'pat-' + Date.now(),
     name: patient?.name || '',
@@ -31,6 +33,19 @@ export const PatientModal: React.FC<PatientModalProps> = ({
     allergies: patient?.allergies || [],
     notes: patient?.notes || ''
   });
+
+  // Acessibilidade WCAG 2.1: Foco inicial e listener da tecla Escape
+  useEffect(() => {
+    nameInputRef.current?.focus();
+    const handleKeyDown = (e: KeyboardEvent) => {
+      if (e.key === 'Escape') {
+        e.preventDefault();
+        onClose();
+      }
+    };
+    window.addEventListener('keydown', handleKeyDown);
+    return () => window.removeEventListener('keydown', handleKeyDown);
+  }, [onClose]);
 
   const handleClear = () => {
     const emptyPat: Patient = {
@@ -61,18 +76,20 @@ export const PatientModal: React.FC<PatientModalProps> = ({
 
   return (
     <div 
-      className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-black/60 backdrop-blur-xs isolate"
+      className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-black/60 backdrop-blur-xs isolate animate-tab-fade"
       role="dialog"
       aria-modal="true"
       aria-labelledby="patient-modal-title"
+      onClick={onClose}
     >
       <div 
-        className="w-full max-w-md rounded-2xl border overflow-hidden shadow-tactile-lg isolate"
+        className="w-full max-w-md rounded-2xl border overflow-hidden shadow-tactile-lg isolate transition-all"
         style={{
           backgroundColor: darkMode ? '#0E1420' : '#FFFFFF',
           borderColor: darkMode ? 'rgba(255,255,255,0.12)' : '#E3D7BD',
           boxShadow: darkMode ? '0 24px 50px -8px rgba(0,0,0,0.85), inset 0 1px 0 rgba(255,255,255,0.1)' : '0 20px 40px -8px rgba(20,32,50,0.18), inset 0 1px 0 rgba(255,255,255,0.95)'
         }}
+        onClick={(e) => e.stopPropagation()}
       >
         {/* Header */}
         <div 
@@ -107,6 +124,7 @@ export const PatientModal: React.FC<PatientModalProps> = ({
               Nome do Paciente ou Identificação
             </label>
             <input
+              ref={nameInputRef}
               id="patient-modal-name"
               type="text"
               autoComplete="name"

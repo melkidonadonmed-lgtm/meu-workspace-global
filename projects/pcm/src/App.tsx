@@ -478,6 +478,7 @@ export default function App() {
       {/* Mobile Bottom Navigation */}
       <MobileBottomNav
         activeTab={activeTab}
+        sidebarOpen={sidebarOpen}
         onSelectTab={(tab) => {
           if (tab === 'certificate') {
             setCertSubTab('certificate');
@@ -488,7 +489,6 @@ export default function App() {
         }}
         prescriptionCount={prescriptionItems.length}
         selectedExamsCount={selectedExams.length}
-        onOpenDoctorModal={() => setIsDoctorModalOpen(true)}
         onOpenMenu={() => setSidebarOpen(true)}
       />
 

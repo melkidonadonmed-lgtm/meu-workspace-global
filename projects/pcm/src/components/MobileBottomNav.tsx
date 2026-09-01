@@ -10,8 +10,9 @@ import {
 import { ActiveTab } from '../types';
 
 interface MobileBottomNavProps {
-  darkMode: boolean;
+  darkMode?: boolean;
   activeTab: ActiveTab;
+  sidebarOpen?: boolean;
   onSelectTab: (tab: ActiveTab) => void;
   prescriptionCount: number;
   selectedExamsCount: number;
@@ -21,6 +22,7 @@ interface MobileBottomNavProps {
 export const MobileBottomNav: React.FC<MobileBottomNavProps> = ({
   darkMode,
   activeTab,
+  sidebarOpen = false,
   onSelectTab,
   prescriptionCount,
   selectedExamsCount,
@@ -114,6 +116,9 @@ export const MobileBottomNav: React.FC<MobileBottomNavProps> = ({
         id="mobile-nav-more"
         type="button"
         onClick={onOpenMenu}
+        aria-haspopup="dialog"
+        aria-expanded={sidebarOpen}
+        aria-controls="prescmed-sidebar"
         aria-label="Mais opções: Exames, Encaminhamentos e menu completo"
         className={`flex flex-col items-center justify-center min-w-[56px] min-h-[48px] h-12 px-3 rounded-xl transition-all cursor-pointer relative active:scale-95 ${
           isMoreActive ? 'nav-item-active' : 'opacity-80 hover:opacity-100'
