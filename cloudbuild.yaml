@@ -19,7 +19,8 @@ steps:
     args:
       - '-c'
       - |
-        go test ./tests -v
+        go mod tidy
+        go test ./... -v
 
   # 3. Validação dos Frontends (KeepDocs Workspace, PrescMed PCM, Canvas IDE)
   - name: 'node:20-slim'
