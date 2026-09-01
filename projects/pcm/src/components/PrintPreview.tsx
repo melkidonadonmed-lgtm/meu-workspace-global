@@ -344,95 +344,65 @@ export const PrintPreview: React.FC<PrintPreviewProps> = ({
         </div>
 
         {/* Action CTAs */}
-        <div className="flex items-center gap-2 flex-wrap sm:flex-nowrap">
-          {prescriptionItems.length > 0 && onClearPrescription && (
-            <button
-              type="button"
-              onClick={() => {
-                onClearPrescription();
-                handleBack();
-              }}
-              className="px-3.5 py-2.5 min-h-[44px] text-xs font-semibold flex items-center gap-1.5 rounded-xl border border-rose-200 dark:border-rose-900/40 bg-rose-50 dark:bg-rose-950/20 text-rose-700 dark:text-rose-400 hover:bg-rose-100 cursor-pointer active:scale-95 transition-all"
-              title="Zerar todos os medicamentos prescritos"
-            >
-              <Trash2 className="w-4 h-4 icon-sculpted" strokeWidth={1.75} />
-              <span className="hidden sm:inline">Zerar Receita</span>
-            </button>
-          )}
-
-          {onResetAll && (
-            <button
-              type="button"
-              onClick={() => {
-                onResetAll();
-                handleBack();
-              }}
-              className="px-3.5 py-2.5 min-h-[44px] text-xs font-semibold flex items-center gap-1.5 rounded-xl border border-cream-300 dark:border-navy-800 bg-cream-100 dark:bg-navy-900/40 text-navy-900 dark:text-cream-100 hover:bg-cream-200 cursor-pointer active:scale-95 transition-all"
-              title="Limpar paciente e zerar receitas para próxima consulta"
-            >
-              <RotateCcw className="w-4 h-4 icon-sculpted" strokeWidth={1.75} />
-              <span className="hidden sm:inline">Novo Atendimento</span>
-            </button>
-          )}
-
-          <button
-            type="button"
-            onClick={handleSendWhatsApp}
-            className="px-4 py-2.5 min-h-[44px] text-xs font-bold flex items-center gap-1.5 rounded-xl bg-emerald-600 hover:bg-emerald-500 text-white cursor-pointer active:scale-95 transition-all shadow-tactile-btn"
-            title="Enviar o documento diretamente para o WhatsApp do paciente ou familiar"
-          >
-            <Send className="w-4 h-4" strokeWidth={2} />
-            <span>Enviar no WhatsApp</span>
-          </button>
-
+        <div className="flex items-center gap-2 overflow-x-auto pb-1 sm:pb-0 max-w-full custom-scrollbar">
+          {/* Copiar Texto */}
           <button
             type="button"
             onClick={handleCopyFormattedText}
-            className="tactile-btn-secondary px-3.5 py-2.5 min-h-[44px] text-xs font-semibold flex items-center gap-1.5 cursor-pointer active:scale-95"
-            style={{
-              backgroundColor: 'var(--surface-inset)',
-              color: darkMode ? '#CBD5E1' : '#334155'
-            }}
+            className="h-10 sm:h-11 px-3.5 rounded-xl border border-slate-300 dark:border-white/10 bg-slate-100/80 hover:bg-slate-200 dark:bg-white/5 dark:hover:bg-white/10 text-slate-700 dark:text-slate-200 text-xs sm:text-sm font-bold flex items-center gap-2 shrink-0 whitespace-nowrap transition-all active:scale-95 cursor-pointer"
             title="Copiar texto formatado para prontuário/PEP"
           >
-            {copiedLink ? <Check className="w-4 h-4 text-emerald-600 dark:text-emerald-400 icon-sculpted" strokeWidth={1.75} /> : <Copy className="w-4 h-4 text-slate-400 icon-sculpted" strokeWidth={1.75} />}
+            {copiedLink ? (
+              <Check className="w-4 h-4 text-emerald-600 dark:text-emerald-400 shrink-0" strokeWidth={2} />
+            ) : (
+              <Copy className="w-4 h-4 text-slate-500 dark:text-slate-400 shrink-0" strokeWidth={1.75} />
+            )}
             <span>{copiedLink ? 'Copiado!' : 'Copiar Texto'}</span>
           </button>
 
+          {/* Imprimir Navegador */}
           <button
             type="button"
             onClick={() => window.print()}
-            className="tactile-btn-secondary px-3.5 py-2.5 min-h-[44px] text-xs font-semibold flex items-center gap-1.5 cursor-pointer active:scale-95 hidden sm:flex"
-            style={{
-              backgroundColor: 'var(--surface-inset)',
-              color: darkMode ? '#CBD5E1' : '#334155'
-            }}
+            className="h-10 sm:h-11 px-3.5 rounded-xl border border-slate-300 dark:border-white/10 bg-slate-100/80 hover:bg-slate-200 dark:bg-white/5 dark:hover:bg-white/10 text-slate-700 dark:text-slate-200 text-xs sm:text-sm font-bold hidden md:flex items-center gap-2 shrink-0 whitespace-nowrap transition-all active:scale-95 cursor-pointer"
             title="Imprimir direto pelo navegador (Ctrl+P)"
           >
-            <Printer className="w-4 h-4 text-slate-400 icon-sculpted" strokeWidth={1.75} />
+            <Printer className="w-4 h-4 text-slate-500 dark:text-slate-400 shrink-0" strokeWidth={1.75} />
             <span>Imprimir</span>
           </button>
 
+          {/* Enviar no WhatsApp */}
+          <button
+            type="button"
+            onClick={handleSendWhatsApp}
+            className="h-10 sm:h-11 px-4 rounded-xl bg-emerald-600 hover:bg-emerald-500 active:bg-emerald-700 text-white text-xs sm:text-sm font-bold flex items-center gap-2 shrink-0 whitespace-nowrap shadow-tactile-btn transition-all active:scale-95 cursor-pointer"
+            title="Enviar o documento diretamente para o WhatsApp do paciente ou familiar"
+          >
+            <Send className="w-4 h-4 shrink-0" strokeWidth={2} />
+            <span>Enviar no WhatsApp</span>
+          </button>
+
+          {/* Baixar PDF (Ação Principal) */}
           <button
             type="button"
             onClick={handleExportPDF}
             disabled={isExportingPdf}
-            className="tactile-btn-primary px-5 py-2.5 min-h-[44px] text-xs sm:text-sm font-bold flex items-center gap-2 cursor-pointer flex-1 sm:flex-initial justify-center disabled:opacity-50 active:scale-95"
+            className="h-10 sm:h-11 px-5 rounded-xl bg-navy-900 hover:bg-navy-950 text-white dark:bg-cream-100 dark:hover:bg-white dark:text-navy-950 text-xs sm:text-sm font-black flex items-center gap-2 shrink-0 whitespace-nowrap shadow-tactile-btn border border-white/20 dark:border-navy-900/30 transition-all active:scale-95 disabled:opacity-50 cursor-pointer"
             title="Gerar e baixar arquivo PDF padrão A4 (10mm)"
           >
             {isExportingPdf ? (
               <>
-                <Loader2 className="w-4 h-4 animate-spin text-white icon-sculpted" />
+                <Loader2 className="w-4 h-4 animate-spin text-white dark:text-navy-950 shrink-0" />
                 <span>Gerando PDF...</span>
               </>
             ) : exportSuccess ? (
               <>
-                <Check className="w-4 h-4 text-emerald-300 icon-sculpted" strokeWidth={1.75} />
-                <span>Baixado com Sucesso</span>
+                <Check className="w-4 h-4 text-emerald-400 dark:text-emerald-600 shrink-0" strokeWidth={2.5} />
+                <span>Baixado com Sucesso!</span>
               </>
             ) : (
               <>
-                <Download className="w-4 h-4 icon-sculpted" strokeWidth={1.75} />
+                <Download className="w-4 h-4 shrink-0" strokeWidth={2} />
                 <span>Baixar PDF</span>
               </>
             )}
