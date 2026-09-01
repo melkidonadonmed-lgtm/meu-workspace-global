@@ -15,6 +15,8 @@ steps:
   - name: 'golang:1.24'
     id: 'go-tests'
     dir: 'projects/customer_issue_reviewer_go'
+    env:
+      - 'GOTOOLCHAIN=auto'
     entrypoint: 'bash'
     args:
       - '-c'
