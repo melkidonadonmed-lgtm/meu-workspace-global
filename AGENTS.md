@@ -12,7 +12,7 @@ Arquitetura completa em `docs/architecture.md`. Idioma do projeto: **Português 
   - `router.py`: `AutoSkillRouter` determinístico com classificação de complexidade e portão de segurança destrutivo.
   - `antigravity_bridge.py`: Ponte nativa com o Google Antigravity SDK.
   - `api_gateway.py`: API Gateway FastAPI com endpoints REST e SSE Streaming (`/chat`, `/chat/stream`, `/skills/health`, `/skills/create`).
-  - `specialized/`: Subagentes stateless (`security_guard`, `sql_specialist`, `workspace_specialist`).
+  - `specialized/`: Subagentes stateless (`security_guard`, `sql_specialist`, `workspace_specialist`, `html_modular_specialist`).
 - `skills/` — catálogo governado de habilidades consumido pelo `skill_parser.py` (progressive disclosure) e validado pelo `skill_healthcheck.py`, organizado em bundles:
   - `governanca/` (`resilience-circuit-breaker`, `skill-factory`, `skill-healthcheck`, `skill-context-sentinel-state`, `skill-requirements-analyzer`, `validacao-pre-entrega`, `aprimoramento-expansibilidade-agentes-skills`)
   - `auditoria/` (`code-validator`, `skill-repo-analyser`, `api-auditor`, `code-reviewer`)
@@ -20,7 +20,7 @@ Arquitetura completa em `docs/architecture.md`. Idioma do projeto: **Português 
   - `analytics/` (`workspace-data-analytics-architect`)
   - `arquitetura/` (`project-enhancer-brainstorm`, `arquitetura-design-implementacao-sistema`)
   - `engenharia/` (`mcp-troubleshooter-design-advisor`)
-  - `ui-engineering/` (`frontend-design`, `accessibility`, `tactile-hyperreal-ui-auditor`, `color-palette-and-depth-architect`, `minimal-ui-menu-icon-architect`, `responsive-html-ui-master`, `design-interface-medica-minimalista`)
+  - `ui-engineering/` (`frontend-design`, `accessibility`, `tactile-hyperreal-ui-auditor`, `color-palette-and-depth-architect`, `minimal-ui-menu-icon-architect`, `responsive-html-ui-master`, `design-interface-medica-minimalista`, `skill-html-modular-builder`)
   - Standalone: `skill-prompt-generator`, `check-updates`
 - `mcp_servers/` — servidor FastMCP unificado (stdio/SSE) e tools em `tools/` (BigQuery Analytics, Google Workspace, Calendar, Cloud Storage).
 - `shared/` — motores utilitários:

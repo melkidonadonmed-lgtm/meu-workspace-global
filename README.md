@@ -23,6 +23,7 @@ meu-workspace-global/
 │   ├── 📄 api_gateway.py             # Servidor de API (FastAPI / SSE Streaming)
 │   └── 📁 specialized/              # Subagentes Especialistas Stateless
 │       ├── 📄 __init__.py
+│       ├── 📄 html_modular_specialist.py # Especialista em páginas HTML5 e Atomic Design
 │       ├── 📄 sql_specialist.py      # Agente especialista em consultas e otimização SQL
 │       ├── 📄 workspace_specialist.py# Agente para manipulação de arquivos e sistema
 │       └── 📄 security_guard.py      # Guardrail Zero-Trust e validação de segurança/PII
@@ -34,7 +35,7 @@ meu-workspace-global/
 │   │   ├── 📄 SKILL.md               # Especificação do parent
 │   │   ├── 📁 deep-research/         # Sub-skill de pesquisa web multi-fonte
 │   │   └── 📁 notebooklm/            # Sub-skill de consulta a cadernos NotebookLM
-│   ├── 📁 ui-engineering/            # Bundle de interface (frontend-design, accessibility)
+│   ├── 📁 ui-engineering/            # Bundle de interface (frontend, a11y, html-modular-builder)
 │   ├── 📁 auditoria/                 # Bundle de auditoria (code-validator, skill-repo-analyser)
 │   └── 📁 skill-prompt-generator/    # Skill standalone
 │       └── 📄 SKILL.md

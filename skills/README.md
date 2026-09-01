@@ -12,7 +12,7 @@ Para evitar **poluição de contexto (*context bloat*)**, o orquestrador não ca
 | Parent | Sub-skills | Domínio |
 |---|---|---|
 | [`research`](research/SKILL.md) | [`deep-research`](research/deep-research/SKILL.md), [`notebooklm`](research/notebooklm/SKILL.md) | Pesquisa fundamentada com citações (web aberta + cadernos NotebookLM). |
-| [`ui-engineering`](ui-engineering/SKILL.md) | [`frontend-design`](ui-engineering/frontend-design/SKILL.md), [`accessibility`](ui-engineering/accessibility/SKILL.md) | Construção de interfaces: direção visual + acessibilidade. |
+| [`ui-engineering`](ui-engineering/SKILL.md) | [`frontend-design`](ui-engineering/frontend-design/SKILL.md), [`accessibility`](ui-engineering/accessibility/SKILL.md), [`skill-html-modular-builder`](ui-engineering/skill-html-modular-builder/SKILL.md) | Construção de interfaces: direção visual + acessibilidade + montagem HTML modular. |
 | [`auditoria`](auditoria/SKILL.md) | [`code-validator`](auditoria/code-validator/SKILL.md), [`skill-repo-analyser`](auditoria/skill-repo-analyser/SKILL.md) | Análise pré-mudança: risco de código + estrutura de repositório. |
 
 ## Habilidades Standalone
