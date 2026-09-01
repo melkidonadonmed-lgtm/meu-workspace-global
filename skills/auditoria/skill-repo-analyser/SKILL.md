@@ -1,5 +1,5 @@
 ---
-name: skill-repo-architecture-analyser
+name: skill-repo-analyser
 version: 2.0.0
 description: Analisador, Arquitetor e Reorganizador de Repositório Global. Realiza varredura profunda em pastas e caminhos soltos, mapeia dependências e redundâncias, detecta potenciais conflitos de código e gera um plano determinístico de montagem de um repositório global, modular e escalável.
 triggers:

@@ -1,0 +1,10 @@
+{
+  "entries": [
+    { "path": "skills" },
+    { "path": "skills/auditoria" },
+    { "path": "skills/research" },
+    { "path": "skills/ui-engineering" },
+    { "path": "skills/check-updates" },
+    { "path": "skills/skill-prompt-generator" }
+  ]
+}

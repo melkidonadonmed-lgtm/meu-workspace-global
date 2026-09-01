@@ -5,6 +5,7 @@ from pathlib import Path
 from typing import Any
 
 from shared.logger import get_logger
+from skills.skill_healthcheck import SkillHealthChecker
 
 logger = get_logger("SkillParser")
 
@@ -15,19 +16,16 @@ except ImportError:
 
 
 class SkillParser:
-    """Carregador e parser de habilidades modulares alinhado ao padrão Antigravity Customizations."""
+    """Carregador e parser de habilidades modulares com auditoria contínua de integridade."""
 
     def __init__(self, skills_dir: Path | None = None):
-        self.skills_dir = skills_dir or (Path(__file__).parent)
+        self.skills_dir = skills_dir or (Path(__file__).resolve().parent)
         self._skills_cache: dict[str, dict[str, Any]] = {}
+        self.health_checker = SkillHealthChecker(skills_dir=self.skills_dir)
         self.reload_skills()
 
     def reload_skills(self) -> None:
-        """Varre recursivamente o diretório de skills e mapeia os arquivos SKILL.md.
-
-        Suporta bundles de sub-skills (parent/filho): o parent é descoberto como
-        skill normal e suas filhas em subdiretórios aninhados também.
-        """
+        """Varre recursivamente o diretório de skills e mapeia os arquivos SKILL.md."""
         self._skills_cache.clear()
         if not self.skills_dir.exists():
             logger.warning(f"Diretório de skills não encontrado: {self.skills_dir}")
@@ -40,15 +38,26 @@ class SkillParser:
                 metadata, body = self._parse_frontmatter(content)
                 metadata["name"] = metadata.get("name", skill_name)
                 metadata["path"] = str(skill_path.resolve())
-                
+
                 self._skills_cache[skill_name] = {
                     "metadata": metadata,
                     "body": body,
                     "full_content": content,
                 }
-                logger.info(f"Habilidade carregada: {skill_name} (v{metadata.get('version', '1.0.0')})")
+                logger.debug(f"Habilidade carregada: {skill_name} (v{metadata.get('version', '1.0.0')})")
             except (OSError, ValueError) as e:
                 logger.error(f"Erro ao analisar skill {skill_path}: {e}")
+
+        # Auditoria de integridade contínua
+        report = self.health_checker.audit_catalog()
+        if report.get("is_healthy"):
+            logger.info(f"Catálogo de Skills carregado e validado ({len(self._skills_cache)} skills ativas).")
+        else:
+            logger.warning(f"Catálogo carregado com {report.get('total_issues')} alerta(s) de integridade.")
+
+    def audit_catalog(self) -> dict[str, Any]:
+        """Executa auditoria sob demanda."""
+        return self.health_checker.audit_catalog()
 
     @staticmethod
     def _parse_frontmatter(content: str) -> tuple[dict[str, Any], str]:
@@ -57,16 +66,15 @@ class SkillParser:
         match = frontmatter_pattern.match(content)
         if match:
             yaml_str = match.group(1)
-            body = content[match.end():]
-            
+            body = content[match.end() :]
+
             if yaml is not None:
                 try:
                     metadata = yaml.safe_load(yaml_str) or {}
                     return metadata, body
                 except yaml.YAMLError as e:
                     logger.debug(f"Frontmatter YAML inválido, usando fallback manual: {e}")
-            
-            # Fallback nativo simples para parsing de chave-valor e listas
+
             meta: dict[str, Any] = {}
             current_list_key = None
             for line in yaml_str.splitlines():
@@ -77,7 +85,7 @@ class SkillParser:
                     item_val = line_str[2:].strip().strip("\"'")
                     meta[current_list_key].append(item_val)
                     continue
-                
+
                 if ":" in line:
                     key, val = line.split(":", 1)
                     key = key.strip()
@@ -89,7 +97,7 @@ class SkillParser:
                         meta[key] = val
                         current_list_key = None
             return meta, body
-            
+
         return {}, content
 
     def list_available_skills(self) -> list[dict[str, Any]]:
@@ -123,22 +131,18 @@ class SkillParser:
             triggers = meta.get("triggers", [])
             name = str(meta.get("name", "")).lower()
 
-            # 1. Match exato de ID ou nome da skill
             if skill_id in query_lower or name in query_lower:
                 matched.append(skill_id)
                 continue
 
-            # 2. Match por frase do trigger
             if any(str(t).lower() in query_lower for t in triggers):
                 matched.append(skill_id)
                 continue
 
-            # 3. Match por interseção semântica de palavras-chave dos triggers/descrição
             all_trigger_words = set()
             for t in triggers:
                 all_trigger_words.update(re.findall(r"\w+", str(t).lower()))
-            
-            # Palavras relevantes ignorando stopwords curtas
+
             relevant_trigger_words = {w for w in all_trigger_words if len(w) > 3}
             if relevant_trigger_words and len(query_words.intersection(relevant_trigger_words)) >= 1:
                 matched.append(skill_id)
