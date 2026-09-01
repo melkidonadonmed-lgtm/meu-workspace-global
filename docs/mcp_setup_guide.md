@@ -71,3 +71,31 @@ Para ambientes de contêiner ou comunicação cliente-servidor web:
 .\run.ps1 mcp --transport sse
 ```
 O endpoint estará acessível em: `http://127.0.0.1:8080/sse`
+
+---
+
+## 5. Documentação oficial da OpenAI no Codex
+
+O workspace versiona a configuração do Docs MCP em `.codex/config.toml`:
+
+```toml
+[mcp_servers.openaiDeveloperDocs]
+url = "https://developers.openai.com/mcp"
+```
+
+O Codex carrega configurações de projeto apenas quando o repositório está marcado como confiável.
+Para confirmar que o servidor foi reconhecido, execute a partir da raiz:
+
+```powershell
+codex mcp list
+codex mcp get openaiDeveloperDocs
+```
+
+O servidor é público, somente leitura e não chama a API da OpenAI em nome do usuário. Ele fornece
+busca e leitura da documentação oficial. Uma sessão já aberta não recebe novas ferramentas
+retroativamente; depois de adicionar ou alterar a configuração, abra uma nova sessão do Codex.
+
+Referências oficiais:
+
+- [Docs MCP](https://learn.chatgpt.com/learn/docs-mcp)
+- [Configuração por projeto](https://learn.chatgpt.com/docs/config-file/config-basic)

@@ -13,9 +13,13 @@ Este repositório consolida a **arquitetura de repositório global ideal** para 
 
 ```text
 meu-workspace-global/
+├── 📁 .codex/                        # Configuração do Codex no escopo do projeto
+│   └── 📄 config.toml                # OpenAI Docs MCP oficial e somente leitura
+│
 ├── 📁 agents/                        # Hub Central de Agentes e Orquestração (Google Antigravity SDK)
 │   ├── 📄 __init__.py                # Módulo exportável
 │   ├── 📄 orchestrator.py            # Orquestrador Stateful (Gemini Interactions API + Memória)
+│   ├── 📄 antigravity_bridge.py      # Ponte oficial com o Google Antigravity SDK (Python)
 │   ├── 📄 api_gateway.py             # Servidor de API (FastAPI / SSE Streaming)
 │   └── 📁 specialized/              # Subagentes Especialistas Stateless
 │       ├── 📄 __init__.py
@@ -47,8 +51,18 @@ meu-workspace-global/
 │   ├── 📄 guardrails.yaml            # Regras de segurança, sanitização e OWASP LLM01
 │   └── 📄 .env.example               # Template de variáveis de ambiente do ecossistema
 │
-├── 📁 projects/                      # Aplicações Clientes e UIs Isoladas (Standalone)
-│   └── 📁 canvas_ide/                # Frontend (React + TypeScript + Tailwind)
+├── 📁 projects/                      # Aplicações Clientes e Módulos Standalone
+│   ├── 📁 canvas_ide/                # Frontend (React + TypeScript + Tailwind)
+│   │   ├── 📄 package.json           # Dependências Node.js isoladas
+│   │   └── 📄 README.md
+│   ├── 📁 customer_issue_reviewer_go/# Agente em Go com Google ADK v2 (Issue Reviewer & SRE Report)
+│   │   ├── 📄 go.mod                 # Módulo Go (google.golang.org/adk/v2)
+│   │   ├── 📄 main.go                # CLI Launcher e Web UI ADK
+│   │   └── 📁 pkg/                   # Modelos, Store simulado e Workflow pipeline
+│   ├── 📁 pcm/                       # PrescMed (Vite + React + TS + Tailwind + Gemini AI)
+│   │   ├── 📄 package.json           # Dependências Node.js isoladas
+│   │   └── 📄 README.md
+│   └── 📁 keepdocs-workspace/        # KeepDocs Workspace (Vite + React + TS + Tailwind)
 │       ├── 📄 package.json           # Dependências Node.js isoladas
 │       └── 📄 README.md
 │
@@ -123,6 +137,12 @@ O arquivo [`mcp_config.json`](file:///mcp_config.json) na raiz do repositório d
 - `list_workspace_documents` & `get_document_content`: Integração com arquivos e documentos corporativos.
 - `bigquery_execute_query` & `bigquery_get_schema`: Consultas e inspeção de dados em larga escala.
 - `get_system_health`: Diagnóstico de integridade do workspace.
+
+O Codex CLI e a extensão carregam o servidor remoto `openaiDeveloperDocs` a partir de
+[`.codex/config.toml`](.codex/config.toml) quando este projeto está marcado como confiável. O servidor
+é público, somente leitura e consulta apenas a documentação oficial da OpenAI; ele não executa
+chamadas da API em nome do usuário. Alterações na configuração passam a valer em uma nova sessão
+do Codex.
 
 ---
 

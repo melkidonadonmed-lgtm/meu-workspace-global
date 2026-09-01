@@ -45,6 +45,9 @@ flowchart TD
 ## 3. Guia dos Componentes
 
 - **`agents/orchestrator.py`**: Mantém o estado da sessão e gerencia a chamada à **Gemini Interactions API** (`gemini-3.7-flash`), permitindo conversações com histórico contextual e delegação paralela.
+- **`agents/antigravity_bridge.py`**: Implementação oficial do **Google Antigravity SDK** (`google-antigravity`), fornecendo `LocalAgentConfig`, `Agent`, e ferramentas nativas de inspeção do workspace.
 - **`skills/skill_parser.py`**: Mapeia arquivos `SKILL.md` nos subdiretórios de `/skills` e expõe apenas resumos no prompt base, carregando o conteúdo completo sob demanda.
 - **`mcp_servers/server.py`**: Instância FastMCP unificada que expõe ferramentas via `stdio` (para IDEs locais) ou `sse` na porta 8080 (para contêineres e nuvem).
 - **`configs/agents_manifest.yaml`**: Manifesto declarativo de permissões, orçamentos e limites operacionais dos modelos.
+- **`projects/customer_issue_reviewer_go/`**: Agente autônomo em Go implementado com **Google ADK v2 (`google.golang.org/adk/v2`)**, especializado em triagem de chamados e relatórios executivos de confiabilidade.
+- **`projects/canvas_ide/`**: Interface de visualização moderna em React + TypeScript + Tailwind.

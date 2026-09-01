@@ -13,7 +13,7 @@
 [CmdletBinding()]
 param (
     [Parameter(Position = 0)]
-    [ValidateSet("setup", "dev", "gateway", "mcp", "test", "lint", "clean", "help")]
+    [ValidateSet("setup", "dev", "gateway", "mcp", "antigravity", "agent-go", "pcm", "keepdocs", "test", "lint", "clean", "help")]
     [string]$Command = "help",
 
     [Parameter()]
@@ -52,7 +52,7 @@ $env:PYTHONPATH = (Get-Location).Path
 
 switch ($Command) {
     "setup" {
-        Write-Header "Instalando Dependências do Ecossistema (Python & Node.js)"
+        Write-Header "Instalando Dependências do Ecossistema (Python, Node.js & Go)"
         
         # Copia .env.example para .env se não existir
         if (-not (Test-Path ".env")) {
@@ -62,16 +62,43 @@ switch ($Command) {
 
         # Instalação do pacote Python em modo editável
         Write-Info "Instalando pacote Python em modo editável via pip..."
-        pip install -e ".[dev]"
+        python -m pip install -e ".[dev]"
         Write-Success "Dependências Python instaladas com sucesso!"
 
-        # Instalação do frontend se existir
+        # Configuração do agente Go
+        if (Test-Path "projects/customer_issue_reviewer_go/go.mod") {
+            Write-Info "Baixando dependências Go (google.golang.org/adk/v2)..."
+            Push-Location "projects/customer_issue_reviewer_go"
+            go mod tidy
+            Pop-Location
+            Write-Success "Módulo Go ADK v2 configurado!"
+        }
+
+        # Instalação do frontend Canvas IDE se existir
         if (Test-Path "projects/canvas_ide/package.json") {
             Write-Info "Instalando dependências Node.js do Canvas IDE..."
             Push-Location "projects/canvas_ide"
             npm install
             Pop-Location
             Write-Success "Frontend Canvas IDE configurado!"
+        }
+
+        # Instalação do app PCM (PrescMed) se existir
+        if (Test-Path "projects/pcm/package.json") {
+            Write-Info "Instalando dependências Node.js do PCM (PrescMed)..."
+            Push-Location "projects/pcm"
+            npm install
+            Pop-Location
+            Write-Success "Frontend PCM (PrescMed) configurado!"
+        }
+
+        # Instalação do app KeepDocs Workspace se existir
+        if (Test-Path "projects/keepdocs-workspace/package.json") {
+            Write-Info "Instalando dependências Node.js do KeepDocs Workspace..."
+            Push-Location "projects/keepdocs-workspace"
+            npm install
+            Pop-Location
+            Write-Success "KeepDocs Workspace configurado!"
         }
     }
 
@@ -102,16 +129,50 @@ switch ($Command) {
         }
     }
 
+    "antigravity" {
+        Write-Header "Executando Google Antigravity Agent (Python SDK)"
+        python -c "import asyncio; from agents.antigravity_bridge import AntigravityAgentBridge; bridge = AntigravityAgentBridge(); res = asyncio.run(bridge.chat('Status operacional e listagem do workspace')); print(res['response'])"
+    }
+
+    "agent-go" {
+        Write-Header "Executando Customer Issue Reviewer Agent (Google ADK Go v2)"
+        Push-Location "projects/customer_issue_reviewer_go"
+        go run main.go
+        Pop-Location
+    }
+
+    "pcm" {
+        Write-Header "Iniciando PrescMed PCM (Vite Dev Server)"
+        Push-Location "projects/pcm"
+        npm run dev -- --open
+        Pop-Location
+    }
+
+    "keepdocs" {
+        Write-Header "Iniciando KeepDocs Workspace (Vite Dev Server)"
+        Push-Location "projects/keepdocs-workspace"
+        npm run dev -- --open
+        Pop-Location
+    }
+
     "test" {
-        Write-Header "Executando Suíte de Testes Automatizados (pytest)"
-        pytest tests -v --tb=short
-        Write-Success "Suíte de testes finalizada com sucesso!"
+        Write-Header "Executando Suíte Completa de Testes (Pytest + Go)"
+        Write-Info "Rodando testes Python com pytest..."
+        python -m pytest tests -v --tb=short
+        
+        if (Test-Path "projects/customer_issue_reviewer_go/go.mod") {
+            Write-Info "Rodando testes Go ADK v2..."
+            Push-Location "projects/customer_issue_reviewer_go"
+            go test ./... -v
+            Pop-Location
+        }
+        Write-Success "Todas as suítes de testes foram concluídas com sucesso!"
     }
 
     "lint" {
         Write-Header "Executando Validações de Qualidade de Código"
         Write-Info "Verificando com Ruff..."
-        ruff check .
+        python -m ruff check .
         Write-Success "Verificação concluída sem erros!"
     }
 
@@ -124,12 +185,16 @@ switch ($Command) {
     Default {
         Write-Header "Ajuda e Comandos Disponíveis - run.ps1"
         Write-Host "Comandos:" -ForegroundColor Yellow
-        Write-Host "  .\run.ps1 setup       - Instala dependências Python e Node.js em modo editável"
+        Write-Host "  .\run.ps1 setup       - Instala dependências Python, Node.js e Go"
         Write-Host "  .\run.ps1 dev         - Executa API Gateway e Servidor FastMCP em paralelo"
         Write-Host "  .\run.ps1 gateway     - Executa somente o API Gateway FastAPI (porta 8000)"
         Write-Host "  .\run.ps1 mcp         - Executa o Servidor FastMCP (padrão: stdio)"
         Write-Host "  .\run.ps1 mcp -Transport sse - Executa Servidor FastMCP via SSE na porta 8080"
-        Write-Host "  .\run.ps1 test        - Roda os testes unitários e de integração com pytest"
+        Write-Host "  .\run.ps1 antigravity - Executa o agente do Google Antigravity SDK"
+        Write-Host "  .\run.ps1 agent-go    - Executa o agente de chamados em Go (ADK v2)"
+        Write-Host "  .\run.ps1 pcm         - Executa o frontend PrescMed PCM (Vite dev)"
+        Write-Host "  .\run.ps1 keepdocs    - Executa o frontend KeepDocs Workspace (Vite dev)"
+        Write-Host "  .\run.ps1 test        - Roda a suíte completa de testes (Python + Go)"
         Write-Host "  .\run.ps1 lint        - Valida formatação e qualidade com Ruff"
         Write-Host "  .\run.ps1 clean       - Remove caches e temporários Python`n"
     }
