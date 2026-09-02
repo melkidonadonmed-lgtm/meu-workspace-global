@@ -87,6 +87,9 @@ class SkillHealthChecker:
         if current_key and multiline:
             data[current_key] = " ".join(multiline).strip()
 
+        if not isinstance(data, dict):
+            return None, "Frontmatter YAML não produziu um dicionário válido."
+
         return data, None
 
     def audit_catalog(self, redundancy_threshold: float = 0.5) -> dict[str, Any]:

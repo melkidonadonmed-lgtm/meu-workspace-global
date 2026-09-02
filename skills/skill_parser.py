@@ -71,18 +71,22 @@ class SkillParser:
             if yaml is not None:
                 try:
                     metadata = yaml.safe_load(yaml_str) or {}
+                    if not isinstance(metadata, dict):
+                        raise ValueError("Frontmatter YAML deve produzir um dicionário de metadados.")
                     return metadata, body
-                except yaml.YAMLError as e:
+                except (yaml.YAMLError, ValueError) as e:
                     logger.debug(f"Frontmatter YAML inválido, usando fallback manual: {e}")
 
             meta: dict[str, Any] = {}
-            current_list_key = None
+            current_list_key: str | None = None
             for line in yaml_str.splitlines():
                 line_str = line.strip()
                 if not line_str or line_str.startswith("#"):
                     continue
                 if line_str.startswith("- ") and current_list_key:
                     item_val = line_str[2:].strip().strip("\"'")
+                    if not isinstance(meta.get(current_list_key), list):
+                        meta[current_list_key] = []
                     meta[current_list_key].append(item_val)
                     continue
 
@@ -120,15 +124,20 @@ class SkillParser:
             return skill["full_content"]
         return None
 
-    def match_skills_by_query(self, query: str) -> list[str]:
+    def match_skills_by_query(self, query: str | None) -> list[str]:
         """Identifica habilidades relevantes para a mensagem do usuário com base em palavras-chave e triggers."""
+        if query is None:
+            return []
+
         matched = []
-        query_lower = query.lower()
+        query_lower = str(query).lower()
         query_words = set(re.findall(r"\w+", query_lower))
 
         for skill_id, data in self._skills_cache.items():
             meta = data["metadata"]
             triggers = meta.get("triggers", [])
+            if not isinstance(triggers, list):
+                triggers = [triggers] if triggers else []
             name = str(meta.get("name", "")).lower()
 
             if skill_id in query_lower or name in query_lower:

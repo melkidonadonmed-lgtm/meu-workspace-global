@@ -61,9 +61,18 @@ class SkillFactory:
         if len(desc_clean) < 20:
             raise ValueError("A descrição deve conter no mínimo 20 caracteres detalhando objetivo e gatilhos.")
 
-        # 3. Monta o diretório de destino
-        bundle_dir = self.skills_dir / category
-        target_dir = bundle_dir / name_clean if category != "." else self.skills_dir / name_clean
+        # 3. Validação da categoria para prevenir traversal de path
+        category_clean = (category or "custom").strip()
+        if category_clean == ".":
+            bundle_dir = self.skills_dir
+        else:
+            if not re.fullmatch(r"[a-z0-9]+(?:-[a-z0-9]+)*(?:/[a-z0-9]+(?:-[a-z0-9]+)*)*", category_clean):
+                raise ValueError(
+                    "A categoria da skill deve usar apenas minúsculas, hífens e separadores de pasta seguros."
+                )
+            bundle_dir = self.skills_dir / category_clean
+
+        target_dir = bundle_dir / name_clean if category_clean != "." else self.skills_dir / name_clean
         target_dir.mkdir(parents=True, exist_ok=True)
         skill_file = target_dir / "SKILL.md"
 

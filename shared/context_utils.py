@@ -34,11 +34,17 @@ class TokenBudgetManager:
 
 def truncate_context(text: str, max_chars: int = 12000, suffix: str = "\n...[CONTEÚDO TRUNCADO PARA PREVENÇÃO DE CONTEXT BLOAT]...") -> str:
     """Trunca textos extensos mantendo as partes mais relevantes (início e fim)."""
+    if not text:
+        return text
+    if max_chars <= 0:
+        return ""
     if len(text) <= max_chars:
         return text
-    
-    half = (max_chars - len(suffix)) // 2
-    return text[:half] + suffix + text[-half:]
+
+    safe_suffix = suffix if len(suffix) < max_chars else suffix[: max_chars // 2]
+    safe_max = max(1, max_chars - len(safe_suffix))
+    half = safe_max // 2
+    return text[:half] + safe_suffix + text[-half:]
 
 
 def extract_skills_summary(skills_metadata: list[dict[str, Any]]) -> str:
