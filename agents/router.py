@@ -84,9 +84,11 @@ ROUTING_MATRIX: list[tuple[str, str, tuple[str, ...]]] = [
 ]
 
 
-def normalize_text(text: str) -> str:
+def normalize_text(text: str | None) -> str:
     """Normaliza texto para minúsculas e sem acentos."""
-    text = text.lower()
+    if text is None:
+        return ""
+    text = str(text).lower()
     return "".join(
         c for c in unicodedata.normalize("NFD", text) if unicodedata.category(c) != "Mn"
     )
@@ -119,9 +121,9 @@ class AutoSkillRouter:
             return "SIMPLES"
         return "INTERMEDIARIO"
 
-    def route(self, user_input: str) -> dict[str, Any]:
+    def route(self, user_input: str | None) -> dict[str, Any]:
         """Calcula o roteamento da entrada."""
-        raw = user_input.strip()
+        raw = (user_input or "").strip()
         entry = normalize_text(raw)
 
         trigger_source = "FRASE_CHAVE" if any(t in entry for t in TRIGGERS) else "AUTOMATICO"

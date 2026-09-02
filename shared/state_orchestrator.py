@@ -89,17 +89,26 @@ class StateOrchestrator:
                     (session_id,),
                 )
                 rows = cursor.fetchall()
-                return [
-                    {
-                        "step_index": r[0],
-                        "agent_name": r[1],
-                        "role": r[2],
-                        "content": r[3],
-                        "metadata": json.loads(r[4] or "{}"),
-                        "created_at": r[5],
-                    }
-                    for r in rows
-                ]
+                history: list[dict[str, Any]] = []
+                for r in rows:
+                    metadata_raw = r[4] or "{}"
+                    try:
+                        metadata = json.loads(metadata_raw)
+                    except json.JSONDecodeError:
+                        metadata = {}
+                    if not isinstance(metadata, dict):
+                        metadata = {}
+                    history.append(
+                        {
+                            "step_index": r[0],
+                            "agent_name": r[1],
+                            "role": r[2],
+                            "content": r[3],
+                            "metadata": metadata,
+                            "created_at": r[5],
+                        }
+                    )
+                return history
         except Exception as e:  # noqa: BLE001 - fallback seguro
             logger.warning(f"Falha ao carregar checkpoints da sessão {session_id}: {e}")
             return []
