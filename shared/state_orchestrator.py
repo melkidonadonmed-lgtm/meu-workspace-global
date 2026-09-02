@@ -1,6 +1,7 @@
 """Persistência Transacional e Checkpointing de Sessões via SQLite WAL."""
 
 import json
+import os
 import sqlite3
 from pathlib import Path
 from typing import Any
@@ -14,12 +15,13 @@ class StateOrchestrator:
     """Gerenciador de estado persistente com modo WAL para rastreabilidade de agentes."""
 
     def __init__(self, db_path: Path | str | None = None):
-        if db_path is None:
+        configured_db_path = db_path or os.getenv("BRAIN_STATE_DB_PATH")
+        if configured_db_path is None:
             state_dir = Path(__file__).resolve().parent / "state"
             state_dir.mkdir(parents=True, exist_ok=True)
             self.db_path = state_dir / "sessions.db"
         else:
-            self.db_path = Path(db_path)
+            self.db_path = Path(configured_db_path)
             self.db_path.parent.mkdir(parents=True, exist_ok=True)
 
         self._init_db()
@@ -60,8 +62,8 @@ class StateOrchestrator:
         role: str,
         content: str,
         metadata: dict[str, Any] | None = None,
-    ) -> None:
-        """Salva um checkpoint incremental append-only na sessão."""
+    ) -> bool:
+        """Salva um checkpoint incremental append-only na sessão. Retorna True se persistido com sucesso."""
         meta_str = json.dumps(metadata or {}, ensure_ascii=False)
         try:
             with self._get_connection() as conn:
@@ -72,8 +74,10 @@ class StateOrchestrator:
                     """,
                     (session_id, step_index, agent_name, role, content, meta_str),
                 )
+            return True
         except Exception as e:  # noqa: BLE001 - erro de persistência não deve travar o pipeline
             logger.warning(f"Falha ao persistir checkpoint SQLite para sessão {session_id}: {e}")
+            return False
 
     def load_session_history(self, session_id: str) -> list[dict[str, Any]]:
         """Recupera todo o histórico ordenado de mensagens de uma sessão persistida."""

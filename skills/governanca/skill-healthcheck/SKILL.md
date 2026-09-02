@@ -18,6 +18,7 @@ Auditor de conformidade para prevenir degradação, links quebrados e redundânc
 - Validação automática de 100% dos arquivos `SKILL.md` sob o diretório `skills/`.
 - Verificação de consistência entre o nome da pasta e o atributo `name` do frontmatter YAML.
 - Cálculo de similaridade semântica Jaccard para alertar sobre sobreposição indevida de escopo.
+- Hubs (`has-sub-skill: true`) e skills vendorizadas de terceiros (rastreadas em `skills-lock.json`) são isentas da cobrança da seção de restrições ("O que NÃO Fazer" / "Negative Bounds" / "What NOT to Do"), pois seguem convenções de origem próprias.
 
 ## 2. Fluxo Operacional
 1. Varrer recursivamente todos os arquivos `SKILL.md`.

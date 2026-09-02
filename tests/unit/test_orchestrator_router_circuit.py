@@ -38,6 +38,21 @@ def test_router_skill_matching():
     assert res["execution_mode"] == "SINGLE_SKILL"
 
 
+def test_router_target_type_distinguishes_agent_from_skill():
+    """Garante que o router sinaliza quando o alvo é um subagente Python, não uma skill do catálogo."""
+    router = AutoSkillRouter()
+
+    agent_res = router.route("preciso de uma query sql no bigquery")
+    assert agent_res["target_skill"] == "sql_specialist"
+    assert agent_res["target_type"] == "agent"
+
+    skill_res = router.route("Preciso de uma análise de risco no código linha a linha")
+    assert skill_res["target_type"] == "skill"
+
+    trivial_res = router.route("bom dia")
+    assert trivial_res["target_type"] == "none"
+
+
 def test_circuit_breaker_normal_and_trip():
     """Garante o funcionamento normal e desarme por deadlock do Circuit Breaker."""
     policy = CircuitPolicy(max_identical_consecutive_states=3)
@@ -76,6 +91,16 @@ def test_skill_healthchecker_audit():
     assert report["is_healthy"] is True
     assert report["total_issues"] == 0
     assert report["total_skills"] >= 10
+
+
+def test_skill_healthchecker_exempts_hubs_and_vendored_skills():
+    """Garante que hubs (has-sub-skill) e skills vendorizadas (skills-lock.json) não gerem falso-positivo."""
+    checker = SkillHealthChecker()
+    report = checker.audit_catalog()
+    warnings = report["missing_sections_warnings"]
+    assert not any("auditoria/SKILL.md" == w.split(":")[0] for w in warnings)
+    assert not any(w.startswith("tdd/SKILL.md") for w in warnings)
+    assert report["missing_sections_warnings"] == []
 
 
 def test_skill_factory_validation(tmp_path):

@@ -100,3 +100,34 @@ class SkillFactory:
             "category": category,
             "message": f"Skill '{name_clean}' registrada com sucesso no catálogo.",
         }
+
+    def generate_skill(
+        self,
+        name: str,
+        bundle: str,
+        description: str,
+        triggers: list[str] | None = None,
+        when_to_use: str = "",
+        when_not_to_use: str = "",
+        rules: list[str] | None = None,
+    ) -> dict[str, Any]:
+        """Gera uma skill a partir de um gap operacional detectado (ex: ResearchEvolutionSpecialistAgent).
+
+        Wrapper de `create_skill` com um vocabulário mais rico (quando usar / quando não usar / regras),
+        útil para geração autônoma de rascunhos de SKILL.md a partir de pesquisa técnica.
+        """
+        principles = when_to_use.strip() or "- Aplicar a habilidade apenas dentro do escopo técnico pesquisado."
+        if when_not_to_use.strip():
+            principles += f"\n- **Quando NÃO usar:** {when_not_to_use.strip()}"
+
+        rules_list = rules or ["Validar entradas e saídas antes de qualquer execução."]
+        negative_bounds = "\n".join(f"- {r}" for r in rules_list)
+        negative_bounds += "\n- NUNCA tratar este rascunho gerado automaticamente como definitivo sem revisão humana."
+
+        return self.create_skill(
+            name=name,
+            description=description,
+            category=bundle,
+            triggers=triggers,
+            negative_bounds=negative_bounds,
+        )

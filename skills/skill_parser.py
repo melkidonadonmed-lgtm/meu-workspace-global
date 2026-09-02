@@ -5,7 +5,7 @@ from pathlib import Path
 from typing import Any
 
 from shared.logger import get_logger
-from skills.skill_healthcheck import SkillHealthChecker
+from skills.skill_healthcheck import STOPWORDS, SkillHealthChecker
 
 logger = get_logger("SkillParser")
 
@@ -125,16 +125,23 @@ class SkillParser:
         return None
 
     def match_skills_by_query(self, query: str | None) -> list[str]:
-        """Identifica habilidades relevantes para a mensagem do usuário com base em palavras-chave e triggers."""
+        """Identifica habilidades relevantes para a mensagem do usuário com base em palavras-chave e triggers.
+
+        Hubs de bundle (frontmatter `has-sub-skill: true`) são ignorados aqui: são índices de
+        navegação sobre sub-skills, não habilidades individualmente injetáveis, e casá-los por
+        palavra solta (ex: "arquitetura", "ui-engineering") polui `matched_skills` com falso-positivo.
+        """
         if query is None:
             return []
-
         matched = []
         query_lower = str(query).lower()
         query_words = set(re.findall(r"\w+", query_lower))
 
         for skill_id, data in self._skills_cache.items():
             meta = data["metadata"]
+            if str(meta.get("has-sub-skill", "")).strip().lower() in ("true", "yes", "1"):
+                continue
+
             triggers = meta.get("triggers", [])
             if not isinstance(triggers, list):
                 triggers = [triggers] if triggers else []
@@ -152,8 +159,8 @@ class SkillParser:
             for t in triggers:
                 all_trigger_words.update(re.findall(r"\w+", str(t).lower()))
 
-            relevant_trigger_words = {w for w in all_trigger_words if len(w) > 3}
-            if relevant_trigger_words and len(query_words.intersection(relevant_trigger_words)) >= 1:
+            relevant_trigger_words = {w for w in all_trigger_words if len(w) > 3 and w not in STOPWORDS}
+            if relevant_trigger_words and len(query_words.intersection(relevant_trigger_words)) >= 2:
                 matched.append(skill_id)
                 continue
 

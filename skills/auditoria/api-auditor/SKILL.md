@@ -23,3 +23,9 @@ active, you MUST:
     failures in plain English.
 3.  **Secure**: Remind the user if they are testing a sensitive endpoint without
     an `https://` protocol.
+
+## What NOT to Do
+
+- NEVER send destructive requests (DELETE/PUT with mutating payloads) to a production endpoint without explicit user confirmation.
+- NEVER hardcode or echo back API keys/tokens found in headers or responses.
+- NEVER assume an endpoint is safe to test just because it responded with `200`.

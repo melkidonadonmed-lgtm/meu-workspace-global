@@ -49,4 +49,5 @@ target-version = "py311"
 extend-exclude = [
     "skills/research/notebooklm",
     "inbox",
+    ".agents",
 ]

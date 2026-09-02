@@ -17,6 +17,12 @@ Trigger examples:
 
 Do not skip this skill just because accessibility is not named in the prompt.
 
+## What NOT to Do
+
+- NEVER ship a new interactive UI surface without an Accessibility Help Dialog, and an Accessible View when it displays non-trivial visual content.
+- NEVER skip updating an existing feature's help dialog when new commands or interactions are added to it.
+- NEVER rely on visual-only cues (color, icon shape) without an equivalent ARIA/keyboard/announcement path for screen reader users.
+
 When adding a **new interactive UI surface** to VS Code — a panel, view, widget, editor overlay, dialog, or any rich focusable component the user interacts with — you **must** provide three accessibility components (if they do not already exist for the feature):
 
 1. **An Accessibility Help Dialog** — opened via the accessibility help keybinding when the feature has focus.

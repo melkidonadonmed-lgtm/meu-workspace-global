@@ -49,3 +49,21 @@ def test_gateway_antigravity_chat_endpoint():
     assert data["status"] == "success"
     assert "response" in data
     assert "workspace_root" in data
+
+
+def test_gateway_html_build_endpoint():
+    """Valida o endpoint /agents/html/build com uma requisição estruturada mínima."""
+    payload = {
+        "page_title": "Página de Teste",
+        "page_type": "landing_page",
+        "styling_framework": "tailwind",
+        "components": [
+            {"name": "HeaderNav", "type": "organism", "description": "Cabeçalho de navegação principal"}
+        ],
+    }
+    response = client.post("/agents/html/build", json=payload)
+    assert response.status_code == 200
+    data = response.json()
+    assert data["page_title"] == "Página de Teste"
+    assert len(data["assembled_components"]) == 1
+    assert "full_html_document" in data

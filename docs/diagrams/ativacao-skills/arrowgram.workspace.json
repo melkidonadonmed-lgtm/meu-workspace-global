@@ -1,0 +1,12 @@
+{
+  "version": 1,
+  "activeProjectId": "diagram-main",
+  "projects": [
+    {
+      "id": "diagram-main",
+      "type": "diagram",
+      "title": "Untitled Diagram",
+      "source": "diagram.json"
+    }
+  ]
+}

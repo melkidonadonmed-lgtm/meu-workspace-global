@@ -8,6 +8,12 @@ license: Complete terms in LICENSE.txt
 
 Approach this as the design lead at a small studio known for giving every client a visual identity that could not be mistaken for anyone else's. This client has already rejected proposals that felt templated, and is paying for a distinctive point of view: make deliberate, opinionated choices about palette, typography, and layout that are specific to this brief, and take one real aesthetic risk you can justify.
 
+## What NOT to Do
+
+- NEVER default to the three generic AI-design looks (warm cream + serif + terracotta; near-black + single acid accent; broadsheet hairline-rule layout) unless the brief explicitly calls for one of them.
+- NEVER use numbered markers (01/02/03) or templated hero patterns (big number + label + gradient) just because they are common — only when the content is genuinely sequential.
+- NEVER skip the brainstorm/critique pass before writing code; ship the plan review before implementation.
+
 ## Ground it in the subject
 
 If the brief does not pin down what the product or subject is, pin it yourself before designing: name one concrete subject, its audience, and the page's single job, and state your choice. If there's any information in your memory about the human's preferences, context about what they're building, or designs you've made before – use that as a hint. The subject's own world, its materials, instruments, artifacts, and vernacular, is where distinctive choices come from. Build with the brief's real content and subject matter throughout.

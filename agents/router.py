@@ -63,6 +63,7 @@ ROUTING_MATRIX: list[tuple[str, str, tuple[str, ...]]] = [
     ("skill-healthcheck", "governanca", ("saude do catalogo", "healthcheck", "auditar skills", "redundancia")),
     ("skill-factory", "governanca", ("criar skill", "nova skill", "padronizar skill", "fabricar skill")),
     ("resilience-circuit-breaker", "governanca", ("disjuntor", "circuit breaker", "loop", "deadlock")),
+    ("skill-context-expander-guard", "governanca", ("organize meu pedido", "estruture este contexto", "melhore meu comando", "expanda esta ideia")),
     # Pesquisa & Conhecimento
     ("deep-research", "pesquisa", ("pesquisa profunda", "web search", "multi-fonte", "relatorio aprofundado")),
     ("notebooklm", "pesquisa", ("notebooklm", "caderno", "audio overview", "consultar notas")),
@@ -82,6 +83,10 @@ ROUTING_MATRIX: list[tuple[str, str, tuple[str, ...]]] = [
     ("workspace_specialist", "arquitetura", ("pastas", "diretorio", "arquivos locais", "scan")),
     ("html_modular_specialist", "ui", ("especialista html", "gerador html", "montador de componentes")),
 ]
+
+# Alvos que identificam um subagente Python (agents/specialized/*), não um SKILL.md do catálogo.
+# Usado para o orquestrador não injetar o nome do agente como se fosse conteúdo de skill.
+AGENT_TARGETS = {"sql_specialist", "workspace_specialist", "html_modular_specialist", "research_evolution_specialist"}
 
 
 def normalize_text(text: str | None) -> str:
@@ -135,6 +140,7 @@ class AutoSkillRouter:
                 "detected_intent": raw,
                 "complexity": "COMPLEXO",
                 "target_skill": "accidental-data-loss-prevention",
+                "target_type": "skill",
                 "execution_mode": "HITL_BLOCK",
                 "is_destructive": True,
                 "next_action": "BLOQUEAR e solicitar confirmação explícita antes de qualquer mutação destrutiva.",
@@ -148,6 +154,7 @@ class AutoSkillRouter:
                 "detected_intent": raw,
                 "complexity": "SIMPLES",
                 "target_skill": None,
+                "target_type": "none",
                 "execution_mode": "DIRECT_RESPONSE",
                 "is_destructive": False,
                 "next_action": "Resposta direta conversacional sem injeção pesada de skills.",
@@ -163,6 +170,7 @@ class AutoSkillRouter:
                 "detected_intent": raw,
                 "complexity": complexity,
                 "target_skill": None,
+                "target_type": "none",
                 "execution_mode": "DIRECT_RESPONSE",
                 "is_destructive": False,
                 "next_action": "Resposta direta com apoio das diretrizes gerais.",
@@ -180,11 +188,14 @@ class AutoSkillRouter:
             {"skill": s, "domain": d, "matched_keywords": kw} for s, d, kw in scored[:4]
         ]
 
+        target_type = "meta" if target == "orchestrator" else ("agent" if target in AGENT_TARGETS else "skill")
+
         return {
             "trigger_source": trigger_source,
             "detected_intent": raw,
             "complexity": complexity,
             "target_skill": target,
+            "target_type": target_type,
             "execution_mode": mode,
             "is_destructive": False,
             "next_action": f"Execução via modo {mode} com foco em {target}.",

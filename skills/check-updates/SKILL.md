@@ -32,6 +32,12 @@ as an **automatic invocation**.
 Always continue with the caller's original task after an automatic invocation,
 including when the check is skipped or fails.
 
+## What NOT to Do
+
+- NEVER perform an automatic update or write to files — this skill only reports.
+- NEVER re-run the network lookup more than once per 7 days per installation identity outside an explicit invocation.
+- NEVER block or fail the caller's original task if the check itself fails or is skipped.
+
 ## Procedure
 
 ### Step 1: Resolve the Installation Context

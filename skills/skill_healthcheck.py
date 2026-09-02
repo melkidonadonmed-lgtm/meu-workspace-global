@@ -1,5 +1,6 @@
 """Motor de Auditoria Contínua e Integridade do Catálogo de Skills (SkillHealthChecker)."""
 
+import json
 import re
 import unicodedata
 from pathlib import Path
@@ -55,6 +56,24 @@ class SkillHealthChecker:
 
     def __init__(self, skills_dir: Path | None = None):
         self.skills_dir = skills_dir or (Path(__file__).resolve().parent)
+        self.vendored_skill_ids = self._load_vendored_skill_ids()
+
+    def _load_vendored_skill_ids(self) -> set[str]:
+        """Carrega os ids de skills vendorizadas de terceiros via skills-lock.json.
+
+        Essas skills seguem convenções de repositórios externos (ex: mattpocock/skills,
+        google/skills) e não devem ser cobradas pelo template interno de governança
+        (ex: seção 'O que NÃO Fazer').
+        """
+        lock_path = self.skills_dir.parent / "skills-lock.json"
+        if not lock_path.exists():
+            return set()
+        try:
+            data = json.loads(lock_path.read_text(encoding="utf-8"))
+            return set(data.get("skills", {}).keys())
+        except (OSError, json.JSONDecodeError) as e:
+            logger.warning(f"Falha ao ler skills-lock.json para exceção de governança: {e}")
+            return set()
 
     def parse_frontmatter(self, content: str) -> tuple[dict[str, str] | None, str | None]:
         """Extrai o frontmatter YAML."""
@@ -136,8 +155,21 @@ class SkillHealthChecker:
             if not desc or len(desc) < 20:
                 syntax_failures.append(f"{rel_path}: 'description' ausente ou curta (<20 chars).")
 
-            # Verifica seções recomendadas
-            if not any(s in content for s in ["O que NÃO Fazer", "O que NÃO fazer", "Restrições", "Negative Bounds"]):
+            # Hubs (bundles com sub-skills) e skills vendorizadas de terceiros seguem
+            # convenções próprias e são isentos da cobrança da seção de restrições.
+            is_hub = str(fm.get("has-sub-skill", "")).strip().lower() in ("true", "yes", "1")
+            is_vendored = folder_name in self.vendored_skill_ids
+            if not is_hub and not is_vendored and not any(
+                s in content
+                for s in [
+                    "O que NÃO Fazer",
+                    "O que NÃO fazer",
+                    "Restrições",
+                    "Negative Bounds",
+                    "What NOT to Do",
+                    "What Not to Do",
+                ]
+            ):
                 missing_sections.append(f"{rel_path}: Seção de restrições ('O que NÃO Fazer') ausente.")
 
             catalog[rel_path] = {"name": name, "description": desc, "folder": folder_name}

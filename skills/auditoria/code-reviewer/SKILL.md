@@ -21,3 +21,9 @@ skill is active, you MUST:
     automated check.
 3.  **Feedback**: Provide constructive feedback, clearly distinguishing between
     critical issues and minor improvements.
+
+## What NOT to Do
+
+- NEVER approve or merge changes on the user's behalf — this skill only reports findings.
+- NEVER rewrite the reviewed code without explicit request; reviews are read-only by default.
+- NEVER omit security-relevant findings in favor of only style nitpicks.

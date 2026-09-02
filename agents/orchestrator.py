@@ -4,6 +4,11 @@ import os
 from typing import Any
 
 from agents.router import AutoSkillRouter
+from agents.specialized.html_modular_specialist import HTMLModularSpecialistAgent
+from agents.specialized.research_evolution_specialist import (
+    ResearchEvolutionSpecialistAgent,
+    ResearchTaskRequest,
+)
 from agents.specialized.security_guard import SecurityGuardAgent
 from agents.specialized.sql_specialist import SqlSpecialistAgent
 from agents.specialized.workspace_specialist import WorkspaceSpecialistAgent
@@ -48,6 +53,8 @@ class MasterOrchestrator:
         self.security_guard = SecurityGuardAgent()
         self.sql_specialist = SqlSpecialistAgent(model_name=self.model_name)
         self.workspace_specialist = WorkspaceSpecialistAgent()
+        self.html_modular_specialist = HTMLModularSpecialistAgent(model_name=self.model_name)
+        self.research_evolution_specialist = ResearchEvolutionSpecialistAgent(model_name=self.model_name)
         self.budget_manager = TokenBudgetManager()
         self.sessions: dict[str, SessionState] = {}
         self._init_gemini_client()
@@ -117,6 +124,10 @@ class MasterOrchestrator:
                 "response": f"🚨 Execução interrompida pelo Circuit Breaker: {trip_err.reason}",
                 "status": "circuit_breaker_tripped",
                 "circuit_payload": trip_err.payload,
+                "matched_skills": [],
+                "routing_decision": None,
+                "delegated_subagents": [],
+                "checkpoint_persisted": False,
                 "tokens_estimated": 0,
             }
 
@@ -130,12 +141,16 @@ class MasterOrchestrator:
                 "session_id": session_id,
                 "response": audit_result["reason"],
                 "status": "blocked_by_guardrails",
+                "matched_skills": [],
+                "routing_decision": None,
+                "delegated_subagents": [],
+                "checkpoint_persisted": False,
                 "tokens_estimated": 0,
             }
 
         sanitized_input = audit_result["sanitized_text"]
         session.add_message("user", sanitized_input)
-        self.state_orchestrator.save_checkpoint(
+        input_persisted = self.state_orchestrator.save_checkpoint(
             session_id=session_id,
             step_index=len(session.history),
             agent_name="MasterOrchestrator",
@@ -155,13 +170,17 @@ class MasterOrchestrator:
                 ),
                 "status": "blocked_by_guardrails",
                 "routing_decision": routing_decision,
+                "matched_skills": [],
+                "delegated_subagents": [],
+                "checkpoint_persisted": input_persisted,
                 "tokens_estimated": 0,
             }
 
         # 4. Descoberta e injeção de skills relevantes
         matched_skills = self.skill_parser.match_skills_by_query(sanitized_input)
         target_skill = routing_decision.get("target_skill")
-        if target_skill and target_skill not in matched_skills and target_skill != "orchestrator":
+        target_type = routing_decision.get("target_type")
+        if target_skill and target_type == "skill" and target_skill not in matched_skills:
             matched_skills.append(target_skill)
 
         system_instruction = self.build_system_prompt(matched_skills)
@@ -177,6 +196,23 @@ class MasterOrchestrator:
             logger.info("Delegando subtarefa para WorkspaceSpecialistAgent...")
             ws_res = self.workspace_specialist.scan_workspace()
             specialist_results.append(ws_res)
+
+        if any(w in sanitized_input.lower() for w in ["pesquisar", "pesquisa profunda", "investigar", "pesquisa tecnica", "pesquisa técnica"]):
+            logger.info("Delegando subtarefa para ResearchEvolutionSpecialistAgent...")
+            research_res = self.research_evolution_specialist.execute_research(
+                ResearchTaskRequest(query=sanitized_input)
+            )
+            specialist_results.append({"agent": "ResearchEvolutionSpecialistAgent", **research_res.model_dump()})
+        elif not matched_skills and target_type == "none" and routing_decision.get("complexity") == "COMPLEXO":
+            # Gap operacional: nenhuma skill/agente cobre uma demanda complexa. Aciona a SkillFactory
+            # (via ResearchEvolutionSpecialistAgent) para desenhar um rascunho de SKILL.md antes de prosseguir.
+            logger.info("Gap operacional detectado. Acionando geração autônoma de skill (SkillFactory)...")
+            gap_res = self.research_evolution_specialist.execute_research(
+                ResearchTaskRequest(query=sanitized_input, auto_generate_skill=True)
+            )
+            specialist_results.append({"agent": "ResearchEvolutionSpecialistAgent", **gap_res.model_dump()})
+            if gap_res.generated_skill and gap_res.generated_skill.get("status") == "created_and_validated":
+                self.skill_parser.reload_skills()
 
         # 6. Geração de Resposta via Gemini Interactions API ou Fallback
         response_text = ""
@@ -208,11 +244,12 @@ class MasterOrchestrator:
 
         # 7. Auditoria de Saída
         output_audit = self.security_guard.audit_output(response_text)
-        final_output = output_audit["output_text"]
+        dispatch_panel = self._build_dispatch_panel(sanitized_input, matched_skills, routing_decision)
+        final_output = f"{dispatch_panel}\n{output_audit['output_text']}"
         session.add_message("assistant", final_output)
 
         # 8. Checkpointing Transacional e Conclusão no Circuit Breaker
-        self.state_orchestrator.save_checkpoint(
+        output_persisted = self.state_orchestrator.save_checkpoint(
             session_id=session_id,
             step_index=len(session.history),
             agent_name="MasterOrchestrator",
@@ -232,8 +269,27 @@ class MasterOrchestrator:
             "routing_decision": routing_decision,
             "delegated_subagents": [r.get("agent") for r in specialist_results],
             "tokens_estimated": tokens_est,
+            "checkpoint_persisted": input_persisted and output_persisted,
             "status": "success",
         }
+
+    def _build_dispatch_panel(self, user_input: str, matched_skills: list[str], routing_decision: dict[str, Any]) -> str:
+        """Monta o Painel de Despacho Executivo com o mapa real de roteamento desta requisição."""
+        target = routing_decision.get("target_skill") or "Resposta Direta (sem delegação)"
+        target_type = routing_decision.get("target_type", "none")
+        type_label = {"skill": "Skill do Catálogo", "agent": "Subagente Especialista", "meta": "Orquestrador (Cascata Multi-Agente)", "none": "N/A"}.get(target_type, target_type)
+        capacidade = "Existente no Catálogo" if (target_type == "skill" and target in matched_skills) or target_type in ("agent", "meta") else "Sem correspondência direta"
+
+        return "\n".join(
+            [
+                "[PAINEL DE DESPACHO EXECUTIVO]",
+                f"- Intenção Identificada: {user_input[:100]}",
+                f"- Módulo Acionado: {target} ({type_label})",
+                f"- Matriz de Skill Carregada: {', '.join(matched_skills) if matched_skills else 'Nenhuma skill específica injetada'}",
+                f"- Status de Capacidade: {capacidade}",
+                "-" * 70,
+            ]
+        )
 
     def _generate_local_fallback(
         self,

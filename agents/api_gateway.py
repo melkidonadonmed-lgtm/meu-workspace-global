@@ -11,6 +11,8 @@ from pydantic import BaseModel, Field
 
 from agents.antigravity_bridge import AntigravityAgentBridge
 from agents.orchestrator import MasterOrchestrator
+from agents.specialized.html_modular_specialist import HTMLBuildRequest, HTMLBuildResponse
+from shared.circuit_breaker import CircuitTripException
 from shared.logger import get_logger, setup_logging
 
 setup_logging()
@@ -45,10 +47,11 @@ class ChatResponse(BaseModel):
     session_id: str
     interaction_id: str | None = None
     response: str
-    matched_skills: list[str]
+    matched_skills: list[str] = Field(default_factory=list)
     routing_decision: dict[str, Any] | None = None
-    delegated_subagents: list[str]
+    delegated_subagents: list[str] = Field(default_factory=list)
     tokens_estimated: int
+    checkpoint_persisted: bool = True
     status: str
 
 
@@ -111,6 +114,20 @@ def create_skill(request: CreateSkillRequest) -> dict[str, Any]:
         raise HTTPException(status_code=500, detail=str(err)) from err
 
 
+@app.post("/agents/html/build", response_model=HTMLBuildResponse)
+def build_html_page(request: HTMLBuildRequest) -> HTMLBuildResponse:
+    """Delega a montagem de página/componentes HTML5 modular ao HTMLModularSpecialistAgent.
+
+    Requer entrada estruturada (componentes tipados) em vez de texto livre, pois o agente
+    não deve inferir/inventar parâmetros de construção ausentes (Negative Bounds).
+    """
+    try:
+        return orchestrator.html_modular_specialist.assemble_page(request)
+    except Exception as e:
+        logger.error(f"Erro ao montar página HTML via HTMLModularSpecialistAgent: {e}")
+        raise HTTPException(status_code=500, detail=str(e)) from e
+
+
 @app.post("/chat", response_model=ChatResponse)
 def handle_chat(request: ChatRequest) -> ChatResponse:
     """Processa uma mensagem do usuário de ponta a ponta."""
@@ -126,11 +143,40 @@ def handle_chat(request: ChatRequest) -> ChatResponse:
 
 @app.post("/antigravity/chat", response_model=AntigravityResponse)
 async def handle_antigravity_chat(request: ChatRequest) -> AntigravityResponse:
-    """Processa mensagem utilizando o Google Antigravity Agent Bridge."""
+    """Processa mensagem utilizando o Google Antigravity Agent Bridge.
+
+    Reutiliza o Circuit Breaker e o StateOrchestrator do MasterOrchestrator para que este
+    caminho paralelo também fique protegido contra loops/deadlocks e mantenha trilha de auditoria.
+    """
+    estimated_tokens = orchestrator.budget_manager.estimate_tokens(request.message)
+    try:
+        orchestrator.circuit_breaker.before_node_execution(
+            session_id=request.session_id,
+            node_id="AntigravityAgentBridge",
+            input_payload=request.message,
+            estimated_tokens=estimated_tokens,
+        )
+    except CircuitTripException as trip_err:
+        raise HTTPException(status_code=429, detail=trip_err.reason) from trip_err
+
     try:
         result = await antigravity_bridge.chat(request.message)
+        orchestrator.state_orchestrator.save_checkpoint(
+            session_id=request.session_id,
+            step_index=0,
+            agent_name="AntigravityAgentBridge",
+            role="assistant",
+            content=result.get("response", ""),
+            metadata={"matched_skills": result.get("matched_skills", [])},
+        )
+        orchestrator.circuit_breaker.after_node_execution(
+            request.session_id, "AntigravityAgentBridge", is_error=False
+        )
         return AntigravityResponse(**result)
     except Exception as e:
+        orchestrator.circuit_breaker.after_node_execution(
+            request.session_id, "AntigravityAgentBridge", is_error=True, error_msg=str(e)
+        )
         logger.error(f"Erro ao processar mensagem via Antigravity Agent: {e}")
         raise HTTPException(status_code=500, detail=str(e)) from e
 

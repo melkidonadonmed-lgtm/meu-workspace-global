@@ -24,6 +24,7 @@ meu-workspace-global/
 │   └── 📁 specialized/              # Subagentes Especialistas Stateless
 │       ├── 📄 __init__.py
 │       ├── 📄 html_modular_specialist.py # Especialista em páginas HTML5 e Atomic Design
+│       ├── 📄 research_evolution_specialist.py # Pesquisa web e evolução do workspace
 │       ├── 📄 sql_specialist.py      # Agente especialista em consultas e otimização SQL
 │       ├── 📄 workspace_specialist.py# Agente para manipulação de arquivos e sistema
 │       └── 📄 security_guard.py      # Guardrail Zero-Trust e validação de segurança/PII
@@ -115,6 +116,11 @@ make setup
 Adicione sua chave de API do Gemini no arquivo `.env`:
 ```bash
 GEMINI_API_KEY=sua_chave_aqui
+```
+
+Configuração opcional de persistência de estado:
+```bash
+BRAIN_STATE_DB_PATH=shared/state/sessions.db
 ```
 
 ### 4. Execução dos Serviços

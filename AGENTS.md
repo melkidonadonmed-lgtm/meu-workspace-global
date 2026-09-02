@@ -12,7 +12,7 @@ Arquitetura completa em `docs/architecture.md`. Idioma do projeto: **Português 
   - `router.py`: `AutoSkillRouter` determinístico com classificação de complexidade e portão de segurança destrutivo.
   - `antigravity_bridge.py`: Ponte nativa com o Google Antigravity SDK.
   - `api_gateway.py`: API Gateway FastAPI com endpoints REST e SSE Streaming (`/chat`, `/chat/stream`, `/skills/health`, `/skills/create`).
-  - `specialized/`: Subagentes stateless (`security_guard`, `sql_specialist`, `workspace_specialist`, `html_modular_specialist`).
+  - `specialized/`: Subagentes stateless (`security_guard`, `sql_specialist`, `workspace_specialist`, `html_modular_specialist`, `research_evolution_specialist`).
 - `skills/` — catálogo governado de habilidades consumido pelo `skill_parser.py` (progressive disclosure) e validado pelo `skill_healthcheck.py`, organizado em bundles:
   - `governanca/` (`resilience-circuit-breaker`, `skill-factory`, `skill-healthcheck`, `skill-context-sentinel-state`, `skill-requirements-analyzer`, `validacao-pre-entrega`, `aprimoramento-expansibilidade-agentes-skills`)
   - `auditoria/` (`code-validator`, `skill-repo-analyser`, `api-auditor`, `code-reviewer`)
@@ -45,8 +45,9 @@ Windows (PowerShell): `.\run.ps1 <cmd>` — Linux/macOS: `make <cmd>`
 ## Convenções
 
 - Python 3.11+, line-length 100, tipagem moderna (`dict[str, Any]`, `X | None`).
-- Ruff: código vendorado/legado está em `extend-exclude` no `pyproject.toml` (`skills/research/notebooklm`, `inbox`) — não "corrigir" esses diretórios.
+- Ruff: código vendorado/legado está em `extend-exclude` no `pyproject.toml` (`skills/research/notebooklm`, `inbox`, `.agents`) — não "corrigir" esses diretórios.
 - Padrões de bloqueio de segurança vivem em `configs/guardrails.yaml`, **não** hardcoded.
+- Novos símbolos públicos de `shared/` devem ser registrados na fachada lazy em `shared/__init__.py`, preservando imports existentes sem carregamento eager.
 - `except Exception` só com `# noqa: BLE001` e justificativa (fallback proposital).
 - Mudanças em estrutura/convenções → atualizar este AGENTS.md e o `README.md`.
 

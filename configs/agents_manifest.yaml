@@ -24,11 +24,20 @@ orchestrator:
     - "workspace_specialist"
     - "security_guard"
     - "html_modular_specialist"
+    - "research_evolution_specialist"
   tools_enabled:
     - "mcp_tool_execution"
     - "skill_injection"
 
 specialized_agents:
+  research_evolution_specialist:
+    name: "ResearchEvolutionSpecialistAgent"
+    description: "Especialista stateless em pesquisa web técnica aprofundada, defesas anti-injeção e evolução do workspace"
+    model: "gemini-3.7-flash"
+    stateless: true
+    max_tokens_output: 8192
+    temperature: 0.2
+
   html_modular_specialist:
     name: "HTMLModularSpecialistAgent"
     description: "Especialista stateless em montagem de páginas HTML5 modular, Atomic Design e WCAG 2.1 AA"
