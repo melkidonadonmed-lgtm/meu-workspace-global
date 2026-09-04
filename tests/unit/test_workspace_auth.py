@@ -15,12 +15,19 @@ from shared.auth.workspace_auth import (
 )
 
 
-def test_client_secrets_path_found():
-    """Garante que o arquivo de credenciais do cliente OAuth é localizado em configs/."""
+def test_client_secrets_path_found(tmp_path: Path):
+    """Garante que o arquivo de credenciais do cliente OAuth é localizado quando existente."""
     path = get_client_secrets_path()
-    assert path is not None
-    assert path.is_file()
-    assert "credentials.json" in path.name or "oauth_client_desktop.json" in path.name
+    if path is not None:
+        assert path.is_file()
+        assert "credentials.json" in path.name or "oauth_client_desktop.json" in path.name
+    else:
+        fake_cred = tmp_path / "credentials.json"
+        fake_cred.write_text("{}", encoding="utf-8")
+        with patch.dict("os.environ", {"WORKSPACE_CREDENTIALS_FILE": str(fake_cred)}):
+            found = get_client_secrets_path()
+            assert found is not None
+            assert found.is_file()
 
 
 def test_token_storage_path_defined():

@@ -107,8 +107,9 @@ class TestOrchestratorUnit(unittest.TestCase):
             self.assertTrue(audit["is_healthy"])
         finally:
             # Limpa qualquer skill de rascunho gerada automaticamente durante o teste
-            for path in generated_dir.glob("**/SKILL.md"):
-                if path.parent.name.startswith("preciso-migrar"):
+            draft_skills = list(generated_dir.glob("**/SKILL.md"))
+            for path in draft_skills:
+                if path.parent.name.startswith("preciso-migrar") and path.parent.exists():
                     shutil.rmtree(path.parent, ignore_errors=True)
             orchestrator.skill_parser.reload_skills()
 
