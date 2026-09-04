@@ -2,24 +2,659 @@
   "version": 1,
   "nodes": [
     {
-      "name": "A",
-      "left": 150,
-      "top": 150,
-      "label": "A"
+      "name": "titulo",
+      "left": 750,
+      "top": 70,
+      "label": "$\\Large\\text{Como as skills do repositório são ativadas}$",
+      "color": "#0F172A"
     },
     {
-      "name": "B",
-      "left": 450,
-      "top": 150,
-      "label": "B"
+      "name": "subtitulo",
+      "left": 750,
+      "top": 125,
+      "label": "$\\text{Fluxo real: descoberta, roteamento, injeção sob demanda e execução}$",
+      "color": "#475569"
+    },
+    {
+      "name": "legenda_catalogo",
+      "left": 150,
+      "top": 220,
+      "label": "$\\bullet\\;\\text{Catálogo}$",
+      "color": "#15803D"
+    },
+    {
+      "name": "legenda_fluxo",
+      "left": 400,
+      "top": 220,
+      "label": "$\\bullet\\;\\text{Fluxo da requisição}$",
+      "color": "#1D4ED8"
+    },
+    {
+      "name": "legenda_ativacao",
+      "left": 650,
+      "top": 220,
+      "label": "$\\bullet\\;\\text{Ativação da skill}$",
+      "color": "#7E22CE"
+    },
+    {
+      "name": "legenda_subagente",
+      "left": 900,
+      "top": 220,
+      "label": "$\\bullet\\;\\text{Código de subagente}$",
+      "color": "#C2410C"
+    },
+    {
+      "name": "legenda_bloqueio",
+      "left": 1150,
+      "top": 220,
+      "label": "$\\bullet\\;\\text{Bloqueio / HITL}$",
+      "color": "#B91C1C"
+    },
+    {
+      "name": "fase_catalogo",
+      "left": 210,
+      "top": 340,
+      "label": "$\\Large\\text{1. Catálogo preparado na inicialização}$",
+      "color": "#15803D"
+    },
+    {
+      "name": "inicializacao",
+      "left": 750,
+      "top": 470,
+      "label": "$\\text{Inicialização do API Gateway}$",
+      "color": "#15803D"
+    },
+    {
+      "name": "skill_parser_init",
+      "left": 750,
+      "top": 620,
+      "label": "$\\mathtt{SkillParser()}$",
+      "color": "#15803D"
+    },
+    {
+      "name": "varredura_skills",
+      "left": 750,
+      "top": 770,
+      "label": "$\\mathtt{glob\\ skills/**/SKILL.md}$",
+      "color": "#15803D"
+    },
+    {
+      "name": "parse_frontmatter",
+      "left": 750,
+      "top": 920,
+      "label": "$\\text{frontmatter + corpo Markdown}$",
+      "color": "#15803D"
+    },
+    {
+      "name": "cache_catalogo",
+      "left": 750,
+      "top": 1070,
+      "label": "$\\text{cache do catálogo}$",
+      "color": "#15803D"
+    },
+    {
+      "name": "health_checker",
+      "left": 1250,
+      "top": 1070,
+      "label": "$\\text{SkillHealthChecker (observador)}$",
+      "color": "#A16207"
+    },
+    {
+      "name": "fase_requisicao",
+      "left": 210,
+      "top": 1270,
+      "label": "$\\Large\\text{2. Ativação em cada mensagem}$",
+      "color": "#1D4ED8"
+    },
+    {
+      "name": "mensagem_usuario",
+      "left": 750,
+      "top": 1420,
+      "label": "$\\text{/chat ou /chat/stream}$",
+      "color": "#1D4ED8"
+    },
+    {
+      "name": "circuit_breaker",
+      "left": 750,
+      "top": 1570,
+      "label": "$\\text{Circuit Breaker}$",
+      "color": "#A16207"
+    },
+    {
+      "name": "bloqueio_circuito",
+      "left": 300,
+      "top": 1570,
+      "label": "$\\text{Circuito interrompe}$",
+      "color": "#B91C1C"
+    },
+    {
+      "name": "security_guard",
+      "left": 750,
+      "top": 1720,
+      "label": "$\\text{SecurityGuard Zero-Trust}$",
+      "color": "#A16207"
+    },
+    {
+      "name": "bloqueio_guardrail",
+      "left": 300,
+      "top": 1720,
+      "label": "$\\text{Entrada bloqueada}$",
+      "color": "#B91C1C"
+    },
+    {
+      "name": "entrada_sanitizada",
+      "left": 750,
+      "top": 1870,
+      "label": "$\\text{Entrada sanitizada + checkpoint}$",
+      "color": "#1D4ED8"
+    },
+    {
+      "name": "auto_skill_router",
+      "left": 400,
+      "top": 2070,
+      "label": "$\\text{AutoSkillRouter (decide, não ativa)}$",
+      "color": "#1D4ED8"
+    },
+    {
+      "name": "bloqueio_hitl",
+      "left": 150,
+      "top": 2220,
+      "label": "$\\mathtt{HITL\\_BLOCK}\\;\\text{confirmar}$",
+      "color": "#B91C1C"
+    },
+    {
+      "name": "modos_roteamento",
+      "left": 400,
+      "top": 2270,
+      "label": "$\\text{Rota: direta | skill | cascata}$",
+      "color": "#1D4ED8"
+    },
+    {
+      "name": "matcher_catalogo",
+      "left": 1050,
+      "top": 2070,
+      "label": "$\\text{Matcher do catálogo por triggers}$",
+      "color": "#15803D"
+    },
+    {
+      "name": "skills_correspondentes",
+      "left": 1050,
+      "top": 2270,
+      "label": "$\\mathtt{matched\\_skills}$",
+      "color": "#7E22CE"
+    },
+    {
+      "name": "conteudo_integral",
+      "left": 1050,
+      "top": 2470,
+      "label": "$\\text{SKILL.md integral}$",
+      "color": "#7E22CE"
+    },
+    {
+      "name": "indice_catalogo",
+      "left": 1400,
+      "top": 2470,
+      "label": "$\\text{índice leve do catálogo}$",
+      "color": "#15803D"
+    },
+    {
+      "name": "system_prompt",
+      "left": 1050,
+      "top": 2670,
+      "label": "$\\text{ATIVAÇÃO: SKILL.md }\\to\\mathtt{\\ system\\_instruction}$",
+      "color": "#7E22CE"
+    },
+    {
+      "name": "gemini_online",
+      "left": 850,
+      "top": 2870,
+      "label": "$\\text{Gemini + prompt enriquecido}$",
+      "color": "#7E22CE"
+    },
+    {
+      "name": "fallback_local",
+      "left": 1250,
+      "top": 2870,
+      "label": "$\\text{Fallback local}$",
+      "color": "#475569"
+    },
+    {
+      "name": "auditoria_saida",
+      "left": 1050,
+      "top": 3070,
+      "label": "$\\text{Auditoria + painel + checkpoint}$",
+      "color": "#A16207"
+    },
+    {
+      "name": "resposta_final",
+      "left": 1050,
+      "top": 3270,
+      "label": "$\\text{Resposta + metadados}$",
+      "color": "#1D4ED8"
+    },
+    {
+      "name": "subagentes_python",
+      "left": 350,
+      "top": 2870,
+      "label": "$\\text{Subagentes Python por keywords}$",
+      "color": "#C2410C"
+    },
+    {
+      "name": "nota_subagentes",
+      "left": 350,
+      "top": 3070,
+      "label": "$\\text{Subagente}\\ne\\text{ skill: código Python separado}$",
+      "color": "#C2410C"
+    },
+    {
+      "name": "nota_roteamento",
+      "left": 400,
+      "top": 3270,
+      "label": "$\\begin{array}{c}\\text{Modos = metadados}\\\\ \\text{não executam skill}\\end{array}$",
+      "color": "#475569"
+    },
+    {
+      "name": "gap_operacional",
+      "left": 500,
+      "top": 2470,
+      "label": "$\\text{Gap complexo sem cobertura}$",
+      "color": "#A16207"
+    },
+    {
+      "name": "skill_factory",
+      "left": 200,
+      "top": 2630,
+      "label": "$\\text{SkillFactory cria + valida}$",
+      "color": "#15803D"
+    },
+    {
+      "name": "reload_catalogo",
+      "left": 250,
+      "top": 1070,
+      "label": "$\\mathtt{reload\\_skills()}$",
+      "color": "#15803D"
+    },
+    {
+      "name": "fase_antigravity",
+      "left": 210,
+      "top": 3480,
+      "label": "$\\Large\\text{3. Caminho paralelo Antigravity}$",
+      "color": "#475569"
+    },
+    {
+      "name": "antigravity_entrada",
+      "left": 250,
+      "top": 3680,
+      "label": "$\\text{/antigravity/chat}$",
+      "color": "#1D4ED8"
+    },
+    {
+      "name": "antigravity_match",
+      "left": 600,
+      "top": 3680,
+      "label": "$\\text{Guardrail + matcher}$",
+      "color": "#15803D"
+    },
+    {
+      "name": "antigravity_sdk",
+      "left": 950,
+      "top": 3580,
+      "label": "$\\text{SDK online + }\\mathtt{skills\\_paths}$",
+      "color": "#7E22CE"
+    },
+    {
+      "name": "antigravity_local",
+      "left": 950,
+      "top": 3780,
+      "label": "$\\text{Fallback local: só lista matches}$",
+      "color": "#475569"
+    },
+    {
+      "name": "antigravity_auditoria",
+      "left": 1250,
+      "top": 3680,
+      "label": "$\\text{Auditoria + checkpoint}$",
+      "color": "#A16207"
+    },
+    {
+      "name": "antigravity_resposta",
+      "left": 1250,
+      "top": 3950,
+      "label": "$\\text{Resposta Antigravity}$",
+      "color": "#1D4ED8"
+    },
+    {
+      "name": "insight_central",
+      "left": 750,
+      "top": 4200,
+      "label": "$\\Large\\text{Skill ativada = instruções do SKILL.md carregadas no prompt}$",
+      "color": "#7E22CE"
     }
   ],
   "arrows": [
     {
-      "name": "f",
-      "from": "A",
-      "to": "B",
-      "label": "f"
+      "name": "inicializa_parser",
+      "from": "inicializacao",
+      "to": "skill_parser_init",
+      "color": "#15803D"
+    },
+    {
+      "name": "parser_varre",
+      "from": "skill_parser_init",
+      "to": "varredura_skills",
+      "color": "#15803D"
+    },
+    {
+      "name": "varredura_parseia",
+      "from": "varredura_skills",
+      "to": "parse_frontmatter",
+      "color": "#15803D"
+    },
+    {
+      "name": "parseia_cacheia",
+      "from": "parse_frontmatter",
+      "to": "cache_catalogo",
+      "color": "#15803D"
+    },
+    {
+      "name": "cache_auditado",
+      "from": "cache_catalogo",
+      "to": "health_checker",
+      "color": "#A16207",
+      "style": {
+        "body": {
+          "name": "dashed"
+        }
+      }
+    },
+    {
+      "name": "reload_para_varredura",
+      "from": "reload_catalogo",
+      "to": "varredura_skills",
+      "label": "$\\text{próximo turno}$",
+      "color": "#15803D",
+      "label_color": "#15803D",
+      "curve": -90,
+      "style": {
+        "body": {
+          "name": "dashed"
+        }
+      }
+    },
+    {
+      "name": "mensagem_para_circuito",
+      "from": "mensagem_usuario",
+      "to": "circuit_breaker",
+      "color": "#1D4ED8"
+    },
+    {
+      "name": "circuito_libera",
+      "from": "circuit_breaker",
+      "to": "security_guard",
+      "label": "$\\text{ok}$",
+      "color": "#1D4ED8",
+      "label_color": "#1D4ED8"
+    },
+    {
+      "name": "circuito_bloqueia",
+      "from": "circuit_breaker",
+      "to": "bloqueio_circuito",
+      "label": "$\\text{trip}$",
+      "color": "#B91C1C",
+      "label_color": "#B91C1C"
+    },
+    {
+      "name": "guardrail_sanitiza",
+      "from": "security_guard",
+      "to": "entrada_sanitizada",
+      "label": "$\\text{safe}$",
+      "color": "#1D4ED8",
+      "label_color": "#1D4ED8"
+    },
+    {
+      "name": "guardrail_bloqueia",
+      "from": "security_guard",
+      "to": "bloqueio_guardrail",
+      "label": "$\\text{blocked}$",
+      "color": "#B91C1C",
+      "label_color": "#B91C1C"
+    },
+    {
+      "name": "entrada_para_router",
+      "from": "entrada_sanitizada",
+      "to": "auto_skill_router",
+      "label": "$\\text{roteia}$",
+      "color": "#1D4ED8",
+      "label_color": "#1D4ED8",
+      "curve": 55
+    },
+    {
+      "name": "entrada_para_matcher",
+      "from": "entrada_sanitizada",
+      "to": "matcher_catalogo",
+      "label": "$\\text{faz match}$",
+      "color": "#15803D",
+      "label_color": "#15803D",
+      "curve": -55
+    },
+    {
+      "name": "router_para_modos",
+      "from": "auto_skill_router",
+      "to": "modos_roteamento",
+      "label": "$\\text{decisão}$",
+      "color": "#1D4ED8",
+      "label_color": "#1D4ED8"
+    },
+    {
+      "name": "router_para_hitl",
+      "from": "auto_skill_router",
+      "to": "bloqueio_hitl",
+      "label": "$\\text{destrutivo}$",
+      "color": "#B91C1C",
+      "label_color": "#B91C1C",
+      "curve": 35
+    },
+    {
+      "name": "modo_acrescenta_alvo",
+      "from": "modos_roteamento",
+      "to": "skills_correspondentes",
+      "label": "$\\text{alvo skill}$",
+      "color": "#7E22CE",
+      "label_color": "#7E22CE",
+      "curve": -40,
+      "style": {
+        "body": {
+          "name": "dashed"
+        }
+      }
+    },
+    {
+      "name": "matcher_encontra_skills",
+      "from": "matcher_catalogo",
+      "to": "skills_correspondentes",
+      "label": "$\\text{0..N matches}$",
+      "color": "#7E22CE",
+      "label_color": "#7E22CE"
+    },
+    {
+      "name": "matches_carregam_conteudo",
+      "from": "skills_correspondentes",
+      "to": "conteudo_integral",
+      "label": "$\\text{cada ID}$",
+      "color": "#7E22CE",
+      "label_color": "#7E22CE"
+    },
+    {
+      "name": "conteudo_ativa_skill",
+      "from": "conteudo_integral",
+      "to": "system_prompt",
+      "label": "$\\text{nível 2}$",
+      "color": "#7E22CE",
+      "label_color": "#7E22CE"
+    },
+    {
+      "name": "cache_fornece_resumo",
+      "from": "cache_catalogo",
+      "to": "indice_catalogo",
+      "label": "$\\text{nível 1}$",
+      "color": "#15803D",
+      "label_color": "#15803D",
+      "curve": -300,
+      "style": {
+        "body": {
+          "name": "dashed"
+        }
+      }
+    },
+    {
+      "name": "indice_para_prompt",
+      "from": "indice_catalogo",
+      "to": "system_prompt",
+      "label": "$\\text{resumo}$",
+      "color": "#15803D",
+      "label_color": "#15803D",
+      "style": {
+        "body": {
+          "name": "dashed"
+        }
+      }
+    },
+    {
+      "name": "prompt_para_gemini",
+      "from": "system_prompt",
+      "to": "gemini_online",
+      "label": "$\\text{online}$",
+      "color": "#7E22CE",
+      "label_color": "#7E22CE",
+      "curve": 35
+    },
+    {
+      "name": "prompt_para_fallback",
+      "from": "system_prompt",
+      "to": "fallback_local",
+      "label": "$\\text{offline / erro}$",
+      "color": "#475569",
+      "label_color": "#475569",
+      "curve": -35
+    },
+    {
+      "name": "gemini_para_auditoria",
+      "from": "gemini_online",
+      "to": "auditoria_saida",
+      "color": "#A16207",
+      "curve": -35
+    },
+    {
+      "name": "fallback_para_auditoria",
+      "from": "fallback_local",
+      "to": "auditoria_saida",
+      "color": "#A16207",
+      "curve": 35
+    },
+    {
+      "name": "auditoria_para_resposta",
+      "from": "auditoria_saida",
+      "to": "resposta_final",
+      "color": "#1D4ED8"
+    },
+    {
+      "name": "entrada_para_subagentes",
+      "from": "entrada_sanitizada",
+      "to": "subagentes_python",
+      "color": "#C2410C",
+      "curve": 240
+    },
+    {
+      "name": "subagentes_para_nota",
+      "from": "subagentes_python",
+      "to": "nota_subagentes",
+      "color": "#C2410C",
+      "style": {
+        "head": {
+          "name": "none"
+        },
+        "body": {
+          "name": "dotted"
+        }
+      }
+    },
+    {
+      "name": "matches_para_gap",
+      "from": "skills_correspondentes",
+      "to": "gap_operacional",
+      "color": "#A16207",
+      "curve": -180,
+      "style": {
+        "body": {
+          "name": "dashed"
+        }
+      }
+    },
+    {
+      "name": "gap_para_factory",
+      "from": "gap_operacional",
+      "to": "skill_factory",
+      "label": "$\\text{gerar}$",
+      "color": "#15803D",
+      "label_color": "#15803D"
+    },
+    {
+      "name": "factory_para_reload",
+      "from": "skill_factory",
+      "to": "reload_catalogo",
+      "label": "$\\text{criada + validada}$",
+      "color": "#15803D",
+      "label_color": "#15803D",
+      "curve": -180,
+      "style": {
+        "body": {
+          "name": "dashed"
+        }
+      }
+    },
+    {
+      "name": "antigravity_inicia",
+      "from": "antigravity_entrada",
+      "to": "antigravity_match",
+      "color": "#1D4ED8"
+    },
+    {
+      "name": "antigravity_match_sdk",
+      "from": "antigravity_match",
+      "to": "antigravity_sdk",
+      "label": "$\\text{online}$",
+      "color": "#7E22CE",
+      "label_color": "#7E22CE",
+      "curve": 35
+    },
+    {
+      "name": "antigravity_match_local",
+      "from": "antigravity_match",
+      "to": "antigravity_local",
+      "label": "$\\text{offline}$",
+      "color": "#475569",
+      "label_color": "#475569",
+      "curve": -35
+    },
+    {
+      "name": "antigravity_sdk_audita",
+      "from": "antigravity_sdk",
+      "to": "antigravity_auditoria",
+      "color": "#A16207",
+      "curve": -35
+    },
+    {
+      "name": "antigravity_local_audita",
+      "from": "antigravity_local",
+      "to": "antigravity_auditoria",
+      "color": "#A16207",
+      "curve": 35
+    },
+    {
+      "name": "antigravity_retorna",
+      "from": "antigravity_auditoria",
+      "to": "antigravity_resposta",
+      "color": "#1D4ED8"
     }
   ]
 }
