@@ -72,9 +72,9 @@ class SkillParser:
                 try:
                     metadata = yaml.safe_load(yaml_str) or {}
                     if not isinstance(metadata, dict):
-                        raise ValueError("Frontmatter YAML deve produzir um dicionário de metadados.")
+                        raise TypeError("Frontmatter YAML deve produzir um dicionário de metadados.")
                     return metadata, body
-                except (yaml.YAMLError, ValueError) as e:
+                except (yaml.YAMLError, ValueError, TypeError) as e:
                     logger.debug(f"Frontmatter YAML inválido, usando fallback manual: {e}")
 
             meta: dict[str, Any] = {}

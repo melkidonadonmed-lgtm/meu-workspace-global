@@ -71,6 +71,8 @@ class TestOrchestratorUnit(unittest.TestCase):
         self.assertTrue(hasattr(orchestrator, "workspace_specialist"))
         self.assertTrue(hasattr(orchestrator, "html_modular_specialist"))
         self.assertTrue(hasattr(orchestrator, "research_evolution_specialist"))
+        self.assertTrue(hasattr(orchestrator, "customer_issue_reviewer"))
+        self.assertTrue(hasattr(orchestrator, "code_consistency_specialist"))
 
     def test_orchestrator_does_not_leak_agent_name_into_matched_skills(self):
         """Garante que nomes de subagentes (ex: sql_specialist) não poluam a lista matched_skills."""

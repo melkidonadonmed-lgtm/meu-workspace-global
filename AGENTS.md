@@ -12,7 +12,7 @@ Arquitetura completa em `docs/architecture.md`. Idioma do projeto: **Português 
   - `router.py`: `AutoSkillRouter` determinístico com classificação de complexidade e portão de segurança destrutivo.
   - `antigravity_bridge.py`: Ponte nativa com o Google Antigravity SDK.
   - `api_gateway.py`: API Gateway FastAPI com endpoints REST e SSE Streaming (`/chat`, `/chat/stream`, `/skills/health`, `/skills/create`).
-  - `specialized/`: Subagentes stateless (`security_guard`, `sql_specialist`, `workspace_specialist`, `html_modular_specialist`, `research_evolution_specialist`).
+  - `specialized/`: Subagentes stateless (`security_guard`, `sql_specialist`, `workspace_specialist`, `html_modular_specialist`, `research_evolution_specialist`, `customer_issue_reviewer`, `code_consistency_specialist`).
 - `skills/` — catálogo governado de habilidades consumido pelo `skill_parser.py` (progressive disclosure) e validado pelo `skill_healthcheck.py`, organizado em bundles:
   - `governanca/` (`resilience-circuit-breaker`, `skill-factory`, `skill-healthcheck`, `skill-context-sentinel-state`, `skill-requirements-analyzer`, `validacao-pre-entrega`, `aprimoramento-expansibilidade-agentes-skills`)
   - `auditoria/` (`code-validator`, `skill-repo-analyser`, `api-auditor`, `code-reviewer`)
@@ -29,8 +29,8 @@ Arquitetura completa em `docs/architecture.md`. Idioma do projeto: **Português 
   - `auth/`: Autenticação para GCP Service Account / ADC (`gcp_auth.py`) e Google Workspace OAuth 2.0 com Refresh Token permanente (`workspace_auth.py`).
   - `logger.py`, `context_utils.py`.
 - `configs/` — `guardrails.yaml` (lido pelo `SecurityGuardAgent`), `agents_manifest.yaml`, `.env.example`.
-- `projects/` — aplicações standalone: `canvas_ide`, `customer_issue_reviewer_go`, `pcm` e `keepdocs-workspace`.
 - `inbox/` — quarentena/triagem; **não é código governado** (excluída do lint).
+- Projetos alvo de aplicação operados externamente em `Brain/projetos/`: `pcm`, `canvas_ide`, `keepdocs-workspace`.
 - `tests/` — `unit/`, `integration/`, `eval/`.
 
 ## Comandos

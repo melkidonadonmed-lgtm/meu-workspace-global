@@ -82,11 +82,22 @@ ROUTING_MATRIX: list[tuple[str, str, tuple[str, ...]]] = [
     ("sql_specialist", "dados", ("sql", "bigquery", "query", "tabela", "schema")),
     ("workspace_specialist", "arquitetura", ("pastas", "diretorio", "arquivos locais", "scan")),
     ("html_modular_specialist", "ui", ("especialista html", "gerador html", "montador de componentes")),
+    # Suporte & Atendimento (Google ADK Go v2)
+    ("customer_issue_reviewer", "suporte", ("chamado", "issue", "ticket", "problema do cliente", "revisar chamado", "urgencia do cliente", "bug report")),
+    # Auditoria de Código, Anti-Drift e Sincronização Periódica de Contexto
+    ("code_consistency_specialist", "auditoria", ("analise de codigo", "consistencia de codigo", "desvio de codigo", "compatibilidade", "code drift", "sync de contexto", "sentinela de codigo")),
 ]
 
 # Alvos que identificam um subagente Python (agents/specialized/*), não um SKILL.md do catálogo.
 # Usado para o orquestrador não injetar o nome do agente como se fosse conteúdo de skill.
-AGENT_TARGETS = {"sql_specialist", "workspace_specialist", "html_modular_specialist", "research_evolution_specialist"}
+AGENT_TARGETS = {
+    "sql_specialist",
+    "workspace_specialist",
+    "html_modular_specialist",
+    "research_evolution_specialist",
+    "customer_issue_reviewer",
+    "code_consistency_specialist",
+}
 
 
 def normalize_text(text: str | None) -> str:

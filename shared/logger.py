@@ -48,9 +48,17 @@ class ColoredConsoleFormatter(logging.Formatter):
 
 def setup_logging(
     level: str | None = None,
-    json_format: bool = False
+    json_format: bool = False,
+    stream: Any = None,
 ) -> None:
-    """Configura o logger raiz do sistema."""
+    """Configura o logger raiz do sistema direcionando a saída para stderr (evita poluição no stdout de MCP)."""
+    target_stream = stream if stream is not None else sys.stderr
+    if sys.platform == "win32" and hasattr(target_stream, "reconfigure"):
+        try:
+            target_stream.reconfigure(encoding="utf-8", errors="replace")
+        except Exception:  # noqa: BLE001, S110
+            pass
+
     log_level = (level or os.getenv("LOG_LEVEL", "INFO")).upper()
     numeric_level = getattr(logging, log_level, logging.INFO)
 
@@ -59,7 +67,7 @@ def setup_logging(
 
     # Evita duplicidade de handlers
     if not root_logger.handlers:
-        handler = logging.StreamHandler(sys.stdout)
+        handler = logging.StreamHandler(target_stream)
         handler.setLevel(numeric_level)
         if json_format:
             handler.setFormatter(JSONFormatter())

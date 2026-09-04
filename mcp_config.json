@@ -8,7 +8,9 @@
         "mcp_servers.server"
       ],
       "env": {
-        "PYTHONPATH": "."
+        "PYTHONPATH": ".",
+        "PYTHONUNBUFFERED": "1",
+        "FASTMCP_SHOW_SERVER_BANNER": "false"
       },
       "description": "Servidor MCP Unificado via stdio para ferramentas do workspace e BigQuery"
     },
@@ -36,4 +38,3 @@
     }
   }
 }
-

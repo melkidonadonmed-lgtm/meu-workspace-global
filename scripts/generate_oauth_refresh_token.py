@@ -1,57 +1,43 @@
-"""Script utilitário para gerar o Refresh Token OAuth 2.0 do Google Workspace.
+"""Script utilitário para gerar o Refresh Token e Login Persistente no Google Workspace.
 
-Executa o fluxo local de consentimento no navegador para a conta pessoal
+Executa o fluxo local de consentimento OAuth 2.0 no navegador para a conta pessoal
 melkidonadonmed@gmail.com no projeto GCP agent-md-506215.
 
+Salva o token permanentemente em configs/workspace_token.json e sincroniza o arquivo .env.
+
 Uso:
-    python scripts/generate_oauth_refresh_token.py [caminho_oauth_client.json]
+    python scripts/generate_oauth_refresh_token.py
 """
 
 import sys
 from pathlib import Path
 
-from shared.auth.workspace_auth import WORKSPACE_SCOPES
-from shared.logger import get_logger
+# Adiciona o diretório raiz ao sys.path para importação de shared
+repo_root = Path(__file__).resolve().parent.parent
+if str(repo_root) not in sys.path:
+    sys.path.insert(0, str(repo_root))
 
-logger = get_logger("OAuthGenerator")
+from shared.auth.workspace_auth import login_workspace_interactive
 
 
 def main() -> None:
-    repo_root = Path(__file__).resolve().parent.parent
-    default_secret_path = repo_root / "configs" / "oauth_client_desktop.json"
+    print("\n" + "=" * 60)
+    print("🔐 INICIANDO LOGIN PERSISTENTE COM CONTA GOOGLE")
+    print("=" * 60)
+    result = login_workspace_interactive(open_browser=True)
 
-    client_secret_file = (
-        Path(sys.argv[1]) if len(sys.argv) > 1 else default_secret_path
-    )
-
-    if not client_secret_file.exists():
-        print(
-            f"\n[AVISO] Arquivo de credenciais não encontrado: {client_secret_file}\n"
-            "Baixe o arquivo JSON do cliente OAuth 2.0 (Tipo Desktop) no GCP Console:\n"
-            "https://console.cloud.google.com/apis/credentials?project=agent-md-506215\n"
-            f"E salve em: {default_secret_path}\n"
-        )
-        sys.exit(1)
-
-    try:
-        from google_auth_oauthlib.flow import InstalledAppFlow
-
-        print(f"[*] Iniciando fluxo OAuth 2.0 com: {client_secret_file}")
-        flow = InstalledAppFlow.from_client_secrets_file(
-            str(client_secret_file), WORKSPACE_SCOPES
-        )
-        credentials = flow.run_local_server(port=0)
-
+    if result.get("status") == "success":
         print("\n" + "=" * 60)
         print("✅ AUTENTICAÇÃO CONCLUÍDA COM SUCESSO!")
-        print("Adicione as seguintes linhas ao seu arquivo .env:")
-        print("=" * 60)
-        print(f"WORKSPACE_OAUTH_CLIENT_ID={credentials.client_id}")
-        print(f"WORKSPACE_OAUTH_CLIENT_SECRET={credentials.client_secret}")
-        print(f"WORKSPACE_OAUTH_REFRESH_TOKEN={credentials.refresh_token}")
+        print(f"Conta: {result.get('account')}")
+        print(f"Token salvo em: {result.get('token_path')}")
+        print(f"Expiração: {result.get('expiry')}")
+        print("As credenciais foram persistidas no arquivo de token e no .env.")
         print("=" * 60 + "\n")
-    except Exception as e:  # noqa: BLE001 - captura falha de execução de script standalone
-        print(f"[ERRO] Falha durante a autenticação OAuth: {e}")
+    else:
+        print("\n" + "=" * 60)
+        print(f"❌ ERRO NA AUTENTICAÇÃO: {result.get('error')}")
+        print("=" * 60 + "\n")
         sys.exit(1)
 
 

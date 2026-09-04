@@ -3,6 +3,8 @@
 from mcp_servers.server import mcp
 
 EXPECTED_TOOLS = {
+    "login_google_workspace",
+    "get_workspace_auth_status",
     "list_workspace_documents",
     "get_document_content",
     "list_upcoming_calendar_events",
@@ -41,3 +43,13 @@ async def test_calendar_and_storage_tools():
     storage_result = storage_tool.fn(bucket_name="agent-md-506215-backups", max_results=2)
     assert isinstance(storage_result, list)
     assert len(storage_result) > 0
+
+
+async def test_workspace_auth_status_tool():
+    """Verifica que a ferramenta de status de autenticação retorna diagnóstico estruturado."""
+    status_tool = await mcp.get_tool("get_workspace_auth_status")
+    result = status_tool.fn()
+    assert isinstance(result, dict)
+    assert "status" in result
+    assert "authenticated" in result
+

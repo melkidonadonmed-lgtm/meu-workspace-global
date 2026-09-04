@@ -6,7 +6,11 @@ from typing import Any
 from fastmcp import FastMCP
 
 from shared.auth.gcp_auth import get_gcp_credentials
-from shared.auth.workspace_auth import get_workspace_credentials
+from shared.auth.workspace_auth import (
+    get_workspace_auth_info,
+    get_workspace_credentials,
+    login_workspace_interactive,
+)
 from shared.logger import get_logger
 
 logger = get_logger("GoogleWorkspaceMCP")
@@ -14,6 +18,18 @@ logger = get_logger("GoogleWorkspaceMCP")
 
 def register_google_workspace_tools(mcp: FastMCP) -> None:
     """Registra as ferramentas do Google Workspace e GCP no servidor FastMCP."""
+
+    @mcp.tool()
+    def login_google_workspace(port: int = 0) -> dict[str, Any]:
+        """Inicia o fluxo de login OAuth 2.0 no navegador para conectar sua conta Google Workspace de forma persistente."""
+        logger.info("Solicitação de login persistente com conta Google Workspace recebida.")
+        return login_workspace_interactive(port=port, open_browser=True)
+
+    @mcp.tool()
+    def get_workspace_auth_status() -> dict[str, Any]:
+        """Verifica o status da autenticação com o Google Workspace (conta ativa, validade do token e permissões)."""
+        logger.info("Verificando status da autenticação Google Workspace.")
+        return get_workspace_auth_info()
 
     @mcp.tool()
     def list_workspace_documents(folder_id: str = "root", limit: int = 10) -> list[dict[str, Any]]:

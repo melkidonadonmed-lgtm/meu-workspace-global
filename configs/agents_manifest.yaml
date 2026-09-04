@@ -25,6 +25,8 @@ orchestrator:
     - "security_guard"
     - "html_modular_specialist"
     - "research_evolution_specialist"
+    - "customer_issue_reviewer"
+    - "code_consistency_specialist"
   tools_enabled:
     - "mcp_tool_execution"
     - "skill_injection"
@@ -77,6 +79,22 @@ specialized_agents:
     stateless: true
     max_tokens_output: 2048
     temperature: 0.0
+
+  customer_issue_reviewer:
+    name: "CustomerIssueReviewerAgent"
+    description: "Especialista em revisão e triagem de chamados, incidentes e bugs de clientes via Google ADK Go v2"
+    model: "gemini-3.7-flash"
+    stateless: true
+    max_tokens_output: 8192
+    temperature: 0.1
+
+  code_consistency_specialist:
+    name: "CodeConsistencySpecialistAgent"
+    description: "Especialista em análise contínua de código, anti-drift de arquitetura e sincronização periódica de contexto a cada X steps"
+    model: "gemini-3.7-flash"
+    stateless: true
+    max_tokens_output: 8192
+    temperature: 0.1
 
   antigravity_bridge:
     name: "AntigravityAgentBridge"

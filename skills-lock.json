@@ -53,7 +53,7 @@
       "source": "google/agents-cli",
       "sourceType": "github",
       "skillPath": "skills/google-agents-cli-eval/SKILL.md",
-      "computedHash": "a60bb0086696ea4f7f4ba1175b07117494917ba23595d2c0a5f1633b278e57cf"
+      "computedHash": "7f4e41549d7b74a963412a5819e4eec087d6cb95d738bd5f6e786ac5963aa868"
     },
     "grill-me": {
       "source": "mattpocock/skills",

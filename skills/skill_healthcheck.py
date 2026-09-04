@@ -213,3 +213,9 @@ class SkillHealthChecker:
             )
 
         return report
+
+
+if __name__ == "__main__":
+    checker = SkillHealthChecker()
+    rep = checker.audit_catalog()
+    print(json.dumps(rep, indent=2, ensure_ascii=False))

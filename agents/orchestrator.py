@@ -1,9 +1,12 @@
 """Orquestrador Stateful Principal com Gemini Interactions API, Router e Circuit Breaker."""
 
 import os
+import re
 from typing import Any
 
 from agents.router import AutoSkillRouter
+from agents.specialized.code_consistency_specialist import CodeConsistencySpecialistAgent
+from agents.specialized.customer_issue_reviewer import CustomerIssueReviewerAgent
 from agents.specialized.html_modular_specialist import HTMLModularSpecialistAgent
 from agents.specialized.research_evolution_specialist import (
     ResearchEvolutionSpecialistAgent,
@@ -55,6 +58,8 @@ class MasterOrchestrator:
         self.workspace_specialist = WorkspaceSpecialistAgent()
         self.html_modular_specialist = HTMLModularSpecialistAgent(model_name=self.model_name)
         self.research_evolution_specialist = ResearchEvolutionSpecialistAgent(model_name=self.model_name)
+        self.customer_issue_reviewer = CustomerIssueReviewerAgent(model_name=self.model_name)
+        self.code_consistency_specialist = CodeConsistencySpecialistAgent(model_name=self.model_name)
         self.budget_manager = TokenBudgetManager()
         self.sessions: dict[str, SessionState] = {}
         self._init_gemini_client()
@@ -197,6 +202,11 @@ class MasterOrchestrator:
             ws_res = self.workspace_specialist.scan_workspace()
             specialist_results.append(ws_res)
 
+        if any(w in sanitized_input.lower() for w in ["chamado", "issue", "ticket", "problema do cliente", "revisar chamado", "urgencia"]):
+            logger.info("Delegando subtarefa para CustomerIssueReviewerAgent (Google ADK Go v2)...")
+            issue_res = self.customer_issue_reviewer.review_issues(sanitized_input)
+            specialist_results.append(issue_res)
+
         if any(w in sanitized_input.lower() for w in ["pesquisar", "pesquisa profunda", "investigar", "pesquisa tecnica", "pesquisa técnica"]):
             logger.info("Delegando subtarefa para ResearchEvolutionSpecialistAgent...")
             research_res = self.research_evolution_specialist.execute_research(
@@ -213,6 +223,41 @@ class MasterOrchestrator:
             specialist_results.append({"agent": "ResearchEvolutionSpecialistAgent", **gap_res.model_dump()})
             if gap_res.generated_skill and gap_res.generated_skill.get("status") == "created_and_validated":
                 self.skill_parser.reload_skills()
+
+        # Sentinela de Código: Sincronização Periódica a cada X steps ou delegação direta
+        step_index = len(session.history)
+        should_sync = self.code_consistency_specialist.should_trigger_sync(step_index)
+        is_code_intent = (
+            target_skill == "code_consistency_specialist"
+            or any(w in sanitized_input.lower() for w in [
+                "analise de codigo", "análise de código", "consistencia de codigo",
+                "consistência de código", "desvio de codigo", "desvio de código",
+                "code drift", "compatibilidade", "sync de contexto", "sentinela de codigo", "sentinela de código"
+            ])
+        )
+
+        if should_sync or is_code_intent:
+            logger.info(
+                f"Delegando para CodeConsistencySpecialistAgent (Step {step_index}, "
+                f"Periódico={should_sync}, Direto={is_code_intent})..."
+            )
+            code_matches = re.findall(r"```(?:python)?\s*(.*?)\s*```", sanitized_input, re.DOTALL)
+            snippets = [(f"step_{step_index}.py", c) for c in code_matches]
+            sync_snapshot = self.code_consistency_specialist.analyze_step(
+                step_index=step_index,
+                code_snippets=snippets,
+                context_summary=sanitized_input,
+                force_sync=is_code_intent,
+            )
+            specialist_results.append({
+                "agent": "CodeConsistencySpecialistAgent",
+                "status": sync_snapshot.status,
+                "is_sync_turn": sync_snapshot.is_sync_turn,
+                "snapshot": sync_snapshot.model_dump(),
+            })
+            if sync_snapshot.is_sync_turn or sync_snapshot.status != "aligned":
+                sync_xml = self.code_consistency_specialist.format_prompt_injection_for_peers(sync_snapshot)
+                system_instruction += f"\n\n{sync_xml}"
 
         # 6. Geração de Resposta via Gemini Interactions API ou Fallback
         response_text = ""
@@ -321,6 +366,15 @@ class MasterOrchestrator:
                     output_lines.append(f"```sql\n{res['suggested_sql']}\n```")
                 if "total_items_scanned" in res:
                     output_lines.append(f"Varredura concluída: {res['total_items_scanned']} itens inspecionados.")
+                if "snapshot" in res:
+                    snap = res["snapshot"]
+                    output_lines.append(f"  - Status de Alinhamento: `{snap.get('status')}` (Sincronização Periódica: {snap.get('is_sync_turn')})")
+                    if snap.get("drift_issues"):
+                        output_lines.append(f"  - Alertas de Desvio: {len(snap['drift_issues'])} questão(ões) detectada(s).")
+                    if snap.get("shared_directives_for_agents"):
+                        output_lines.append("  - Diretrizes Compartilhadas para Agentes:")
+                        for d in snap["shared_directives_for_agents"]:
+                            output_lines.append(f"    * {d}")
 
         output_lines.append("\n✅ *Separação estrita de responsabilidades, Circuit Breaker e guardrails Zero-Trust aplicados.*")
         return "\n".join(output_lines)

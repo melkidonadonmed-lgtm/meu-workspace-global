@@ -1,0 +1,927 @@
+version: 1.0.0
+total_skills: 69
+skills:
+- id: analytics
+  version: 1.0.0
+  description: Hub de análise de dados, métricas tabulares, agregação de planilhas
+    e dashboards analíticos de produtividade.
+  path: skills/analytics/SKILL.md
+  target_agent: agents/orchestrator.py
+  runtime: orchestrator
+  triggers:
+  - analytics
+  - metricas de workspace
+  - dashboard
+  - dados tabulares
+  output_schema: markdown
+  status: ATIVO
+- id: workspace-data-analytics-architect
+  version: 1.0.0
+  description: Dashboards analíticos, agregação de dados tabulares, cálculo de KPIs
+    e interfaces de Chat Analítico conectadas a dados de planilhas e documentos.
+  path: skills/analytics/workspace-data-analytics-architect/SKILL.md
+  target_agent: agents/specialized/workspace_specialist.py
+  runtime: mcp
+  triggers:
+  - dashboard analitico
+  - kpis de produtividade
+  - chat com planilhas
+  - agregacao de dados
+  - metricas tabulares
+  output_schema: markdown
+  status: ATIVO
+- id: arquitetura-design-implementacao-sistema
+  version: 1.0.0
+  description: Design de navegabilidade e fluxo de telas, diagramas de arquitetura
+    Mermaid e especificação funcional rigorosa dos 4 estados de interface.
+  path: skills/arquitetura/arquitetura-design-implementacao-sistema/SKILL.md
+  target_agent: agents/orchestrator.py
+  runtime: orchestrator
+  triggers:
+  - diagrama mermaid
+  - fluxo de navegabilidade
+  - especificacao de telas
+  - 4 estados de interface
+  output_schema: markdown
+  status: ATIVO
+- id: project-enhancer-brainstorm
+  version: 1.0.0
+  description: Expansão estruturada de ideias e MVPs em 6 eixos estratégicos (Features,
+    Arquitetura, UI, UX, Engenharia e Integrações com Google Workspace/MCP).
+  path: skills/arquitetura/project-enhancer-brainstorm/SKILL.md
+  target_agent: agents/orchestrator.py
+  runtime: orchestrator
+  triggers:
+  - expandir projeto
+  - brainstorm de produto
+  - melhorar mvp
+  - 6 eixos estrategicos
+  output_schema: markdown
+  status: ATIVO
+- id: arquitetura
+  version: 1.0.0
+  description: Hub de arquitetura de software, design de sistemas, especificações
+    funcionais e brainstorming de produtos em múltiplos eixos.
+  path: skills/arquitetura/SKILL.md
+  target_agent: agents/orchestrator.py
+  runtime: orchestrator
+  triggers:
+  - arquitetura de software
+  - design de sistemas
+  - expandir ideia
+  - especificacao funcional
+  output_schema: markdown
+  status: ATIVO
+- id: ask-matt
+  version: 1.0.0
+  description: Ask which skill or flow fits your situation. A router over the skills
+    in this repo.
+  path: .agents/skills/ask-matt/SKILL.md
+  target_agent: agents/orchestrator.py
+  runtime: orchestrator
+  triggers:
+  - ask matt
+  output_schema: markdown
+  status: ATIVO
+- id: api-auditor
+  version: 1.0.0
+  description: Expertise in auditing and testing API endpoints. Use when the user
+    asks to "check", "test", or "audit" a URL or API.
+  path: skills/auditoria/api-auditor/SKILL.md
+  target_agent: agents/orchestrator.py
+  runtime: orchestrator
+  triggers:
+  - check
+  - test
+  - audit
+  - url
+  - api
+  - auditar
+  - testar api
+  output_schema: markdown
+  status: ATIVO
+- id: code-reviewer
+  version: 1.0.0
+  description: Expertise in reviewing code changes for correctness, security, and
+    style. Use when the user asks to "review" their code or a PR.
+  path: skills/auditoria/code-reviewer/SKILL.md
+  target_agent: agents/orchestrator.py
+  runtime: orchestrator
+  triggers:
+  - review
+  - revisar
+  - revisar código
+  - revisar pr
+  - revisão de pr
+  output_schema: markdown
+  status: ATIVO
+- id: code-validator
+  version: 1.0.0
+  description: Validador de Código, Expansão de Contexto e Matriz de Risco Percentual.
+    Audita bases de código do macro ao micro linha a linha, expande contexto, calcula
+    risco percentual com justificativa causal obrigatória e gera relatório antes de
+    qualquer refatoração.
+  path: skills/auditoria/code-validator/SKILL.md
+  target_agent: agents/orchestrator.py
+  runtime: orchestrator
+  triggers:
+  - valide este código
+  - audite este código
+  - analise o risco deste código
+  - expanda o contexto deste repositório
+  - revisão de código com porcentagem de risco
+  - check de segurança de código
+  output_schema: markdown
+  status: ATIVO
+- id: skill-repo-analyser
+  version: 2.0.0
+  description: Analisador, Arquitetor e Reorganizador de Repositório Global. Realiza
+    varredura profunda em pastas e caminhos soltos, mapeia dependências e redundâncias,
+    detecta potenciais conflitos de código e gera um plano determinístico de montagem
+    de um repositório global, modular e escalável.
+  path: skills/auditoria/skill-repo-analyser/SKILL.md
+  target_agent: agents/orchestrator.py
+  runtime: orchestrator
+  triggers:
+  - analise estas pastas soltas
+  - reorganize meu repositório
+  - crie um plano de migração de código
+  - organize meu workspace
+  - monte uma estrutura global de repositório
+  output_schema: markdown
+  status: ATIVO
+- id: auditoria
+  version: 1.0.0
+  description: Hub de análise pré-mudança. Ponto de entrada para as sub-skills code-validator,
+    skill-repo-analyser, api-auditor e code-reviewer. Todas emitem relatório e exigem
+    aprovação antes de aplicar mudanças.
+  path: skills/auditoria/SKILL.md
+  target_agent: agents/orchestrator.py
+  runtime: orchestrator
+  triggers:
+  - audite
+  - analise o risco
+  - reorganize meu repositório
+  - valide este código
+  - check
+  - test
+  - audit
+  - review
+  output_schema: markdown
+  status: ATIVO
+- id: check-updates
+  version: 1.0.0
+  description: 'Check an installed skills-for-fabric plugin bundle or git clone for
+    updates, show the matching changelog, and provide host-appropriate update guidance.
+    Use when the user wants to: (1) check for skill updates, (2) see what changed,
+    (3) verify the installed version. Triggers: "check for updates", "am I up to date",
+    "what version", "update skills", "show changelog".'
+  path: skills/check-updates/SKILL.md
+  target_agent: agents/orchestrator.py
+  runtime: orchestrator
+  triggers:
+  - check updates
+  output_schema: markdown
+  status: ATIVO
+- id: claude-handoff
+  version: 1.0.0
+  description: Hand the current conversation off to a fresh background agent that
+    picks up the work immediately.
+  path: .agents/skills/claude-handoff/SKILL.md
+  target_agent: agents/orchestrator.py
+  runtime: orchestrator
+  triggers:
+  - claude handoff
+  output_schema: markdown
+  status: ATIVO
+- id: code-review
+  version: 1.0.0
+  description: 'Review the changes since a fixed point (commit, branch, tag, or merge-base)
+    along two axes: Standards (does the code follow this repo''s documented coding
+    standards?) and Spec (does the code match what the originating issue/spec asked
+    for?). Runs both reviews in parallel sub-agents and reports them side by side.
+    Use when the user wants to review a branch, a PR, work-in-progress changes, or
+    asks to "review since X".'
+  path: .agents/skills/code-review/SKILL.md
+  target_agent: agents/orchestrator.py
+  runtime: orchestrator
+  triggers:
+  - code review
+  output_schema: markdown
+  status: ATIVO
+- id: codebase-design
+  version: 1.0.0
+  description: Shared vocabulary for designing deep modules. Use when the user wants
+    to design or improve a module's interface, find deepening opportunities, decide
+    where a seam goes, make code more testable or AI-navigable, or when another skill
+    needs the deep-module vocabulary.
+  path: .agents/skills/codebase-design/SKILL.md
+  target_agent: agents/orchestrator.py
+  runtime: orchestrator
+  triggers:
+  - codebase design
+  output_schema: markdown
+  status: ATIVO
+- id: diagnosing-bugs
+  version: 1.0.0
+  description: Diagnosis loop for hard bugs and performance regressions. Use when
+    the user says "diagnose"/"debug this", or reports something broken/throwing/failing/slow.
+  path: .agents/skills/diagnosing-bugs/SKILL.md
+  target_agent: agents/orchestrator.py
+  runtime: orchestrator
+  triggers:
+  - diagnosing bugs
+  output_schema: markdown
+  status: ATIVO
+- id: domain-modeling
+  version: 1.0.0
+  description: Build and sharpen a project's domain model. Use when discussing codebase
+    terminology, writing or editing a CONTEXT.md, or recording or editing an ADR.
+  path: .agents/skills/domain-modeling/SKILL.md
+  target_agent: agents/orchestrator.py
+  runtime: orchestrator
+  triggers:
+  - domain modeling
+  output_schema: markdown
+  status: ATIVO
+- id: mcp-troubleshooter-design-advisor
+  version: 1.0.0
+  description: Diagnóstico de falhas e bloqueios em servidores FastMCP, resolução
+    de timeouts em tool calling e consultoria de design de contratos JSON-RPC.
+  path: skills/engenharia/mcp-troubleshooter-design-advisor/SKILL.md
+  target_agent: agents/orchestrator.py
+  runtime: mcp
+  triggers:
+  - falha no mcp
+  - troubleshoot mcp
+  - bloqueio de subagente
+  - erro de tool call
+  - design de ferramenta mcp
+  output_schema: markdown
+  status: ATIVO
+- id: engenharia
+  version: 1.0.0
+  description: Hub de engenharia de software, diagnóstico de servidores FastMCP, resolução
+    de bloqueios em subagentes e padrões de tool calling.
+  path: skills/engenharia/SKILL.md
+  target_agent: agents/orchestrator.py
+  runtime: orchestrator
+  triggers:
+  - engenharia
+  - diagnostico mcp
+  - troubleshoot mcp
+  - tool calling
+  output_schema: markdown
+  status: ATIVO
+- id: git-guardrails-claude-code
+  version: 1.0.0
+  description: Set up Claude Code hooks to block dangerous git commands (push, reset
+    --hard, clean, branch -D, etc.) before they execute. Use when user wants to prevent
+    destructive git operations, add git safety hooks, or block git push/reset in Claude
+    Code.
+  path: .agents/skills/git-guardrails-claude-code/SKILL.md
+  target_agent: agents/specialized/security_guard.py
+  runtime: stateless
+  triggers:
+  - git guardrails claude code
+  output_schema: markdown
+  status: ATIVO
+- id: aprimoramento-expansibilidade-agentes-skills
+  version: 1.1.0
+  description: Engenharia de Contexto de Alta Fidelidade — 5 Pilares (Negative Bounds,
+    Shumer Method, Escalation Ladder, Budgeted Context, 4 Blocos XML) para diagnóstico,
+    refatoração e blindagem de agentes, subagentes e SKILL.md.
+  path: skills/governanca/aprimoramento-expansibilidade-agentes-skills/SKILL.md
+  target_agent: agents/orchestrator.py
+  runtime: orchestrator
+  triggers:
+  - engenharia de contexto
+  - context engineering
+  - budgeted context
+  - shumer method
+  - negative bounds
+  - escalonamento de prompt
+  - context rot
+  - expansibilidade de agentes
+  output_schema: markdown
+  status: ATIVO
+- id: resilience-circuit-breaker
+  version: 1.0.0
+  description: Disjuntor de execução e guardião de orçamento para o fluxo de agentes
+    e tools. Detecta loops e deadlocks por hash de payload, aplica teto de passos
+    e tokens, e desarma com causa raiz estruturada.
+  path: skills/governanca/resilience-circuit-breaker/SKILL.md
+  target_agent: agents/orchestrator.py
+  runtime: orchestrator
+  triggers:
+  - disjuntor
+  - circuit breaker
+  - loop infinito
+  - deadlock
+  - estouro de orcamento
+  - resetar disjuntor
+  output_schema: markdown
+  status: ATIVO
+- id: skill-context-expander-guard
+  version: 1.0.0
+  description: Expande entradas brutas, informais ou fragmentadas em uma especificação
+    técnica completa (Contexto + Tarefas + Critérios de Aceite), preenchendo lacunas
+    com premissas de alta probabilidade e injetando guardrails de segurança, sem interpelar
+    o usuário com perguntas óbvias.
+  path: skills/governanca/skill-context-expander-guard/SKILL.md
+  target_agent: agents/orchestrator.py
+  runtime: orchestrator
+  triggers:
+  - organize meu pedido
+  - estruture este contexto
+  - melhore meu comando
+  - expanda esta ideia
+  - expandir contexto
+  - premissa autonoma
+  output_schema: markdown
+  status: ATIVO
+- id: skill-context-sentinel-state
+  version: 1.0.0
+  description: Audita a integridade da janela de contexto, avalia saturação de tokens,
+    isolamento semântico de dados e gera snapshots determinísticos de estado a cada
+    5 turnos com validação Pydantic/JSON.
+  path: skills/governanca/skill-context-sentinel-state/SKILL.md
+  target_agent: agents/orchestrator.py
+  runtime: orchestrator
+  triggers:
+  - context sentinel
+  - auditar contexto
+  - salvar estado
+  - checkpoint de sessao
+  - snapshot operacional
+  - context rot
+  output_schema: markdown
+  status: ATIVO
+- id: skill-factory
+  version: 1.0.0
+  description: Criação e padronização de novas habilidades no formato canônico SKILL.md
+    com validação estrutural obrigatória antes da gravação no catálogo.
+  path: skills/governanca/skill-factory/SKILL.md
+  target_agent: agents/orchestrator.py
+  runtime: orchestrator
+  triggers:
+  - criar skill
+  - nova skill
+  - padronizar skill
+  - fabricar skill
+  - skill.md
+  output_schema: markdown
+  status: ATIVO
+- id: skill-healthcheck
+  version: 1.0.0
+  description: Auditoria contínua de integridade do catálogo de skills. Mapeia falhas
+    de frontmatter, nomes divergentes, ausência de seções de restrição e redundâncias
+    semânticas.
+  path: skills/governanca/skill-healthcheck/SKILL.md
+  target_agent: agents/orchestrator.py
+  runtime: orchestrator
+  triggers:
+  - healthcheck
+  - saude do catalogo
+  - auditar skills
+  - verificar skills
+  - redundancia de skills
+  output_schema: markdown
+  status: ATIVO
+- id: skill-requirements-analyzer
+  version: 1.0.0
+  description: Auditor de arquitetura e dependências de skills. Mapeia entradas, saídas,
+    dependências externas e gera matrizes de lacunas funcionais (GAPs).
+  path: skills/governanca/skill-requirements-analyzer/SKILL.md
+  target_agent: agents/orchestrator.py
+  runtime: orchestrator
+  triggers:
+  - requisitos de skill
+  - gap analysis
+  - matriz de lacunas
+  - dependencias de skill
+  output_schema: markdown
+  status: ATIVO
+- id: governanca
+  version: 1.0.0
+  description: Hub de governança, resiliência, criação e auditoria de habilidades
+    e agentes autônomos no ecossistema global.
+  path: skills/governanca/SKILL.md
+  target_agent: agents/orchestrator.py
+  runtime: orchestrator
+  triggers:
+  - governanca
+  - circuit breaker
+  - disjuntor
+  - saude do catalogo
+  - criar skill
+  - validar entrega
+  - context sentinel
+  output_schema: markdown
+  status: ATIVO
+- id: validacao-pre-entrega
+  version: 1.0.0
+  description: Validação dimensional de integridade, sintaxe, segurança e funcionalidade
+    de códigos e artefatos antes do envio final com cálculo de ganho percentual.
+  path: skills/governanca/validacao-pre-entrega/SKILL.md
+  target_agent: agents/orchestrator.py
+  runtime: orchestrator
+  triggers:
+  - validacao pre-entrega
+  - validar entrega
+  - relatorio de ganho
+  - score dimensional
+  output_schema: markdown
+  status: ATIVO
+- id: grill-me
+  version: 1.0.0
+  description: A relentless interview to sharpen a plan or design.
+  path: .agents/skills/grill-me/SKILL.md
+  target_agent: agents/orchestrator.py
+  runtime: orchestrator
+  triggers:
+  - grill me
+  output_schema: markdown
+  status: ATIVO
+- id: grill-with-docs
+  version: 1.0.0
+  description: A relentless interview to sharpen a plan or design, which also creates
+    docs (ADR's and glossary) as we go.
+  path: .agents/skills/grill-with-docs/SKILL.md
+  target_agent: agents/orchestrator.py
+  runtime: orchestrator
+  triggers:
+  - grill with docs
+  output_schema: markdown
+  status: ATIVO
+- id: grilling
+  version: 1.0.0
+  description: Grill the user relentlessly about a plan, decision, or idea. Use when
+    the user wants to stress-test their thinking, or uses any 'grill' trigger phrases.
+  path: .agents/skills/grilling/SKILL.md
+  target_agent: agents/orchestrator.py
+  runtime: orchestrator
+  triggers:
+  - grilling
+  output_schema: markdown
+  status: ATIVO
+- id: handoff
+  version: 1.0.0
+  description: Compact the current conversation into a handoff document for another
+    agent to pick up.
+  path: .agents/skills/handoff/SKILL.md
+  target_agent: agents/orchestrator.py
+  runtime: orchestrator
+  triggers:
+  - handoff
+  output_schema: markdown
+  status: ATIVO
+- id: implement
+  version: 1.0.0
+  description: Implement a piece of work based on a spec or set of tickets.
+  path: .agents/skills/implement/SKILL.md
+  target_agent: agents/orchestrator.py
+  runtime: orchestrator
+  triggers:
+  - implement
+  output_schema: markdown
+  status: ATIVO
+- id: implement-spec
+  version: 1.0.0
+  description: Implement a specification in code.
+  path: .agents/skills/implement-spec/SKILL.md
+  target_agent: agents/orchestrator.py
+  runtime: orchestrator
+  triggers:
+  - implement spec
+  output_schema: markdown
+  status: ATIVO
+- id: improve-codebase-architecture
+  version: 1.0.0
+  description: Scan a codebase for deepening opportunities, present them as a visual
+    HTML report, then grill through whichever one you pick.
+  path: .agents/skills/improve-codebase-architecture/SKILL.md
+  target_agent: agents/orchestrator.py
+  runtime: orchestrator
+  triggers:
+  - improve codebase architecture
+  output_schema: markdown
+  status: ATIVO
+- id: loop-me
+  version: 1.0.0
+  description: Grill me about specs for the workflows I want to build, within this
+    workspace.
+  path: .agents/skills/loop-me/SKILL.md
+  target_agent: agents/orchestrator.py
+  runtime: orchestrator
+  triggers:
+  - loop me
+  output_schema: markdown
+  status: ATIVO
+- id: migrate-to-shoehorn
+  version: 1.0.0
+  description: Migrate test files from `as` type assertions to @total-typescript/shoehorn.
+    Use when user mentions shoehorn, wants to replace `as` in tests, or needs partial
+    test data.
+  path: .agents/skills/migrate-to-shoehorn/SKILL.md
+  target_agent: agents/orchestrator.py
+  runtime: orchestrator
+  triggers:
+  - migrate to shoehorn
+  output_schema: markdown
+  status: ATIVO
+- id: prototype
+  version: 1.0.0
+  description: Build a throwaway prototype to answer a design question. Use when the
+    user wants to sanity-check whether a state model or logic feels right, or explore
+    what a UI should look like.
+  path: .agents/skills/prototype/SKILL.md
+  target_agent: agents/orchestrator.py
+  runtime: orchestrator
+  triggers:
+  - prototype
+  output_schema: markdown
+  status: ATIVO
+- id: research
+  version: 1.0.0
+  description: Investigate a question against high-trust primary sources and capture
+    the findings as a Markdown file in the repo. Use when the user wants a topic researched,
+    docs or API facts gathered, or reading legwork delegated to a background agent.
+  path: skills/research/SKILL.md
+  target_agent: agents/specialized/research_evolution_specialist.py
+  runtime: stateless
+  triggers:
+  - research
+  output_schema: markdown
+  status: ATIVO
+- id: resolving-merge-conflicts
+  version: 1.0.0
+  description: Use when you need to resolve an in-progress git merge/rebase conflict.
+  path: .agents/skills/resolving-merge-conflicts/SKILL.md
+  target_agent: agents/orchestrator.py
+  runtime: orchestrator
+  triggers:
+  - resolving merge conflicts
+  output_schema: markdown
+  status: ATIVO
+- id: retro
+  version: 1.0.0
+  description: Conduct a retrospective on a coding session.
+  path: .agents/skills/retro/SKILL.md
+  target_agent: agents/orchestrator.py
+  runtime: orchestrator
+  triggers:
+  - retro
+  output_schema: markdown
+  status: ATIVO
+- id: scaffold-exercises
+  version: 1.0.0
+  description: Create exercise directory structures with sections, problems, solutions,
+    and explainers that pass linting. Use when user wants to scaffold exercises, create
+    exercise stubs, or set up a new course section.
+  path: .agents/skills/scaffold-exercises/SKILL.md
+  target_agent: agents/orchestrator.py
+  runtime: orchestrator
+  triggers:
+  - scaffold exercises
+  output_schema: markdown
+  status: ATIVO
+- id: setup-matt-pocock-skills
+  version: 1.0.0
+  description: 'Configure this repo for the engineering skills: set up its issue tracker,
+    triage label vocabulary, and domain doc layout. Run once before first use of the
+    other engineering skills.'
+  path: .agents/skills/setup-matt-pocock-skills/SKILL.md
+  target_agent: agents/orchestrator.py
+  runtime: orchestrator
+  triggers:
+  - setup matt pocock skills
+  output_schema: markdown
+  status: ATIVO
+- id: setup-pre-commit
+  version: 1.0.0
+  description: Set up Husky pre-commit hooks with lint-staged (Prettier), type checking,
+    and tests in the current repo. Use when user wants to add pre-commit hooks, set
+    up Husky, configure lint-staged, or add commit-time formatting/typechecking/testing.
+  path: .agents/skills/setup-pre-commit/SKILL.md
+  target_agent: agents/orchestrator.py
+  runtime: orchestrator
+  triggers:
+  - setup pre commit
+  output_schema: markdown
+  status: ATIVO
+- id: setup-ts-deep-modules
+  version: 1.0.0
+  description: Wire dependency-cruiser into a TypeScript repo so each package is a
+    deep module, with implementation hidden in subfolders and reachable only through
+    its entry-point files. User-invoked.
+  path: .agents/skills/setup-ts-deep-modules/SKILL.md
+  target_agent: agents/orchestrator.py
+  runtime: orchestrator
+  triggers:
+  - setup ts deep modules
+  output_schema: markdown
+  status: ATIVO
+- id: skill-prompt-generator
+  version: 1.1.0
+  description: Meta-engenharia e estruturação de prompts declarativos com XML tags,
+    guardrails e pensamento em cadeia para Gemini 3.
+  path: skills/skill-prompt-generator/SKILL.md
+  target_agent: agents/orchestrator.py
+  runtime: orchestrator
+  triggers:
+  - gere um prompt
+  - meta-prompt
+  - otimize meu prompt
+  - crie system prompt
+  output_schema: markdown
+  status: ATIVO
+- id: tdd
+  version: 1.0.0
+  description: Test-driven development. Use when the user wants to build features
+    or fix bugs test-first, mentions "red-green-refactor", or wants integration tests.
+  path: .agents/skills/tdd/SKILL.md
+  target_agent: agents/orchestrator.py
+  runtime: orchestrator
+  triggers:
+  - tdd
+  output_schema: markdown
+  status: ATIVO
+- id: teach
+  version: 1.0.0
+  description: Teach the user a new skill or concept, within this workspace.
+  path: .agents/skills/teach/SKILL.md
+  target_agent: agents/orchestrator.py
+  runtime: orchestrator
+  triggers:
+  - teach
+  output_schema: markdown
+  status: ATIVO
+- id: to-questionnaire
+  version: 1.0.0
+  description: Turn a decision you can't fully answer into a questionnaire for someone
+    else to fill in.
+  path: .agents/skills/to-questionnaire/SKILL.md
+  target_agent: agents/orchestrator.py
+  runtime: orchestrator
+  triggers:
+  - to questionnaire
+  output_schema: markdown
+  status: ATIVO
+- id: to-spec
+  version: 1.0.0
+  description: 'Turn the current conversation into a spec and publish it to the project
+    issue tracker: no interview, just synthesis of what you''ve already discussed.'
+  path: .agents/skills/to-spec/SKILL.md
+  target_agent: agents/orchestrator.py
+  runtime: orchestrator
+  triggers:
+  - to spec
+  output_schema: markdown
+  status: ATIVO
+- id: to-tickets
+  version: 1.0.0
+  description: Break a plan, spec, or the current conversation into a set of tracer-bullet
+    tickets, each declaring its blocking edges, published to the configured tracker
+    (edges as text in one file per ticket locally, or native blocking links on a real
+    tracker).
+  path: .agents/skills/to-tickets/SKILL.md
+  target_agent: agents/orchestrator.py
+  runtime: orchestrator
+  triggers:
+  - to tickets
+  output_schema: markdown
+  status: ATIVO
+- id: triage
+  version: 1.0.0
+  description: Move issues and external PRs through a state machine of triage roles,
+    categorise, verify, grill if needed, and write agent-ready briefs.
+  path: .agents/skills/triage/SKILL.md
+  target_agent: agents/orchestrator.py
+  runtime: orchestrator
+  triggers:
+  - triage
+  output_schema: markdown
+  status: ATIVO
+- id: accessibility
+  version: 1.0.0
+  description: Primary accessibility skill for VS Code. REQUIRED for new feature and
+    contribution work, and also applies to updates of existing UI. Covers accessibility
+    help dialogs, accessible views, verbosity settings, signals, ARIA announcements,
+    keyboard navigation, and ARIA labels/roles.
+  path: skills/ui-engineering/accessibility/SKILL.md
+  target_agent: agents/specialized/html_modular_specialist.py
+  runtime: stateless
+  triggers:
+  - acessibilidade
+  - a11y
+  - wcag
+  - aria
+  - contraste
+  output_schema: markdown
+  status: ATIVO
+- id: color-palette-and-depth-architect
+  version: 1.0.0
+  description: Design de paletas cromáticas acessíveis (WCAG AA/AAA), gradientes suaves,
+    elevação e profundidade em camadas para temas dark/light de alto contraste.
+  path: skills/ui-engineering/color-palette-and-depth-architect/SKILL.md
+  target_agent: agents/specialized/html_modular_specialist.py
+  runtime: stateless
+  triggers:
+  - paleta de cores
+  - gradiente sutil
+  - contraste wcag
+  - profundidade em camadas
+  - tema dark
+  output_schema: markdown
+  status: ATIVO
+- id: design-interface-medica-minimalista
+  version: 1.0.0
+  description: Padrão de UI/UX executivo para aplicações médicas e clínicas. Zero
+    emojis, tipografia sóbria, cores Slate/Emerald, conformidade com CFM/ANVISA e
+    impressão A4 perfeita.
+  path: skills/ui-engineering/design-interface-medica-minimalista/SKILL.md
+  target_agent: agents/specialized/html_modular_specialist.py
+  runtime: stateless
+  triggers:
+  - ui medica
+  - interface clinica
+  - prontuario
+  - receituario medico
+  - impressao a4 medica
+  output_schema: markdown
+  status: ATIVO
+- id: frontend-design
+  version: 1.0.0
+  description: Guidance for distinctive, intentional visual design when building new
+    UI or reshaping an existing one. Helps with aesthetic direction, typography, and
+    making choices that don't read as templated defaults.
+  path: skills/ui-engineering/frontend-design/SKILL.md
+  target_agent: agents/specialized/html_modular_specialist.py
+  runtime: stateless
+  triggers:
+  - design
+  - layout
+  - interface
+  - componente
+  - tailwind
+  - tela
+  output_schema: markdown
+  status: ATIVO
+- id: minimal-ui-menu-icon-architect
+  version: 1.0.0
+  description: Arquitetura de menus minimalistas de alta precisão (docks, sidebars
+    retráteis, navbars) e iconografia vetorial em SVG inline sem emojis.
+  path: skills/ui-engineering/minimal-ui-menu-icon-architect/SKILL.md
+  target_agent: agents/specialized/html_modular_specialist.py
+  runtime: stateless
+  triggers:
+  - menu minimalista
+  - sidebar retratil
+  - dock menu
+  - icones svg
+  - navbar
+  output_schema: markdown
+  status: ATIVO
+- id: responsive-html-ui-master
+  version: 1.0.0
+  description: Design e engenharia de templates HTML5/CSS3 ultra-responsivos, submenus
+    móveis fluidos e layouts adaptativos mobile-first.
+  path: skills/ui-engineering/responsive-html-ui-master/SKILL.md
+  target_agent: agents/specialized/html_modular_specialist.py
+  runtime: stateless
+  triggers:
+  - html responsivo
+  - layout mobile-first
+  - template html5
+  - menu mobile
+  output_schema: markdown
+  status: ATIVO
+- id: skill-html-modular-builder
+  version: 1.0.0
+  description: Construtor de HTML5 modular, Atomic Design (Átomos, Moléculas, Organismos)
+    e montagem de páginas completas acessíveis (WCAG 2.1 AA) com Tailwind CSS.
+  path: skills/ui-engineering/skill-html-modular-builder/SKILL.md
+  target_agent: agents/specialized/html_modular_specialist.py
+  runtime: stateless
+  triggers:
+  - crie uma página HTML
+  - monte um layout em componentes
+  - desenvolva o HTML modular para
+  - estruture uma landing page em módulos
+  - converta este wireframe em HTML
+  - montagem de pages
+  - montagem html
+  - html modular
+  output_schema: markdown
+  status: ATIVO
+- id: ui-engineering
+  version: 1.0.0
+  description: Hub de construção de interfaces de alto padrão. Ponto de entrada para
+    sub-skills de frontend, acessibilidade, design tátil, temas e interfaces médicas.
+  path: skills/ui-engineering/SKILL.md
+  target_agent: agents/specialized/html_modular_specialist.py
+  runtime: stateless
+  triggers:
+  - ui
+  - frontend
+  - design system
+  - componente react
+  - acessibilidade
+  - design tatil
+  output_schema: markdown
+  status: ATIVO
+- id: tactile-hyperreal-ui-auditor
+  version: 1.0.0
+  description: Auditoria estética e visual de alta fidelidade (4K Feel). Aplicação
+    de iluminação direcional 315°, sombras compostas em 3 camadas, relevo tátil e
+    eliminação de emojis.
+  path: skills/ui-engineering/tactile-hyperreal-ui-auditor/SKILL.md
+  target_agent: agents/specialized/html_modular_specialist.py
+  runtime: stateless
+  triggers:
+  - auditoria tatil
+  - design hiper-realista
+  - 4k feel
+  - sombras multicamadas
+  - relevo tatil
+  output_schema: markdown
+  status: ATIVO
+- id: wait-what
+  version: 1.0.0
+  description: 'Stop. That last message did not land: re-pitch it.'
+  path: .agents/skills/wait-what/SKILL.md
+  target_agent: agents/orchestrator.py
+  runtime: orchestrator
+  triggers:
+  - wait what
+  output_schema: markdown
+  status: ATIVO
+- id: wayfinder
+  version: 1.0.0
+  description: Plan a huge chunk of work (more than one agent session can hold) as
+    a shared map of decision tickets on your issue tracker, and resolve them one at
+    a time until the way to the destination is clear.
+  path: .agents/skills/wayfinder/SKILL.md
+  target_agent: agents/orchestrator.py
+  runtime: orchestrator
+  triggers:
+  - wayfinder
+  output_schema: markdown
+  status: ATIVO
+- id: wizard
+  version: 1.0.0
+  description: Generate an interactive bash wizard that walks a human through steps
+    only they can perform. Use when provisioning infrastructure, setting up credentials
+    or CI secrets, walking an unfamiliar third-party dashboard, or running a one-off
+    migration or cutover. Don't invoke this for steps the agent can perform itself.
+  path: .agents/skills/wizard/SKILL.md
+  target_agent: agents/orchestrator.py
+  runtime: orchestrator
+  triggers:
+  - wizard
+  output_schema: markdown
+  status: ATIVO
+- id: writing-beats
+  version: 1.0.0
+  description: Writing, exploit; assemble raw material into a journey of beats, grounding
+    each term before a beat leans on it.
+  path: .agents/skills/writing-beats/SKILL.md
+  target_agent: agents/orchestrator.py
+  runtime: orchestrator
+  triggers:
+  - writing beats
+  output_schema: markdown
+  status: ATIVO
+- id: writing-for-agents
+  version: 1.0.0
+  description: Writing documents for agents. Use when creating or editing skills,
+    or modifying AGENTS.md or CLAUDE.md.
+  path: .agents/skills/writing-for-agents/SKILL.md
+  target_agent: agents/orchestrator.py
+  runtime: orchestrator
+  triggers:
+  - writing for agents
+  output_schema: markdown
+  status: ATIVO
+- id: writing-fragments
+  version: 1.0.0
+  description: 'Writing, explore: mine raw fragments, no structure yet.'
+  path: .agents/skills/writing-fragments/SKILL.md
+  target_agent: agents/orchestrator.py
+  runtime: orchestrator
+  triggers:
+  - writing fragments
+  output_schema: markdown
+  status: ATIVO
+- id: writing-shape
+  version: 1.0.0
+  description: 'Writing, exploit: shape raw material into an article, paragraph by
+    paragraph.'
+  path: .agents/skills/writing-shape/SKILL.md
+  target_agent: agents/orchestrator.py
+  runtime: orchestrator
+  triggers:
+  - writing shape
+  output_schema: markdown
+  status: ATIVO
