@@ -1,5 +1,7 @@
 # Especificação Técnica de Arquitetura do Repositório Global
 
+> **Nota (2026-09-05):** a camada de serviço descrita abaixo (API Gateway FastAPI e servidor FastMCP em `mcp_servers/`) foi removida — era um teste de deploy remoto que não compensava manter. O diagrama e os componentes que dependiam dela ficaram sem ponto de entrada ativo; `MasterOrchestrator` e os subagentes especializados continuam no repositório como referência, pendentes de migração para subagentes nativos do Claude Code (`.claude/agents/*.md`).
+
 ## 1. Visão Geral e Princípios Fundamentais
 Este ecossistema foi projetado para permitir que múltiplos agentes de inteligência artificial autônomos, ferramentas de integração de contexto (Model Context Protocol - FastMCP) e aplicações de usuário final coexistam de maneira harmoniosa, escalável e segura.
 
@@ -45,9 +47,7 @@ flowchart TD
 ## 3. Guia dos Componentes
 
 - **`agents/orchestrator.py`**: Mantém o estado da sessão e gerencia a chamada à **Gemini Interactions API** (`gemini-3.7-flash`), permitindo conversações com histórico contextual e delegação paralela.
-- **`agents/antigravity_bridge.py`**: Implementação oficial do **Google Antigravity SDK** (`google-antigravity`), fornecendo `LocalAgentConfig`, `Agent`, e ferramentas nativas de inspeção do workspace.
 - **`skills/skill_parser.py`**: Mapeia arquivos `SKILL.md` nos subdiretórios de `/skills` e expõe apenas resumos no prompt base, carregando o conteúdo completo sob demanda.
-- **`mcp_servers/server.py`**: Instância FastMCP unificada que expõe ferramentas via `stdio` (para IDEs locais) ou `sse` na porta 8080 (para contêineres e nuvem).
 - **`configs/agents_manifest.yaml`**: Manifesto declarativo de permissões, orçamentos e limites operacionais dos modelos.
 - **`projects/customer_issue_reviewer_go/`**: Agente autônomo em Go implementado com **Google ADK v2 (`google.golang.org/adk/v2`)**, especializado em triagem de chamados e relatórios executivos de confiabilidade.
 - **`projects/canvas_ide/`**: Interface de visualização moderna em React + TypeScript + Tailwind.

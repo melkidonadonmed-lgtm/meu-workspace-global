@@ -1,7 +1,5 @@
 """Testes unitários do CodeConsistencySpecialistAgent (Anti-Drift e Sincronização Periódica de Contexto)."""
 
-from agents.orchestrator import MasterOrchestrator
-from agents.router import AutoSkillRouter
 from agents.specialized.code_consistency_specialist import (
     CodeConsistencySpecialistAgent,
     CodeContract,
@@ -103,26 +101,4 @@ def process_user(payload: UserPayload) -> bool:
     assert "<step_index>2</step_index>" in xml_output
     assert "<contract name=\"UserPayload\"" in xml_output
     assert "</code_context_sync>" in xml_output
-
-
-def test_router_routes_to_code_consistency_specialist():
-    """Garante que o router classifica a intenção de análise de código e anti-drift."""
-    router = AutoSkillRouter()
-    decision = router.route("por favor faça a analise de codigo e veja se tem desvio de codigo")
-    assert decision["target_skill"] == "code_consistency_specialist"
-    assert decision["target_type"] == "agent"
-
-
-def test_orchestrator_delegates_to_code_consistency_specialist():
-    """Valida a integração completa com o MasterOrchestrator."""
-    orchestrator = MasterOrchestrator()
-    user_msg = (
-        "Por favor faça a analise de codigo do seguinte trecho:\n"
-        "```python\ndef calculate_metric(a: int, b: int) -> int:\n    return a * b\n```"
-    )
-    result = orchestrator.process_message(session_id="test_consistency_session", user_message=user_msg)
-
-    assert result["status"] == "success"
-    assert "CodeConsistencySpecialistAgent" in result["delegated_subagents"]
-    assert "Painel de Despacho" in result["response"] or "PAINEL DE DESPACHO" in result["response"]
 

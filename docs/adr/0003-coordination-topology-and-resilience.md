@@ -1,5 +1,7 @@
 # 0003. Topologia de Coordenação Hub-and-Spoke e Resiliência com Checkpoints Git
 
+> **Status: Superseded (2026-09-05).** A camada de interface deste ADR (API Gateway FastAPI na porta 8000, `run.ps1`, servidor FastMCP na porta 8080) foi removida — era um teste de deploy remoto que não compensava manter. `MasterOrchestrator` ficou sem ponto de entrada ativo; a topologia Hub-and-Spoke em si não foi invalidada, mas seu meio de consumo precisa de uma nova decisão (provável migração para subagentes nativos do Claude Code).
+
 Decidimos adotar a topologia de orquestração centralizada em estrela (*Hub-and-Spoke*), disjuntor de resiliência com rollback baseado em checkpoints Git e interface híbrida de consumo via API Gateway SSE (porta 8000) e FastMCP (porta 8080).
 
 ## Contexto e Motivação

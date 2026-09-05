@@ -1,11 +1,10 @@
-# 🌐 Repositório Global de Agentes Autônomos, Skills & FastMCP
+# 🌐 Repositório Global de Agentes Autônomos & Skills
 
 [![Python Version](https://img.shields.io/badge/python-3.11+-blue.svg)](https://www.python.org/)
 [![Model](https://img.shields.io/badge/model-Gemini%203.7%20Flash-orange.svg)](https://ai.google.dev/)
-[![Protocol](https://img.shields.io/badge/MCP-FastMCP%20Multi--Transport-green.svg)](https://modelcontextprotocol.io/)
 [![Architecture](https://img.shields.io/badge/architecture-Strict%20Separation%20of%20Concerns-purple.svg)](#)
 
-Este repositório consolida a **arquitetura de repositório global ideal** para operar agentes de inteligência artificial de alta performance, catálogo modular de habilidades (`SKILL.md`), servidores de ferramentas do Model Context Protocol (FastMCP) e aplicações web isoladas.
+Este repositório consolida a **arquitetura de repositório global ideal** para operar agentes de inteligência artificial de alta performance, catálogo modular de habilidades (`SKILL.md`) e aplicações web isoladas.
 
 ---
 
@@ -16,11 +15,9 @@ meu-workspace-global/
 ├── 📁 .codex/                        # Configuração do Codex no escopo do projeto
 │   └── 📄 config.toml                # OpenAI Docs MCP oficial e somente leitura
 │
-├── 📁 agents/                        # Hub Central de Agentes e Orquestração (Google Antigravity SDK)
+├── 📁 agents/                        # Hub Central de Agentes e Orquestração
 │   ├── 📄 __init__.py                # Módulo exportável
 │   ├── 📄 orchestrator.py            # Orquestrador Stateful (Gemini Interactions API + Memória)
-│   ├── 📄 antigravity_bridge.py      # Ponte oficial com o Google Antigravity SDK (Python)
-│   ├── 📄 api_gateway.py             # Servidor de API (FastAPI / SSE Streaming)
 │   └── 📁 specialized/              # Subagentes Especialistas Stateless
 │       ├── 📄 __init__.py
 │       ├── 📄 html_modular_specialist.py # Especialista em páginas HTML5 e Atomic Design
@@ -40,13 +37,6 @@ meu-workspace-global/
 │   ├── 📁 auditoria/                 # Bundle de auditoria (code-validator, skill-repo-analyser)
 │   └── 📁 skill-prompt-generator/    # Skill standalone
 │       └── 📄 SKILL.md
-│
-├── 📁 mcp_servers/                   # Servidores FastMCP (Model Context Protocol)
-│   ├── 📄 server.py                  # Servidor MCP unificado (Multi-Transporte: stdio + SSE)
-│   ├── 📄 mcp_config.json            # Manifesto para Antigravity, Cursor e Claude
-│   └── 📁 tools/                     # Módulos de ferramentas e conectores de API
-│       ├── 📄 google_workspace.py    # Conector Google Drive/Docs/Sheets
-│       └── 📄 bigquery_analytics.py  # Conector de análise de dados
 │
 ├── 📁 configs/                       # Configurações, Manifestos e Guardrails
 │   ├── 📄 agents_manifest.yaml       # Declaração central de agentes, modelos e permissões
@@ -79,15 +69,13 @@ meu-workspace-global/
 │   └── 📁 eval/                      # Avaliações de segurança e alinhamento (LLM-as-judge)
 │
 ├── 📁 docs/                          # Documentação Técnica e Diagramas do Workspace
-│   ├── 📄 architecture.md            # Especificação técnica do repositório
-│   └── 📄 mcp_setup_guide.md         # Guia de conexão com clientes de IA
+│   └── 📄 architecture.md            # Especificação técnica do repositório
 │
 ├── 📁 inbox/                         # Quarentena de dados brutos e arquivos em triagem
 │
 ├── 📄 pyproject.toml                 # Empacotamento unificado Python (modo editável)
-├── 📄 mcp_config.json                # Apontamento de ferramentas MCP para IDEs
-├── 📄 run.ps1                        # Script de automação Windows PowerShell
-├── 📄 Makefile                       # Comandos de automação Linux/macOS
+├── 📄 mcp_config.json                # Apontamento de servidores MCP de terceiros (desktop-commander, gdrive)
+├── 📄 Makefile                       # Comandos de automação (setup, test, lint, agent-go)
 ├── 📄 .gitignore                     # Exclusão de temporários (.venv, node_modules, .env)
 └── 📄 README.md                      # Documentação Mestre do Repositório Global
 ```
@@ -100,17 +88,13 @@ meu-workspace-global/
 - Python 3.11+
 - Node.js 18+ (Opcional, apenas para UIs em `/projects`)
 
-### 2. Configuração do Ambiente em Um Clique
+### 2. Configuração do Ambiente
 
-No Windows (PowerShell):
-```powershell
-.\run.ps1 setup
-```
-
-No Linux / macOS:
 ```bash
 make setup
 ```
+
+(Windows sem `make` disponível: rode os passos equivalentes direto — `pip install -e ".[dev]"`.)
 
 ### 3. Configuração de Credenciais
 Adicione sua chave de API do Gemini no arquivo `.env`:
@@ -123,27 +107,17 @@ Configuração opcional de persistência de estado:
 BRAIN_STATE_DB_PATH=shared/state/sessions.db
 ```
 
-### 4. Execução dos Serviços
+### 4. Execução da Suíte de Testes
 
-**Iniciar ecossistema completo (API Gateway + Servidor MCP SSE):**
-```powershell
-.\run.ps1 dev
-```
-
-**Executar a suíte de testes:**
-```powershell
-.\run.ps1 test
+```bash
+make test
 ```
 
 ---
 
 ## 🧩 Protocolo MCP e Integração de IDEs
 
-O arquivo [`mcp_config.json`](file:///mcp_config.json) na raiz do repositório disponibiliza imediatamente as ferramentas para **Google Antigravity**, **Cursor** e **Claude Desktop**:
-
-- `list_workspace_documents` & `get_document_content`: Integração com arquivos e documentos corporativos.
-- `bigquery_execute_query` & `bigquery_get_schema`: Consultas e inspeção de dados em larga escala.
-- `get_system_health`: Diagnóstico de integridade do workspace.
+O arquivo [`mcp_config.json`](file:///mcp_config.json) na raiz do repositório aponta para servidores MCP de terceiros (`desktop-commander`, `gdrive`) usados pelas IDEs locais. Este workspace não hospeda mais um servidor MCP próprio.
 
 O Codex CLI e a extensão carregam o servidor remoto `openaiDeveloperDocs` a partir de
 [`.codex/config.toml`](.codex/config.toml) quando este projeto está marcado como confiável. O servidor

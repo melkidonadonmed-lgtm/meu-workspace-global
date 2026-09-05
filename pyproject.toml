@@ -5,7 +5,7 @@ build-backend = "hatchling.build"
 [project]
 name = "meu-workspace-global"
 version = "1.0.0"
-description = "Repositório Global Unificado para Agentes Autônomos, Skills Modulares e Servidores FastMCP"
+description = "Repositório Global Unificado para Agentes Autônomos e Skills Modulares"
 readme = "README.md"
 requires-python = ">=3.11"
 authors = [
@@ -13,9 +13,6 @@ authors = [
 ]
 dependencies = [
     "google-genai>=2.3.0",
-    "fastmcp>=3.0,<4.0",
-    "fastapi>=0.115.0",
-    "uvicorn[standard]>=0.30.0",
     "pydantic>=2.8.0",
     "pyyaml>=6.0.2",
     "python-dotenv>=1.0.1",
@@ -41,7 +38,7 @@ dev = [
 ]
 
 [tool.hatch.build.targets.wheel]
-packages = ["agents", "shared", "skills", "mcp_servers"]
+packages = ["agents", "shared", "skills"]
 
 [tool.pytest.ini_options]
 asyncio_mode = "auto"

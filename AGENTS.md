@@ -1,58 +1,42 @@
-# AGENTS.md — Instruções do Projeto
+# AGENTS.md — meu-workspace-global
 
-## Visão Geral
+Idioma oficial: **Português (BR)** — código, documentação, commits e respostas.
 
-Repositório global de agentes autônomos, catálogo hierárquico de skills (`SKILL.md`), motores de orquestração cognitiva (`AutoSkillRouter`, `ResilienceCircuitBreaker`, `SkillHealthChecker`, `SkillFactory`, `StateOrchestrator`) e servidores FastMCP.
-Arquitetura completa em `docs/architecture.md`. Idioma do projeto: **Português (BR)** — código, comentários, commits e documentação seguem pt-BR.
+## O que este repositório é
 
-## Estrutura
+Workspace de ferramentas para **trabalhar em outros projetos** — ele não é, ele mesmo, o projeto-alvo. Evite auditar ou "melhorar" este próprio repositório quando o pedido for sobre um projeto em `projects/*`.
 
-- `agents/` — hub de agentes e orquestração:
-  - `orchestrator.py`: `MasterOrchestrator` stateful integrado ao Gemini Interactions API, com guardrails Zero-Trust e persistência transacional.
-  - `router.py`: `AutoSkillRouter` determinístico com classificação de complexidade e portão de segurança destrutivo.
-  - `antigravity_bridge.py`: Ponte nativa com o Google Antigravity SDK.
-  - `api_gateway.py`: API Gateway FastAPI com endpoints REST e SSE Streaming (`/chat`, `/chat/stream`, `/skills/health`, `/skills/create`).
-  - `specialized/`: Subagentes stateless (`security_guard`, `sql_specialist`, `workspace_specialist`, `html_modular_specialist`, `research_evolution_specialist`, `customer_issue_reviewer`, `code_consistency_specialist`).
-- `skills/` — catálogo governado de habilidades consumido pelo `skill_parser.py` (progressive disclosure) e validado pelo `skill_healthcheck.py`, organizado em bundles:
-  - `governanca/` (`resilience-circuit-breaker`, `skill-factory`, `skill-healthcheck`, `skill-context-sentinel-state`, `skill-requirements-analyzer`, `validacao-pre-entrega`, `aprimoramento-expansibilidade-agentes-skills`)
-  - `auditoria/` (`code-validator`, `skill-repo-analyser`, `api-auditor`, `code-reviewer`)
-  - `research/` (`deep-research`, `notebooklm`)
-  - `analytics/` (`workspace-data-analytics-architect`)
-  - `arquitetura/` (`project-enhancer-brainstorm`, `arquitetura-design-implementacao-sistema`)
-  - `engenharia/` (`mcp-troubleshooter-design-advisor`)
-  - `ui-engineering/` (`frontend-design`, `accessibility`, `tactile-hyperreal-ui-auditor`, `color-palette-and-depth-architect`, `minimal-ui-menu-icon-architect`, `responsive-html-ui-master`, `design-interface-medica-minimalista`, `skill-html-modular-builder`)
-  - Standalone: `skill-prompt-generator`, `check-updates`
-- `mcp_servers/` — servidor FastMCP unificado (stdio/SSE) e tools em `tools/` (BigQuery Analytics, Google Workspace, Calendar, Cloud Storage).
-- `shared/` — motores utilitários:
-  - `circuit_breaker.py`: Sentinela de resiliência e disjuntor de deadlocks/loops.
-  - `state_orchestrator.py`: Persistência transacional com SQLite WAL em `shared/state/sessions.db`.
-  - `auth/`: Autenticação para GCP Service Account / ADC (`gcp_auth.py`) e Google Workspace OAuth 2.0 com Refresh Token permanente (`workspace_auth.py`).
-  - `logger.py`, `context_utils.py`.
-- `configs/` — `guardrails.yaml` (lido pelo `SecurityGuardAgent`), `agents_manifest.yaml`, `.env.example`.
-- `inbox/` — quarentena/triagem; **não é código governado** (excluída do lint).
-- Projetos alvo de aplicação operados externamente em `Brain/projetos/`: `pcm`, `canvas_ide`, `keepdocs-workspace`.
-- `tests/` — `unit/`, `integration/`, `eval/`.
+O código real dos clientes vive fora daqui, em `C:\Users\melki\Projetos\`; as pastas em `projects/` são só symlinks de conveniência.
 
-## Comandos
+| Projeto | Symlink | Tech Stack | Repositório GitHub |
+|---|---|---|---|
+| PresCMed (PCM) | `projects/pcm` | React 18, Vite, TypeScript, Tailwind, IndexedDB | `melkidonadonmed-lgtm/PCM` |
+| PresCMed Remix (variante) | `projects/remix-prescmed-new` | React, Vite, TypeScript | `melkidonadonmed-lgtm/remix-prescmed-new` |
+| Canvas IDE | `projects/canvas_ide` | React, Vite, TypeScript, Tailwind, Canvas API | `melkidonadonmed-lgtm/canvas_ide` |
+| KeepDocs Workspace | `projects/keepdocs-workspace` | React, TypeScript, Streamlit, Python | `melkidonadonmed-lgtm/keepdocs-v2` |
+| WAOE | `projects/WAOE` | React, TypeScript, Tailwind | `melkidonadonmed-lgtm/agents-md-95` |
 
-Windows (PowerShell): `.\run.ps1 <cmd>` — Linux/macOS: `make <cmd>`
+## Como o trabalho acontece
 
-- `setup` — instala dependências (`pip install -e ".[dev]"`) e npm dos projetos.
-- `dev` — sobe API Gateway (8000) + MCP SSE (8080).
-- `test` — `pytest tests -v --tb=short` (todas as suítes devem passar antes de qualquer commit).
-- `lint` — `ruff check .` (deve sair limpo).
+O Claude Code é quem executa aqui, através dos seus próprios mecanismos nativos:
+- **Skill tool**: carrega `.claude/skills/*/SKILL.md` sob demanda, pela descrição de cada skill. O catálogo de domínio em `skills/` (auditoria, ui-engineering, engenharia) é real e reflete trabalho já feito.
+- **Agent tool**: despacha para subagentes definidos em `.claude/agents/*.md`, quando existirem.
+
+Não há um orquestrador separado por trás disso — nenhum processo Python precisa estar rodando para uma skill ou subagente funcionar.
+
+## O que sobrou do framework Python antigo
+
+Em 2026-09-05, além da camada de serviço (`run.ps1`, API Gateway, servidor MCP), foi auditado item a item o que restava de `agents/*.py`: o que só simulava decisão via texto hardcoded ou dependia de um `GEMINI_API_KEY` que nunca chega a ser chamado por ninguém foi apagado (`orchestrator.py`, `dispatcher.py`, `router.py`, a parte de planejamento do `execution_planner.py`, e os especialistas `sql_specialist.py`, `html_modular_specialist.py`, `customer_issue_reviewer.py`, `research_evolution_specialist.py` — todos com saída fixa/fake quando testados de verdade).
+
+O que tinha lógica determinística real, sem LLM, testada e sobrevivendo sozinha, ficou:
+- `agents/specialized/security_guard.py` — `ProjectBoundaryGuardrail` (bloqueia auto-auditoria da raiz/`agents/`/`skills/`) e `SecurityGuardAgent` (detecção de prompt injection, mascaramento de PII/CPF/e-mail, redação de API keys vazadas).
+- `agents/specialized/workspace_specialist.py` — varredura real de árvore de arquivos e detecção de stack tecnológica.
+- `agents/specialized/code_consistency_specialist.py` — análise AST real de Python (erros de sintaxe, convenção `except Exception` sem `# noqa: BLE001`, compatibilidade de contratos/assinaturas).
+- `agents/project_resolver.py` — `ProjectTargetResolver`, extraído do `execution_planner.py`: resolve nome casual de projeto → caminho real em `projects/` + stack detectada.
+
+Nenhum desses é invocado automaticamente — são utilitários Python reais, testados (`tests/unit/`), disponíveis para uso direto ou como script bundlado numa skill (ex: a `audit-project` já reaproveita o mesmo tipo de checagem manualmente).
 
 ## Convenções
 
-- Python 3.11+, line-length 100, tipagem moderna (`dict[str, Any]`, `X | None`).
-- Ruff: código vendorado/legado está em `extend-exclude` no `pyproject.toml` (`skills/research/notebooklm`, `inbox`, `.agents`) — não "corrigir" esses diretórios.
-- Padrões de bloqueio de segurança vivem em `configs/guardrails.yaml`, **não** hardcoded.
-- Novos símbolos públicos de `shared/` devem ser registrados na fachada lazy em `shared/__init__.py`, preservando imports existentes sem carregamento eager.
-- `except Exception` só com `# noqa: BLE001` e justificativa (fallback proposital).
-- Mudanças em estrutura/convenções → atualizar este AGENTS.md e o `README.md`.
-
-## Segurança
-
-- `.env` e credenciais **nunca** são versionados (ver `.gitignore`).
-- Conectores MCP (`google_workspace`, `bigquery_analytics`) operam em modo híbrido real via projeto GCP `agent-md-506215` e OAuth 2.0 quando configurados, mantendo fallback simulado automático quando offline.
-- Operações destrutivas exigem confirmação explícita (HITL), conforme `configs/guardrails.yaml` e `AutoSkillRouter`.
+- Operações destrutivas (deletar, sobrescrever, `rm -rf`, force-push) exigem confirmação explícita antes de executar.
+- Skills de governança (auditoria de catálogo, criação de skill) deveriam ficar escopadas a este projeto. **Pendência conhecida:** hoje `~/.claude/skills` ainda aponta globalmente para `Brain/.agents/skills`, então essas skills disparam em qualquer repositório aberto nesta máquina — não só aqui.

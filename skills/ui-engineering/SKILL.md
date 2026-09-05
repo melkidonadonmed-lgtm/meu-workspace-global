@@ -26,6 +26,9 @@ Bundle especializado em direção de arte, sistemas de design tátil, acessibili
 | [`color-palette-and-depth-architect`](color-palette-and-depth-architect/SKILL.md) | Paletas de cores acessíveis, contraste AA/AAA e profundidade de elevação. |
 | [`minimal-ui-menu-icon-architect`](minimal-ui-menu-icon-architect/SKILL.md) | Menus minimalistas (dock, sidebars, navbars) e ícones vetoriais em SVG sem emojis. |
 | [`responsive-html-ui-master`](responsive-html-ui-master/SKILL.md) | Layouts responsivos HTML5/CSS3 com abordagem mobile-first e submenus fluidos. |
+| [`skill-html-modular-builder`](skill-html-modular-builder/SKILL.md) | Montagem de componentes modulares HTML5 semânticos com Atomic Design. |
+| [`ui-component-auditor`](ui-component-auditor/SKILL.md) | Auditoria de UI/HTML bruto, diagnóstico visual/semântico e blueprint técnico de refatoração. |
+| [`ui-refactor-implementer`](ui-refactor-implementer/SKILL.md) | Refatoração e implementação precisa de UI semântica a partir de Blueprint e HTML legado. |
 | [`design-interface-medica-minimalista`](design-interface-medica-minimalista/SKILL.md) | Interfaces médicas, receituários e calculadoras com impressão A4 e conformidade CFM. |
 
 ## Zonas de Não-Ação & O que NÃO Fazer

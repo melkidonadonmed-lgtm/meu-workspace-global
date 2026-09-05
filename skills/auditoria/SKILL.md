@@ -26,6 +26,7 @@ Bundle de habilidades que seguem o mesmo fluxo: **varrer → mapear riscos/confl
 | [`skill-repo-analyser`](skill-repo-analyser/SKILL.md) | Varredura de pastas soltas, mapeamento de dependências/redundâncias e plano de montagem de repositório global. |
 | [`api-auditor`](api-auditor/SKILL.md) | Auditoria e testes de endpoints de API e URLs para verificação de integridade e latência. |
 | [`code-reviewer`](code-reviewer/SKILL.md) | Revisão automatizada de arquivos e alterações de código para checagem de qualidade. |
+| [`web-security-auditor`](web-security-auditor/SKILL.md) | Checklist e auditoria sistemática de segurança para Web Apps (OWASP, injeções, segredos, headers). |
 
 ## Como rotear
 
@@ -33,4 +34,5 @@ Bundle de habilidades que seguem o mesmo fluxo: **varrer → mapear riscos/confl
 - Estrutura de diretórios e organização do workspace → `skill-repo-analyser`.
 - Teste de endpoint de API ou URL → `api-auditor`.
 - Revisão de arquivo ou alterações de código para qualidade/estilo → `code-reviewer`.
+- Auditoria de segurança web, segredos, auth ou headers → `web-security-auditor`.
 - Reorganização grande que toca código → encadear: `skill-repo-analyser` para o plano estrutural, `code-validator` para o risco dos módulos afetados.

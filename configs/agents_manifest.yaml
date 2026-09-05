@@ -95,16 +95,3 @@ specialized_agents:
     stateless: true
     max_tokens_output: 8192
     temperature: 0.1
-
-  antigravity_bridge:
-    name: "AntigravityAgentBridge"
-    description: "Agente oficial integrado com o Google Antigravity SDK e ferramentas locais"
-    model: "gemini-3.7-flash"
-    stateless: false
-    max_tokens_output: 8192
-    temperature: 0.2
-    tools_enabled:
-      - "list_workspace_files"
-      - "read_workspace_file"
-      - "execute_sql_query"
-      - "get_system_health"
