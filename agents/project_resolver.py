@@ -37,20 +37,30 @@ class ProjectTargetInfo:
     description: str = ""
 
 
+CANONICAL_EXTERNAL_PROJECTS_DIR = Path("C:/Users/melki/Projetos")
+
+
 class ProjectTargetResolver:
-    """Localizador determinístico do diretório de projetos clientes estritamente sob projects/."""
+    """Localizador determinístico do diretório de projetos clientes (Projetos/ ou projects/)."""
 
     @staticmethod
     def resolve_target(user_input: str, workspace_root: Path | None = None) -> ProjectTargetInfo | None:
         text_lower = user_input.lower()
         root = workspace_root or Path(__file__).resolve().parents[1]
-        projects_dir = root / "projects"
+        local_projects_dir = root / "projects"
 
         # 1. Correspondência com projetos conhecidos no ecossistema
         for proj_alias, folder_name in sorted(KNOWN_PROJECT_NAMES.items(), key=lambda x: len(x[0]), reverse=True):
             pattern = rf"\b{re.escape(proj_alias)}\b"
             if re.search(pattern, text_lower):
-                target_path = projects_dir / folder_name
+                # Prioridade 1: pasta canônica C:\Users\melki\Projetos
+                target_path = CANONICAL_EXTERNAL_PROJECTS_DIR / folder_name
+                # Fallback: pasta local do workspace projects/
+                if not target_path.exists() and local_projects_dir.exists():
+                    candidate = local_projects_dir / folder_name
+                    if candidate.exists():
+                        target_path = candidate
+
                 tech_stack = ProjectTargetResolver._detect_tech_stack(target_path) if target_path.exists() else []
                 return ProjectTargetInfo(
                     name=folder_name,
@@ -60,18 +70,20 @@ class ProjectTargetResolver:
                     description=f"Projeto {folder_name} localizado em {target_path.as_posix()}",
                 )
 
-        # 2. Descoberta dinâmica em projects/ local
-        if projects_dir.exists():
-            for child in projects_dir.iterdir():
-                if (child.is_dir() or child.is_symlink()) and child.name.lower() in text_lower:
-                    tech_stack = ProjectTargetResolver._detect_tech_stack(child)
-                    return ProjectTargetInfo(
-                        name=child.name,
-                        target_path=child,
-                        exists=True,
-                        tech_stack=tech_stack,
-                        description=f"Projeto descoberto em projects/{child.name}",
-                    )
+        # 2. Descoberta dinâmica em C:\Users\melki\Projetos e projects/ local
+        search_dirs = [CANONICAL_EXTERNAL_PROJECTS_DIR, local_projects_dir]
+        for pdir in search_dirs:
+            if pdir.exists():
+                for child in pdir.iterdir():
+                    if (child.is_dir() or child.is_symlink()) and child.name.lower() in text_lower:
+                        tech_stack = ProjectTargetResolver._detect_tech_stack(child)
+                        return ProjectTargetInfo(
+                            name=child.name,
+                            target_path=child,
+                            exists=True,
+                            tech_stack=tech_stack,
+                            description=f"Projeto descoberto em {child.as_posix()}",
+                        )
 
         return None
 

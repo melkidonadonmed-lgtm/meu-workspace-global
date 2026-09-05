@@ -72,8 +72,16 @@ shared/state/*.db
 # Inbox e Temporários
 inbox/*
 !inbox/.gitkeep
+artifacts/
 
 # Links e Pastas Locais do Usuário
 google-drive-ia/
 skills-e-agentes/
+
+# Projetos externos (residem canonicamente em C:/Users/melki/Projetos/)
+projects/pcm/
+projects/canvas_ide/
+projects/keepdocs-workspace/
+projects/WAOE/
+projects/remix-prescmed-new/
 
