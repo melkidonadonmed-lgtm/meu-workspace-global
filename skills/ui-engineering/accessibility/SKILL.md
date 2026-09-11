@@ -13,9 +13,10 @@ triggers:
 ## When to Use This Skill
 
 Use this skill for any VS Code feature work that introduces or changes interactive UI.
-Use this skill by default for new features and contributions, including when the request does not explicitly mention accessibility.
+Use this skill by default for any new feature or contribution that adds or changes user-facing interactive UI, even when the request does not mention accessibility. For purely non-UI changes (services, APIs, build/tooling), this skill does not apply.
 
 Trigger examples:
+
 - "add a new feature"
 - "implement a new panel/view/widget"
 - "add a new command or workflow"
@@ -74,29 +75,39 @@ An accessibility help dialog tells the user what the feature does, which keyboar
 The simplest approach is to return an `AccessibleContentProvider` directly from `getProvider()`. This is the most common pattern in the codebase (used by chat, inline chat, quick chat, etc.):
 
 ```ts
-import { AccessibleViewType, AccessibleContentProvider, AccessibleViewProviderId } from '../../../../platform/accessibility/browser/accessibleView.js';
-import { IAccessibleViewImplementation } from '../../../../platform/accessibility/browser/accessibleViewRegistry.js';
-import { AccessibilityVerbositySettingId } from '../../../../platform/accessibility/common/accessibilityConfiguration.js';
+import {
+  AccessibleViewType,
+  AccessibleContentProvider,
+  AccessibleViewProviderId,
+} from "../../../../platform/accessibility/browser/accessibleView.js";
+import { IAccessibleViewImplementation } from "../../../../platform/accessibility/browser/accessibleViewRegistry.js";
+import { AccessibilityVerbositySettingId } from "../../../../workbench/contrib/accessibility/browser/accessibilityConfiguration.js";
 
 export class MyFeatureAccessibilityHelp implements IAccessibleViewImplementation {
-	readonly priority = 100;
-	readonly name = 'my-feature';
-	readonly type = AccessibleViewType.Help;
-	readonly when = MyFeatureContextKeys.isFocused;
+  readonly priority = 100;
+  readonly name = "my-feature";
+  readonly type = AccessibleViewType.Help;
+  readonly when = MyFeatureContextKeys.isFocused;
 
-	getProvider(accessor: ServicesAccessor) {
-		const helpText = [
-			localize('myFeature.help.overview', "You are in My Feature. …"),
-			localize('myFeature.help.key1', "- {0}: Do something", '<keybinding:myFeature.doSomething>'),
-		].join('\n');
-		return new AccessibleContentProvider(
-			AccessibleViewProviderId.MyFeature,
-			{ type: AccessibleViewType.Help },
-			() => helpText,
-			() => { /* onClose — refocus whatever was focused before */ },
-			AccessibilityVerbositySettingId.MyFeature,
-		);
-	}
+  getProvider(accessor: ServicesAccessor) {
+    const helpText = [
+      localize("myFeature.help.overview", "You are in My Feature. …"),
+      localize(
+        "myFeature.help.key1",
+        "- {0}: Do something",
+        "<keybinding:myFeature.doSomething>",
+      ),
+    ].join("\n");
+    return new AccessibleContentProvider(
+      AccessibleViewProviderId.MyFeature,
+      { type: AccessibleViewType.Help },
+      () => helpText,
+      () => {
+        /* onClose — refocus whatever was focused before */
+      },
+      AccessibilityVerbositySettingId.MyFeature,
+    );
+  }
 }
 ```
 
@@ -144,25 +155,27 @@ If the feature is purely keyboard-driven with native text input/output (e.g., a 
 
 ```ts
 export class MyFeatureAccessibleView implements IAccessibleViewImplementation {
-	readonly priority = 100;
-	readonly name = 'my-feature';
-	readonly type = AccessibleViewType.View;
-	readonly when = MyFeatureContextKeys.isFocused;
+  readonly priority = 100;
+  readonly name = "my-feature";
+  readonly type = AccessibleViewType.View;
+  readonly when = MyFeatureContextKeys.isFocused;
 
-	getProvider(accessor: ServicesAccessor) {
-		// Retrieve services, build content from the feature's current state
-		const content = getMyFeatureContent();
-		if (!content) {
-			return undefined;
-		}
-		return new AccessibleContentProvider(
-			AccessibleViewProviderId.MyFeature,
-			{ type: AccessibleViewType.View },
-			() => content,
-			() => { /* onClose — refocus whatever was focused before the accessible view opened */ },
-			AccessibilityVerbositySettingId.MyFeature,
-		);
-	}
+  getProvider(accessor: ServicesAccessor) {
+    // Retrieve services, build content from the feature's current state
+    const content = getMyFeatureContent();
+    if (!content) {
+      return undefined;
+    }
+    return new AccessibleContentProvider(
+      AccessibleViewProviderId.MyFeature,
+      { type: AccessibleViewType.View },
+      () => content,
+      () => {
+        /* onClose — refocus whatever was focused before the accessible view opened */
+      },
+      AccessibilityVerbositySettingId.MyFeature,
+    );
+  }
 }
 ```
 
@@ -176,14 +189,16 @@ A verbosity setting controls whether a hint such as "press Alt+F1 for accessibil
 
 1. **Add an entry** to `AccessibilityVerbositySettingId` in
    `src/vs/workbench/contrib/accessibility/browser/accessibilityConfiguration.ts`:
+
    ```ts
    export const enum AccessibilityVerbositySettingId {
-       // … existing entries …
-       MyFeature = 'accessibility.verbosity.myFeature'
+     // … existing entries …
+     MyFeature = "accessibility.verbosity.myFeature",
    }
    ```
 
 2. **Register the configuration property** in the same file's `configuration.properties` object:
+
    ```ts
    [AccessibilityVerbositySettingId.MyFeature]: {
        description: localize('verbosity.myFeature.description',
@@ -191,6 +206,7 @@ A verbosity setting controls whether a hint such as "press Alt+F1 for accessibil
        ...baseVerbosityProperty
    },
    ```
+
    The `baseVerbosityProperty` gives it `type: 'boolean'`, `default: true`, and `tags: ['accessibility']`.
 
 3. **Reference the setting key** in both the help-dialog provider (`verbositySettingKey`) and the accessible-view provider so the runtime can check whether to show the hint.
@@ -209,6 +225,7 @@ Accessibility signals provide audible and spoken feedback for events that happen
 ### How signals work
 
 Each signal has two modalities controlled by user settings:
+
 - **Sound** — a short audio cue, configurable to `auto` (on when screen reader attached), `on`, or `off`.
 - **Announcement** — a spoken message via `aria-live`, configurable to `auto` or `off`.
 
@@ -234,11 +251,13 @@ this._accessibilitySignalService.playSignal(AccessibilitySignal.error, { userGes
 Use the `alert()` and `status()` functions from `src/vs/base/browser/ui/aria/aria.ts` to announce dynamic changes to screen readers.
 
 ### `alert(msg)` — Assertive live region (`role="alert"`)
+
 - **Use for**: Urgent, important information that the user must know immediately.
 - **Examples**: Errors, warnings, critical state changes, results of a user-initiated action.
 - **Behavior**: Interrupts the screen reader's current speech.
 
 ### `status(msg)` — Polite live region (`aria-live="polite"`)
+
 - **Use for**: Non-urgent, informational updates that should be spoken when the screen reader is idle.
 - **Examples**: Progress updates, search result counts, background state changes.
 - **Behavior**: Queued and spoken after the screen reader finishes its current output.
@@ -282,7 +301,7 @@ All interactive UI elements must have appropriate ARIA attributes so screen read
 ### Guidelines
 
 - Avoid generic labels like "button" or "icon" — describe the action: "Close panel", "Toggle sidebar", "Run task".
-- Test with a screen reader (VoiceOver on macOS, NVDA on Windows) to verify labels are spoken correctly in context.
+- Screen reader verification (VoiceOver on macOS, NVDA on Windows) must be done by a human. Do not claim to have tested with a screen reader; instead, list the interactive elements and their `aria-label`/`role` values in your summary and explicitly note that manual screen reader verification is still required.
 - Lists and trees should use `aria-setsize` and `aria-posinset` when virtualized so screen readers report the correct count.
 
 ---
@@ -299,7 +318,7 @@ All interactive UI elements must have appropriate ARIA attributes so screen read
 - [ ] `when` context key is set so the dialog only appears when the feature is focused
 - [ ] If the feature has rich/visual content: `IAccessibleViewImplementation` with `type = View` created and registered
 - [ ] Registration calls in the feature's `*.contribution.ts` file
-- [ ] Accessibility signal played for important events (use existing `AccessibilitySignal.*` or register a new one)
+- [ ] Accessibility signal played for important events (use existing `AccessibilitySignal.*`; if none fits, flag it for coordination with @meganrogge rather than registering a new one)
 - [ ] `aria.alert()` or `aria.status()` used appropriately for dynamic changes (prefer `status()` unless urgent)
 - [ ] All interactive elements reachable and operable via keyboard
 - [ ] All interactive elements without visible text have a localized `aria-label`
@@ -313,4 +332,3 @@ All interactive UI elements must have appropriate ARIA attributes so screen read
 - `src/vs/workbench/contrib/accessibility/browser/accessibilityConfiguration.ts` — `AccessibilityVerbositySettingId`, verbosity setting registration
 - `src/vs/platform/accessibilitySignal/browser/accessibilitySignalService.ts` — `IAccessibilitySignalService`, `AccessibilitySignal`
 - `src/vs/base/browser/ui/aria/aria.ts` — `alert()`, `status()` for ARIA live region announcements
-

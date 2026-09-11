@@ -55,6 +55,7 @@ out/
 *.swo
 .DS_Store
 Thumbs.db
+*.vsix
 
 # Testes e Cobertura
 .coverage
@@ -90,5 +91,4 @@ projects/remix-prescmed-new/
 
 # Catalogo plano sincronizado (gerado por scripts/sync_flat_catalog.py)
 published_skills/
-
 
