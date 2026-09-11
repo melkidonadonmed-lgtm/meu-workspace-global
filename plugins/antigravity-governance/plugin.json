@@ -1,0 +1,5 @@
+{
+  "name": "antigravity-governance",
+  "description": "Bundle oficial de governança, guardrails Zero-Trust, lifecycle hooks e migração de rotinas para Agent Skills.",
+  "version": "1.0.0"
+}

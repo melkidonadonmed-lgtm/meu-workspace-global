@@ -72,6 +72,8 @@ Gere o plano de ação sequencial dividido em:
 - ❌ **NUNCA apagar arquivos brutos ou originais:** Todos os arquivos marcados como duplicados ou obsoletos devem ser movidos para uma pasta temporária de quarentena (`/archive` ou `/raw_data`), nunca deletados definitivamente.
 - ❌ **NUNCA incluir pastas de temporários/build no plano de migração:** Pastas como `node_modules`, `.venv`, `.next` e `dist` devem ser ignoradas no script de transporte e recriadas no novo ambiente via gerenciador de pacotes.
 - ❌ **NUNCA utilizar caminhos absolutos rígidos nas configurações:** Toda a nova estrutura deve ser projetada com caminhos relativos ao diretório raiz para garantir portabilidade entre diferentes sistemas operacionais.
+- ❌ **NUNCA executar reorganização ou varredura de auto-auditoria sobre o meta-workspace ou agents/:** O escopo de reestruturação aplica-se estritamente a diretórios de projetos em `projects/*` ou migrações de pastas soltas externas para novos projetos, sendo expressamente proibido desestruturar ou auditar a raiz `meu-workspace-global` ou a pasta `agents/` (AUDIT_TARGET_PROHIBITED).
+
 
 ---
 

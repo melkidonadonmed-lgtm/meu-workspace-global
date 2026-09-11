@@ -1,0 +1,52 @@
+{
+  "governance-guardrail": {
+    "enabled": true,
+    "PreToolUse": [
+      {
+        "matcher": "run_command|write_to_file|replace_file_content|multi_replace_file_content",
+        "hooks": [
+          {
+            "type": "command",
+            "command": "python ../../scripts/hooks/pre_tool_guard.py",
+            "timeout": 15
+          }
+        ]
+      }
+    ]
+  },
+  "governance-reminder": {
+    "enabled": true,
+    "PreInvocation": [
+      {
+        "type": "command",
+        "command": "python ../../scripts/hooks/pre_invocation_reminder.py",
+        "timeout": 10
+      }
+    ]
+  },
+  "governance-telemetry": {
+    "enabled": true,
+    "PostToolUse": [
+      {
+        "matcher": "run_command",
+        "hooks": [
+          {
+            "type": "command",
+            "command": "python ../../scripts/hooks/post_tool_reporter.py",
+            "timeout": 10
+          }
+        ]
+      }
+    ]
+  },
+  "governance-stop-check": {
+    "enabled": true,
+    "Stop": [
+      {
+        "type": "command",
+        "command": "python ../../scripts/hooks/stop_verifier.py",
+        "timeout": 10
+      }
+    ]
+  }
+}

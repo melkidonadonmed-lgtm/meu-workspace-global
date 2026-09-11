@@ -6,6 +6,13 @@ description: >
   Use when the user wants to: (1) check for skill updates, (2) see what changed,
   (3) verify the installed version. Triggers: "check for updates", "am I up to
   date", "what version", "update skills", "show changelog".
+triggers:
+  - "check for updates"
+  - "am I up to date"
+  - "what version"
+  - "update skills"
+  - "show changelog"
+  - "verificar atualizacoes"
 ---
 
 # Check for Updates

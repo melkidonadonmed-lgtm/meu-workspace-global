@@ -5,11 +5,11 @@ prompt_injection_protection:
   enabled: true
   strict_mode: true
   blocked_patterns:
-    - "(?i)ignore previous instructions"
-    - "(?i)disregard system prompt"
-    - "(?i)reveal api key"
-    - "(?i)dump credentials"
-    - "(?i)sudo rm -rf"
+    - "(?i)ignore\\s+(all\\s+)?previous\\s+(instructions|guidelines|rules|prompts)"
+    - "(?i)disregard\\s+(system\\s+)?(prompt|instructions|rules)"
+    - "(?i)reveal\\s+(api\\s*key|password|credential|secret)"
+    - "(?i)dump\\s+.*(credentials|passwords|keys|secrets)"
+    - "(?i)sudo\\s+rm\\s+-rf"
   action_on_match: "block_and_alert" # block_and_alert, sanitize, log_only
 
 pii_sanitization:
@@ -33,3 +33,21 @@ execution_safety:
 output_validation:
   max_character_length: 50000
   scan_for_secrets_leakage: true
+
+audit_scope_policy:
+  allowed_audit_roots:
+    - "projects/*"
+    - "projects/pcm"
+    - "projects/canvas_ide"
+    - "projects/keepdocs-workspace"
+    - "projects/WAOE"
+  prohibited_audit_targets:
+    - "agents"
+    - "agents/*"
+    - "skills"
+    - "skills/*"
+    - "."
+    - "./"
+    - "meu-workspace-global"
+  default_target_fallback_mode: "reject"
+

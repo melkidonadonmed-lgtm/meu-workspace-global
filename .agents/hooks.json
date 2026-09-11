@@ -1,0 +1,27 @@
+{
+  "security-guardrail": {
+    "enabled": true,
+    "PreToolUse": [
+      {
+        "matcher": "run_command|write_to_file|replace_file_content|multi_replace_file_content",
+        "hooks": [
+          {
+            "type": "command",
+            "command": "python C:/Users/melki/.gemini/scripts/hooks/pre_tool_guard.py",
+            "timeout": 15
+          }
+        ]
+      }
+    ]
+  },
+  "context-reminder": {
+    "enabled": true,
+    "PreInvocation": [
+      {
+        "type": "command",
+        "command": "python C:/Users/melki/.gemini/scripts/hooks/pre_invocation_reminder.py",
+        "timeout": 10
+      }
+    ]
+  }
+}

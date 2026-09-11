@@ -1,16 +1,16 @@
-# Progress - Survey 2: Technical Architecture & Interfaces
+# Progress — Explorer 2 (Ferramentas de Engenharia de Código e Guardrails de Segurança)
 
-Last visited: 2026-09-03T04:10:00Z
+Last visited: 2026-09-11T07:11:30Z
 
-## Status
-- [x] Leitura de ORIGINAL_REQUEST.md e definição da missão
-- [x] Configuração de DISPATCH.md e BRIEFING.md
-- [x] Investigação do ambiente existente (`pyproject.toml`, diretório `projects/`, dependências como playwright, bs4, pillow, pydantic)
-- [x] Análise detalhada dos 5 requisitos (R1 a R5)
-- [x] Especificação dos modelos de dados tipados (Pydantic v2)
-- [x] Desenho da arquitetura modular limpa e fluxos de dados
-- [x] Mapeamento detalhado dos contratos de interface (funções, assinaturas, retornos, exceções)
-- [x] Estratégia de empacotamento, layout de arquivos e CLI
-- [x] Redação do relatório consolidado `survey_arch_report.md`
-- [x] Redação do `handoff.md`
-- [x] Envio da mensagem de conclusão ao parent (concluído)
+## Status: Concluído (100%)
+
+### Tarefas
+- [x] Inicialização do workspace (`DISPATCH.md`, `BRIEFING.md`, `progress.md`)
+- [x] Leitura de `ORIGINAL_REQUEST.md` (seção `## 2026-09-11T07:05:21Z`)
+- [x] Inspeção de `security_guard.py`, `code_consistency_specialist.py`, `guardrails.yaml` e testes associados
+- [x] Levantamento e especificação de ferramentas determinísticas de inteligência de código (navegação/busca, AST estático, propostas/patches com validação)
+- [x] Investigação aprofundada dos guardrails de segurança exigidos em R2 (interceptadores de ciclo de vida pre/post-tool, bloqueio destrutivo, mascaramento PII/credenciais, Boundary Guard, HITL)
+- [x] Execução e validação dos testes existentes como linha de base (12 testes aprovados)
+- [x] Síntese dos achados e elaboração do relatório estruturado `handoff.md` (5 seções canônicas)
+- [x] Atualização final de `progress.md` e `BRIEFING.md`
+- [x] Notificação ao orquestrador pai via `send_message`

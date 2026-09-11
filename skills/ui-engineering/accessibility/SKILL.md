@@ -1,6 +1,13 @@
 ---
 name: accessibility
 description: Primary accessibility skill for VS Code. REQUIRED for new feature and contribution work, and also applies to updates of existing UI. Covers accessibility help dialogs, accessible views, verbosity settings, signals, ARIA announcements, keyboard navigation, and ARIA labels/roles.
+triggers:
+  - "acessibilidade"
+  - "a11y"
+  - "wcag"
+  - "aria"
+  - "contraste"
+  - "acessibilidade web"
 ---
 
 ## When to Use This Skill

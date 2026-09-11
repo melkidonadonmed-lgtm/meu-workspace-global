@@ -29,3 +29,6 @@ active, you MUST:
 - NEVER send destructive requests (DELETE/PUT with mutating payloads) to a production endpoint without explicit user confirmation.
 - NEVER hardcode or echo back API keys/tokens found in headers or responses.
 - NEVER assume an endpoint is safe to test just because it responded with `200`.
+- NEVER execute audits against the meta-workspace root (`meu-workspace-global`) or `agents/` directory; audits are strictly scoped to projects in `projects/*`.
+- NUNCA executar auditoria sobre o meta-workspace ou sobre a pasta de agentes; qualquer tentativa gera bloqueio imediato (AUDIT_TARGET_PROHIBITED).
+

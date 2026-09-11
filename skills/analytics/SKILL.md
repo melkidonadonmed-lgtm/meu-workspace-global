@@ -20,6 +20,11 @@ Bundle responsável pela agregação de métricas, inteligência sobre dados do 
 |---|---|
 | [`workspace-data-analytics-architect`](workspace-data-analytics-architect/SKILL.md) | Painéis de produtividade, KPIs, agregação de dados tabulares e chat analítico sobre planilhas. |
 
+## Referências Canônicas
+
+- [GCP Pipeline Templates](references/gcp-pipeline-templates.md): Modelos declarativos de 3 níveis (Python, Dataproc Serverless PySpark e BigQuery SQL).
+
 ## Zonas de Não-Ação & O que NÃO Fazer
 - NUNCA expor dados sensíveis ou PII sem anonimização prévia.
 - NUNCA executar agregações destrutivas sobre fontes primárias.
+

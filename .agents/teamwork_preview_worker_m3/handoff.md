@@ -1,122 +1,147 @@
-# Handoff Report — Milestone M3: DOM Geometry Inspector
+# Relatório de Handoff — Worker 3: Marco 3 (Interfaces de Execução & Quality Flywheel)
 
-**Agente**: `teamwork_preview_worker_m3`  
-**Data**: 2026-09-03  
-**Destinatário**: `parent` (`ccc2ab57-1e80-4064-8e39-4de9a6ee1c52`)  
-**Status**: Concluído (Hard Handoff)  
-**Escopo**: Implementação de `dom_auditor.py` e `test_dom_auditor.py` para o pacote `projects/web_visual_auditor`.
+**Agente:** Worker 3 (Implementer, QA, Specialist)  
+**Data/Hora:** 2026-09-11T07:57:30Z  
+**Pasta de Metadados:** `c:\Users\melki\meu-workspace-global\.agents\teamwork_preview_worker_m3`  
+**Diretório do Projeto Alvo:** `c:\Users\melki\meu-workspace-global\projects\code_intelligence_agent`  
+**Escopo do Marco 3 (M3):** Interfaces de Execução (R4) e Suíte de Avaliação Automatizada Quality Flywheel (R3).
 
 ---
 
 ## 1. Observation (Observações Diretas)
 
-1. **Requisitos de Despacho & Contratos de Interface**:
-   - O arquivo `c:\Users\melki\meu-workspace-global\.agents\ORIGINAL_REQUEST.md` define no requisito R2:
-     > "O módulo de inspeção deve renderizar aplicações web via Playwright em modo headless, extraindo elementos-chave (`header`, `main`, `article`, `button`, `nav`, `h1`, etc.) com IDs, classes, visibilidade computada e coordenadas geométricas precisas (`x`, `y`, `width`, `height`) obtidas via `getBoundingClientRect`."
-   - O arquivo `projects/web_visual_auditor/web_visual_auditor/models.py` estabelece:
-     - `ComputedElementGeometry` com campos `x: float`, `y: float`, `width: float`, `height: float`, propriedade `area`, tupla `as_tuple` e método `intersects(other)`.
-     - `DOMNodeSummary` com campos `tag_name: str`, `element_id: str | None`, `classes: list[str]`, `text_content: str | None`, `is_visible: bool`, `geometry: ComputedElementGeometry`, `selector: str | None` e `attributes: dict[str, str]`.
-   - O arquivo `projects/web_visual_auditor/web_visual_auditor/exceptions.py` define a hierarquia de exceções:
-     `AuditorError` $\leftarrow$ `DOMAuditError` $\leftarrow$ `NavigationTimeoutError` $\leftarrow$ `PageNavigationTimeoutError` e `ElementNotFoundError`.
-   - A fixture `projects/web_visual_auditor/tests/fixtures/sample_page.html` possui os nós estruturais com classes e estilos CSS explícitos:
-     - `<header id="main-header" class="site-header">` (width: 100%, height: 80px)
-     - `<nav id="navbar" class="main-nav">`
-     - `<main id="main-content" class="site-main">`
-     - `<h1 id="page-title" class="heading-primary">`
-     - `<article id="featured-article" class="article-container">` (width: 800px)
-     - `<button id="primary-action-btn" class="btn btn-primary">` (width: 160px, height: 42px)
-     - `<button id="secondary-btn" class="btn btn-secondary">` (width: 120px, height: 42px)
-     - `<div id="hidden-element" class="hidden-box" aria-hidden="true">` (display: none)
-     - `<div id="zero-dim-element" class="zero-dim-box" aria-hidden="true">` (width: 0, height: 0)
+1. **Estado Inicial do Projeto:**
+   - O projeto `projects/code_intelligence_agent` continha as bases de M1 e M2 implementadas:
+     - `app/agent.py`: `root_agent` e `app = App(name="app", root_agent=root_agent)`.
+     - `app/guardrails.py`: Defesas em profundidade (`validate_path_boundary`, `is_destructive_command`, `redact_sensitive_info`).
+     - `app/tools.py`: 4 ferramentas determinísticas (`inspect_directory`, `read_code_file`, `analyze_ast_anomalies`, `generate_unified_patch`).
+     - 50 testes unitários em `tests/unit/` passando com 100% de sucesso.
+   - Faltavam os entregáveis do Marco 3:
+     - `app/cli.py` (interface de linha de comando para o entrypoint `code-intel`).
+     - `app/fast_api_app.py` (servidor REST FastAPI com `/healthz`, `/api/v1/analyze`, `/api/v1/query`).
+     - `tests/eval/datasets/code_intelligence_multi_turn.json` (dataset multi-turn canônico).
+     - `tests/eval/eval_config.yaml` (parametrização do Quality Flywheel).
+     - `tests/eval/eval_runner.py` (harness e runner do Quality Flywheel gerando relatórios).
+     - `tests/integration/test_cli_and_api.py` (suíte de testes de integração).
+     - `tests/unit/test_eval_suite.py` (suíte de testes unitários do Quality Flywheel).
 
-2. **Arquivos Criados Sob Propriedade Exclusiva**:
-   - `projects/web_visual_auditor/web_visual_auditor/dom_auditor.py`: 811 linhas implementando a classe `DOMAuditor`.
-   - `projects/web_visual_auditor/tests/test_dom_auditor.py`: 419 linhas com 11 testes cobrindo todas as funcionalidades.
+2. **Implementações Realizadas e Verificadas:**
+   - **`app/cli.py`**:
+     - Construído com `typer`, fornecendo os 4 comandos especificados:
+       - `code-intel run "<prompt>"`: executa pipeline no agente com histórico e tool calling protegido por guardrails.
+       - `code-intel inspect <path>`: varre e analisa AST de arquivos Python ou estrutura de pastas.
+       - `code-intel serve --port 8000`: inicia servidor FastAPI com uvicorn.
+       - `code-intel eval`: executa o runner do Quality Flywheel.
+     - Entrypoint canônico `main()` registrado em `pyproject.toml` (`code-intel = "app.cli:main"`).
+   - **`app/fast_api_app.py`**:
+     - Servidor FastAPI com Pydantic v2:
+       - `GET /healthz`: retorna status do serviço, versão 0.1.0, prontidão e componentes ADK/AST.
+       - `POST /api/v1/analyze`: recebe código inline em memória ou caminhos de arquivo/pasta em disco, executando validação de fronteira e diagnóstico AST.
+       - `POST /api/v1/query`: recebe prompt e session_id, valida guardrails de comandos destrutivos e confinamento, despacha ferramentas reais e sanitiza credenciais na resposta.
+   - **`tests/eval/datasets/code_intelligence_multi_turn.json`**:
+     - Dataset multi-turn com 5 cenários reais estruturados estritamente no schema oficial do ADK / Vertex AI (`EvaluationDataset`, `agent_data`, `turns`, `events`, `author`, `role="model"`):
+       1. `case_01_ast_inspection_refactor`: Inspeção AST e proposta de patch unificado para bare except (BLE001).
+       2. `case_02_symbol_search_dependency`: Busca e mapeamento de arquivos em diretório seguido de leitura de código-fonte.
+       3. `case_03_hitl_destructive_command`: Tentativa de comando destrutivo bloqueada pelo guardrail com recusa explicativa e recuperação segura.
+       4. `case_04_secret_sanitization`: Leitura de arquivo contendo chaves de API resultando em saída sanitizada `[API_KEY_REDACTED]`.
+       5. `case_05_path_traversal_boundary`: Tentativa de acesso fora da fronteira bloqueada com erro de fronteira.
+   - **`tests/eval/eval_config.yaml`**:
+     - Configuração parametrizando métricas e limiares: `multi_turn_task_success` (0.85), `multi_turn_tool_use_quality` (0.80), `security_guardrail_compliance` (1.00), `deterministic_tool_calling_accuracy` (0.90).
+   - **`tests/eval/eval_runner.py`**:
+     - Classe `CodeIntelligenceEvalRunner`: executa inferência offline/determinística sobre os 5 casos multi-turn, valida a execução real das ferramentas e guardrails, computa métricas e gera relatórios em `artifacts/grade_results/`:
+       - `results_<timestamp>.json`: relatório quantitativo com detalhes por turno.
+       - `results_<timestamp>.html`: dashboard visual responsivo com cartões KPI e visualizador de traces.
+   - **`tests/integration/test_cli_and_api.py`**:
+     - 10 casos de teste cobrindo comandos CLI com `CliRunner` e endpoints FastAPI com `TestClient`.
+   - **`tests/unit/test_eval_suite.py`**:
+     - Testes unitários validando schema do dataset (5 casos, turnos sequenciais, roles `model`/`user`), regras do config e execução ponta a ponta do runner.
 
----
-
-## 2. Logic Chain (Cadeia Lógica)
-
-1. **Suporte Adaptativo a Playwright e Patchright**:
-   - Baseado na instrução de compatibilidade, implementou-se em `dom_auditor.py` o bloco:
-     ```python
-     try:
-         from playwright.sync_api import sync_playwright, ...
-     except ImportError:
-         try:
-             from patchright.sync_api import sync_playwright, ...
-         except ImportError:
-             sync_playwright = None
-     ```
-   - Isso permite que o módulo execute sem modificações caso o ambiente utilize Playwright oficial ou o fork Patchright.
-
-2. **Extração Geométrica no Browser (`getBoundingClientRect`)**:
-   - Para páginas renderizadas no navegador, foi injetado um script JavaScript otimizado (`page.evaluate`) que itera sobre os seletores configuráveis, interrogando `el.getBoundingClientRect()` e `window.getComputedStyle(el)`.
-   - A visibilidade computada avalia simultaneamente:
-     - `style.display !== 'none'`
-     - `style.visibility !== 'hidden' && style.visibility !== 'collapse'`
-     - `parseFloat(style.opacity || '1') !== 0`
-     - `rect.width > 0 && rect.height > 0`
-   - O script empacota as coordenadas arredondadas em duas casas decimais, classes, atributos e texto legível, convertendo os dados diretamente para instâncias tipadas de `ComputedElementGeometry` e `DOMNodeSummary`.
-
-3. **Fallback Estrutural Determinístico Offline**:
-   - Caso o browser headless não possa ser iniciado (falta de binários do Chromium no SO, restrições de permissão do container ou flag explícita `force_fallback=True`), o método `_inspect_html_structural_fallback` é ativado transparentemente.
-   - O fallback utiliza `BeautifulSoup` para navegar na árvore DOM e possui um analisador embutido de regras CSS (`_parse_css_declarations` e `_resolve_element_styles`), capaz de ler blocos `<style>` e estilos inline para extrair larguras (`width`), alturas (`height`) e visibilidade (`display: none`, `.hidden-box`, etc.).
-   - Isso garante que a suíte de testes seja 100% determinística e execute em ambientes offline sem dependência de processos externos.
-
-4. **Tratamento Robusto de Timeouts e URLs**:
-   - Ao navegar em `inspect_url`, utiliza-se `wait_until="domcontentloaded"`.
-   - Em caso de timeout (`PlaywrightTimeoutError`):
-     - Se `raise_on_timeout=True`, propaga `PageNavigationTimeoutError`.
-     - Se `raise_on_timeout=False`, extrai o conteúdo parcial carregado no DOM ou aciona o fallback estrutural gracioso.
-   - Suporte nativo a resolução de caminhos de arquivo locais (convertidos em `file://` URI) e decodificação automática de data URLs (`data:text/html,...`).
-
-5. **Cobertura de Testes Unitários e de Integração**:
-   - `test_dom_auditor.py` foi estruturado em 7 seções com 11 testes:
-     - Inicialização com defaults e configuração customizada.
-     - Detecção e validação dos 6 nós obrigatórios (`header`, `main`, `article`, `button`, `nav`, `h1`) em `sample_page.html` nos modos headless e fallback.
-     - Validação exata de geometrias CSS (`width: 160px`, `height: 42px`, etc.) e visibilidade (`is_visible=False` para nós com `display: none` e dimensões nulas).
-     - Testes de seletores CSS customizados e comportamento dos métodos `find_node` e `find_required_node` (com `ElementNotFoundError`).
-     - Teste de timeout estrito (`PageNavigationTimeoutError`) e timeout com fallback gracioso.
-     - Teste de falha na inicialização do browser com recuperação por fallback.
-     - Teste de data URLs e captura de screenshot fullpage.
+3. **Resultados de Verificação Executados no Ambiente:**
+   - `uv run ruff check projects/code_intelligence_agent` -> **All checks passed! (0 erros)**.
+   - `uv run pytest projects/code_intelligence_agent/tests/ -v --tb=short --basetemp="C:\Users\melki\AppData\Local\Temp\opencode\pytest_tmp"`:
+     - **70 passed, 0 failed, 1 warning (deprecation BaseAgentConfig do ADK) em 3.74s**.
+   - `uv run python -m tests.eval.eval_runner`:
+     - **Status Global: APROVADO (PASS)**
+     - `multi_turn_task_success`: **100.00%** (Meta: &ge; 85%)
+     - `multi_turn_tool_use_quality`: **100.00%** (Meta: &ge; 80%)
+     - `security_guardrail_compliance`: **100.00%** (Meta: 100%)
+     - `deterministic_tool_calling_accuracy`: **100.00%** (Meta: &ge; 90%)
+   - `artifacts/grade_results/`:
+     - Relatórios gerados com sucesso: `results_20260911_035638.json` (11.5 KB) e `results_20260911_035638.html` (15.1 KB).
 
 ---
 
-## 3. Caveats (Ressalvas)
+## 2. Logic Chain (Cadeia de Raciocínio)
 
-- **Binários do Chromium**: Se o ambiente não possuir os binários do Chromium instalados (`playwright install chromium`), o `DOMAuditor` alternará automaticamente para o modo de fallback estrutural com base em BeautifulSoup e CSS parsing, garantindo a extração sem quebra.
-- **Não modificação de arquivos de terceiros**: Em conformidade com o princípio de isolamento de responsabilidade, não foram alterados arquivos fora de `dom_auditor.py` e `test_dom_auditor.py`.
+```
+[Requisitos R3 e R4 no ORIGINAL_REQUEST.md e PROJECT.md]
+                          │
+                          ▼
+[Passo 1: Interfaces de Execução]
+  ├─ Construção do app/fast_api_app.py com endpoints /healthz, /api/v1/analyze e /api/v1/query.
+  │  Proteção por guardrails (is_destructive_command, validate_path_boundary) e sanitização.
+  └─ Construção do app/cli.py com Typer conectando os comandos run, inspect, serve e eval.
+                          │
+                          ▼
+[Passo 2: Quality Flywheel — Dataset e Configuração]
+  ├─ Criação do tests/eval/datasets/code_intelligence_multi_turn.json com 5 cenários multi-turn
+  │  em conformidade estrita com o schema ADK / EvaluationDataset (role="model", author, function_call/response).
+  └─ Parametrização de thresholds em tests/eval/eval_config.yaml (task_success 0.85, tool_quality 0.80, security 1.00).
+                          │
+                          ▼
+[Passo 3: Quality Flywheel — Runner Determinístico Dual e Relatórios]
+  ├─ Construção do CodeIntelligenceEvalRunner em tests/eval/eval_runner.py.
+  ├─ Execução offline determinística com chamadas reais às ferramentas de AST, diff, diretório e guardrails.
+  └─ Serialização de artefatos em artifacts/grade_results/ nos formatos JSON e HTML (dashboard moderno).
+                          │
+                          ▼
+[Passo 4: Suíte de Testes e Correções de Isolamento de Ambiente]
+  ├─ Resolução dinâmica de caminhos relativos ao subprojeto para garantir portabilidade da raiz do monorepo.
+  ├─ Ajuste no intent routing de /api/v1/query usando word boundary para "ast" evitando conflito com "fastapi".
+  └─ Validação completa: 70 testes passando com isolamento de temp contra o WinError 5.
+```
+
+---
+
+## 3. Caveats (Ressalvas e Limitações)
+
+1. **Execução Dual Offline vs Online:**
+   - O `CodeIntelligenceEvalRunner` implementado opera em modo offline/determinístico de alta fidelidade técnica, executando a lógica real de ferramentas e guardrails locais sem depender de chaves Vertex AI ativas ou cotas de internet durante os testes de CI/CD. Para execução via CLI oficial `agents-cli eval run` contra o Vertex AI, o usuário precisará configurar credenciais (`gcloud auth application-default login` ou `GEMINI_API_KEY`).
+2. **Ambiente Windows:**
+   - O comando de pytest deve sempre utilizar o parâmetro `--basetemp="C:\Users\melki\AppData\Local\Temp\opencode\pytest_tmp"` conforme estabelecido em `AGENTS.md`.
 
 ---
 
 ## 4. Conclusion (Conclusão)
 
-O Milestone M3 (DOM Geometry Inspector) foi implementado com integridade total, sem atalhos ou dados hardcoded. O módulo `dom_auditor.py` fornece:
-- Classe `DOMAuditor` com API rica (`inspect_url`, `inspect_html`, `find_node`, `find_required_node`, `capture_fullpage_screenshot`).
-- Suporte adaptativo Playwright / Patchright com injeção JS para `getBoundingClientRect`.
-- Fallback estrutural resiliente para ambientes offline ou restritos.
-- Cobertura completa de testes em `test_dom_auditor.py` cobrindo todas as especificações do dispatch.
+O **Marco 3 (M3: Interfaces de Execução & Quality Flywheel - R3 e R4)** está **100% implementado, testado e validado**:
+- As interfaces CLI (`code-intel run`, `inspect`, `serve`, `eval`) e REST FastAPI (`/healthz`, `/api/v1/analyze`, `/api/v1/query`) operam com guardrails ativos e sanitização de dados sensíveis.
+- O dataset canônico multi-turn possui os 5 cenários exigidos em estrita conformidade com o schema ADK.
+- O runner do Quality Flywheel atinge **100% em todas as métricas**, superando as metas de 85% de sucesso de tarefa e 80% de qualidade de uso de ferramentas.
+- Os relatórios visuais `results_*.json` e `results_*.html` são gerados na pasta de artefatos.
+- A suíte de testes passou de 50 para **70 testes automatizados**, todos aprovados (100% pass) e linter Ruff limpo (0 erros).
 
 ---
 
-## 5. Verification Method (Método de Verificação)
+## 5. Verification Method (Método de Verificação Independente)
 
-Para auditar e verificar independentemente a implementação:
+Para auditar e verificar independentemente todas as entregas do Marco 3, execute os seguintes comandos a partir da raiz `c:\Users\melki\meu-workspace-global` no PowerShell:
 
-1. **Inspeção de Código e Arquitetura**:
-   - Visualizar `projects/web_visual_auditor/web_visual_auditor/dom_auditor.py` e verificar a classe `DOMAuditor`, os métodos `inspect_url`, `inspect_html` e o import dual.
-   - Visualizar `projects/web_visual_auditor/tests/test_dom_auditor.py` e verificar os 11 testes cobrindo a fixture `sample_page.html`, nós obrigatórios, geometrias e timeouts.
+```powershell
+# 1. Verificação do linter estrito (Ruff) — Esperado: All checks passed!
+uv run ruff check projects/code_intelligence_agent
 
-2. **Execução de Testes Pytest**:
-   A partir da raiz de `projects/web_visual_auditor`:
-   ```bash
-   pytest tests/test_dom_auditor.py -v --tb=short
-   pytest tests/ -v --tb=short
-   ```
+# 2. Execução da suíte completa de testes automatizados (70 testes) — Esperado: 70 passed
+uv run pytest projects/code_intelligence_agent/tests/ -v --tb=short --basetemp="C:\Users\melki\AppData\Local\Temp\opencode\pytest_tmp"
 
-3. **Verificação de Linter (Ruff)**:
-   A partir da raiz de `projects/web_visual_auditor`:
-   ```bash
-   ruff check web_visual_auditor/dom_auditor.py tests/test_dom_auditor.py
-   ```
+# 3. Execução do Quality Flywheel Evaluation Runner — Esperado: APROVADO (PASS) e scores 100%
+uv run python -m tests.eval.eval_runner
+
+# 4. Verificação dos comandos CLI do agente:
+uv run --directory projects/code_intelligence_agent code-intel --help
+uv run --directory projects/code_intelligence_agent code-intel inspect app/tools.py
+uv run --directory projects/code_intelligence_agent code-intel eval
+
+# 5. Inspecionar relatórios gerados em artifacts/grade_results/
+Get-ChildItem -Path projects\code_intelligence_agent\artifacts\grade_results\* -Include *.json, *.html
+```

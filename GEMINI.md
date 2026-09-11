@@ -50,3 +50,5 @@ Executados a partir da raiz de `meu-workspace-global` via **PowerShell**:
 3. **Manutenção de Tipagem**: Python 3.11+ com tipagem moderna e tratamento explícito de exceções.
 4. **Prevenção de Bulk Loading de Skills**: Nunca carregar skills operacionais em bloco no orquestrador raiz. Utilizar roteamento semântico (`order-request-router`) e delegar a execução para subagentes com subcatálogos isolados.
 5. **Orçamento de Contexto Estrito**: Limitar matching de progressive disclosure a no máximo 2 skills contextuais simultâneas.
+6. **Contrato Canônico de Ferramentas de Subagentes**: Subagentes em `.agents/agents/*.md` devem declarar estritamente ferramentas canônicas (`search_web`, `read_url_content`, `view_file`, `grep_search`, `find_by_name`, `list_dir`, `run_command`, `write_to_file`, `replace_file_content`, `ask_question`).
+7. **Memória de Rotas com Persistência em Lote**: Contadores e scores de execução de rotas devem ser acumulados em memória no `shared/task_organizer.py` e persistidos em batch (`configs/orchestration_routes_memory.json`) para evitar gargalos de I/O em tempo real.

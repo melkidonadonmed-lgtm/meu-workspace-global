@@ -542,15 +542,15 @@ skills:
   - prototype
   output_schema: markdown
   status: ATIVO
-- id: research
+- id: deep-research-hub
   version: 1.0.0
-  description: Investigate a question against high-trust primary sources and capture
-    the findings as a Markdown file in the repo. Use when the user wants a topic researched,
-    docs or API facts gathered, or reading legwork delegated to a background agent.
-  path: skills/research/SKILL.md
-  target_agent: agents/specialized/research_evolution_specialist.py
+  description: Hub de pesquisa aprofundada, síntese em fontes primárias e investigação técnica multidisciplinar.
+  path: skills/deep-research-hub/SKILL.md
+  target_agent: agents/specialized/code_consistency_specialist.py
   runtime: stateless
   triggers:
+  - deep research
+  - pesquisa profunda
   - research
   output_schema: markdown
   status: ATIVO

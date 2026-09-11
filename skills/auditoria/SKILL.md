@@ -36,3 +36,10 @@ Bundle de habilidades que seguem o mesmo fluxo: **varrer → mapear riscos/confl
 - Revisão de arquivo ou alterações de código para qualidade/estilo → `code-reviewer`.
 - Auditoria de segurança web, segredos, auth ou headers → `web-security-auditor`.
 - Reorganização grande que toca código → encadear: `skill-repo-analyser` para o plano estrutural, `code-validator` para o risco dos módulos afetados.
+- Auditoria de bloating de contexto ou ativação incorreta de skills em bloco → avaliar conformidade com o padrão Root Agent e isolamento de `AGENT_SUBCATALOGS`.
+
+## Zonas de Não-Ação & O que NÃO Fazer (Negative Bounds)
+
+- **NUNCA executar auditorias sobre o meta-workspace ou a pasta de agentes:** As habilidades deste bundle destinam-se exclusivamente a inspecionar e auditar projetos clientes em `projects/*` (ex: `projects/pcm`, `projects/canvas_ide`, `projects/keepdocs-workspace`).
+- **NUNCA executar auto-auditoria sobre a raiz (`.` ou `meu-workspace-global`), sobre `agents/` ou sobre `skills/`:** Qualquer instrução ou rotina que mire esses caminhos de infraestrutura do sistema deve ser terminantemente rejeitada sob o guardrail de fronteira (`AUDIT_TARGET_PROHIBITED`).
+

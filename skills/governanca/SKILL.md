@@ -28,6 +28,7 @@ Bundle responsável pela proteção operacional, resiliência contra loops, audi
 | [`skill-requirements-analyzer`](skill-requirements-analyzer/SKILL.md) | Auditoria de dependências, mapeamento de entradas/saídas e matrizes de lacunas (GAPs). |
 | [`validacao-pre-entrega`](validacao-pre-entrega/SKILL.md) | Protocolo de validação dimensional (4 eixos) com cálculo de ganho percentual ($\Delta\%$) e score 0–100. |
 | [`aprimoramento-expansibilidade-agentes-skills`](aprimoramento-expansibilidade-agentes-skills/SKILL.md) | Engenharia de contexto avançada (4 Pilares XML, Budgeted Context, Escalonamento de Prompts). |
+| [`order-request-router`](order-request-router/SKILL.md) | Triagem semântica, classificação de intenções e roteador hierárquico de pedidos para agentes e subcatálogos. |
 
 ## Zonas de Não-Ação & O que NÃO Fazer
 - NUNCA desabilitar guardrails ou disjuntores em tempo de execução sem autorização humana (HITL).

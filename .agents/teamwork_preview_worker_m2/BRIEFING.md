@@ -1,59 +1,70 @@
-# BRIEFING — 2026-09-03T04:12:00Z
+# BRIEFING — 2026-09-11T07:41:45Z
 
 ## Mission
-Implementar o módulo Semantic Web Researcher (`researcher.py`) e sua suíte de testes unitários determinísticos (`test_researcher.py`) para o Milestone M2 do pacote `projects/web_visual_auditor`.
+Implementar correções de M1 e entregar Marco 2 (M2: Security Guardrails & Interceptors - R2) com testes completos e zero erros de linter.
 
 ## 🔒 My Identity
-- Archetype: teamwork_preview_worker_m2
+- Archetype: implementer
 - Roles: implementer, qa, specialist
 - Working directory: c:\Users\melki\meu-workspace-global\.agents\teamwork_preview_worker_m2
-- Original parent: ccc2ab57-1e80-4064-8e39-4de9a6ee1c52
-- Milestone: M2 (Semantic Web Researcher)
+- Original parent: 75db6599-789c-4d74-9bf5-be981121c059
+- Milestone: M2 - Security Guardrails & Interceptors (R2) + Correções M1
 
 ## 🔒 Key Constraints
-- Arquivos de propriedade exclusiva: `projects/web_visual_auditor/web_visual_auditor/researcher.py` e `projects/web_visual_auditor/tests/test_researcher.py`.
-- Integridade estrita: sem implementações dummy, sem hardcoding de dados em testes, lógica real de extração e parsing.
-- Idioma obrigatório: Português (BR) para código, docstrings, comentários, relatórios e mensagens.
-- Compatibilidade: Pydantic v2 estrito (`SourceReference`), BeautifulSoup com fallback para `html.parser` da stdlib, suporte offline transparente com fallback de rede gracioso.
+- DO NOT CHEAT: Genuine logic, real state and behavior, no hardcoded bypasses or test fakes.
+- Zero ruff errors on `projects/code_intelligence_agent`.
+- 100% tests passing on pytest with `--basetemp="C:\Users\melki\AppData\Local\Temp\opencode\pytest_tmp"`.
+- Responder sempre em Português BR.
+- Protocolo rigoroso de handoff (5 componentes).
 
 ## Current Parent
-- Conversation ID: ccc2ab57-1e80-4064-8e39-4de9a6ee1c52
-- Updated: 2026-09-03T04:12:00Z
+- Conversation ID: 75db6599-789c-4d74-9bf5-be981121c059
+- Updated: 2026-09-11T07:41:45Z
 
 ## Task Summary
 - **What to build**:
-  1. `SemanticHTMLCleaner`: higienização semântica de HTML removendo `<script>`, `<style>`, `<svg>`, `<noscript>`, nós de comentários e metadados ruidosos, normalizando whitespace e retornando texto semântico puro e estruturado. Fallback para `html.parser`.
-  2. `WebResearcher`: orquestrador de busca e extração. Suporte a DuckDuckGo com fallback de rede/offline gracioso, extração de strings HTML (`extract_from_html`) e URLs, retornando `SourceReference` instanciado com modelos Pydantic v2 de `models.py`.
-  3. `tests/test_researcher.py`: cobertura detalhada com fixture `sample_noisy_article.html`, remoção de scripts, styles, SVG, comentários, preservação de texto nobre/links/títulos, validação Pydantic v2 e resiliência offline.
-- **Success criteria**:
-  - Testes unitários completos cobrindo 100% dos requisitos de R1 e contratos de M2.
-  - Zero violações de lint e tipagem estrita Python 3.11+.
-  - Handoff report formal completo de 5 seções.
-- **Interface contracts**: `c:\Users\melki\meu-workspace-global\PROJECT.md` § Interface Contracts e `survey_arch_report.md` § 4.2.
-- **Code layout**: `projects/web_visual_auditor/web_visual_auditor/` e `projects/web_visual_auditor/tests/`.
+  1. Correções M1: `inspect_directory` com validação de caminho vazio/whitespace; `generate_unified_patch` com normalização de quebras `\r\n` -> `\n`; `_count_decisions` suportando `ast.Match`/`ast.match_case`; fix de imports e asserções em `test_adversarial_tools.py`.
+  2. Implementação M2: `app/guardrails.py` com `validate_path_boundary`, `is_destructive_command`, `redact_sensitive_info`, `before_tool_guard_callback`, `after_tool_sanitizer_callback`, `evaluate_hitl_action`.
+  3. Atualização de `app/agent.py` conectando interceptadores ao `root_agent`.
+  4. Exportações em `app/__init__.py`.
+  5. Suíte de testes `tests/unit/test_guardrails.py`.
+- **Success criteria**: Zero ruff linter errors, todos os testes unitários passando (50/50).
+- **Interface contracts**: `PROJECT.md`
+- **Code layout**: `projects/code_intelligence_agent/app` e `tests/unit`
 
 ## Key Decisions Made
-- `SemanticCleanResult(str)` implementado para retornar uma string que suporta nativamente operações de texto (`assert "termo" in result`, `.strip()`, `.split()`) e simultaneamente desempacotamento de tupla `text, refs = cleaner.clean_html(html)`.
-- `SemanticHTMLCleaner` remove cirurgicamente comentários (incluindo condicionais IE), tags `script`, `style`, `svg`, `noscript`, `iframe`, `template`, `link`, `meta`, `object`, `embed`, `canvas`, `applet`, `aside` e atributos `on*` de eventos inline.
-- `WebResearcher` encapsula buscas DuckDuckGo com captura de exceções de rede e fallback offline determinístico via `_generate_offline_fallback()`.
-- Suporte a leitura via `file://` e paths de arquivo locais em `extract_from_url()`, além de injeção de cliente HTTP para testes com `httpx.MockTransport`.
+- Normalização de caminhos com `Path(p).resolve().as_posix().lower()` para validação de Boundary Guard no Windows contra bypasses.
+- Regex compiladas eficientes cobrindo comandos destrutivos (PowerShell, CMD, Bash, Git, SQL, formato de disco).
+- Redação em duas vias de credenciais e PII (Google API Keys, Bearer, Private Keys, CPF, emails e senhas).
+- Callbacks de ciclo de vida do ADK `before_tool_guard_callback` e `after_tool_sanitizer_callback` integrados ao agente ADK.
+- Matriz HITL em 3 níveis (Automático, Mutação Auditada, Confirmação Obrigatória).
 
 ## Artifact Index
-- `c:\Users\melki\meu-workspace-global\projects\web_visual_auditor\web_visual_auditor\researcher.py` — Implementação de SemanticHTMLCleaner e WebResearcher
-- `c:\Users\melki\meu-workspace-global\projects\web_visual_auditor\tests\test_researcher.py` — Suíte de testes unitários para o pesquisador
-- `c:\Users\melki\meu-workspace-global\.agents\teamwork_preview_worker_m2\handoff.md` — Relatório de handoff formal de 5 seções
+- `DISPATCH.md` — Histórico de despacho do orquestrador
+- `progress.md` — Heartbeat de progresso do agente
+- `handoff.md` — Relatório formal de entrega com 5 componentes
+- `projects/code_intelligence_agent/app/guardrails.py` — Módulo completo de guardrails e interceptadores
+- `projects/code_intelligence_agent/app/tools.py` — Ferramentas com correções de M1
+- `projects/code_intelligence_agent/app/agent.py` — Root agent integrado aos interceptadores
+- `projects/code_intelligence_agent/app/__init__.py` — Exportações de tools e guardrails
+- `projects/code_intelligence_agent/tests/unit/test_guardrails.py` — Suíte de testes dos guardrails
+- `projects/code_intelligence_agent/tests/unit/test_adversarial_tools.py` — Testes adversariais atualizados
 
 ## Change Tracker
 - **Files modified**:
-  - `projects/web_visual_auditor/web_visual_auditor/researcher.py`: Implementação completa de `SemanticHTMLCleaner`, `WebResearcher` e `SemanticCleanResult`.
-  - `projects/web_visual_auditor/tests/test_researcher.py`: 20 testes cobrindo todas as classes, métodos, remoção de ruídos, preservação editorial e fallbacks.
-- **Build status**: Código validado estaticamente, sem dependências circulares, tipado em Python 3.11+.
-- **Pending issues**: Nenhum
+  - `projects/code_intelligence_agent/app/tools.py`: Validação de caminho vazio em inspect_directory, normalização CRLF em generate_unified_patch, suporte match_case em _count_decisions.
+  - `projects/code_intelligence_agent/app/guardrails.py`: Novo módulo de guardrails, boundary guard, interceptadores ADK e HITL.
+  - `projects/code_intelligence_agent/app/agent.py`: Conexão de before_tool_callback e after_tool_callback no root_agent.
+  - `projects/code_intelligence_agent/app/__init__.py`: Exportação formal dos símbolos de guardrails.
+  - `projects/code_intelligence_agent/tests/unit/test_adversarial_tools.py`: Atualização de asserções após correção de bugs de M1.
+  - `projects/code_intelligence_agent/tests/unit/test_guardrails.py`: Nova suíte de 16 testes unitários para guardrails.
+- **Build status**: 50 passed, 0 failures, 1 warning (ADK interno) em 2.66s.
+- **Pending issues**: Nenhum.
 
 ## Quality Status
-- **Build/test result**: 20 testes unitários criados em `test_researcher.py`
-- **Lint status**: Linhas <= 100 caracteres, tipagem estrita, sem violações ruff.
-- **Tests added/modified**: `test_researcher.py` (20 testes)
+- **Build/test result**: 50/50 PASSED (100%).
+- **Lint status**: Ruff check 0 violations (All checks passed!).
+- **Tests added/modified**: 16 novos testes de guardrails em `test_guardrails.py` e 2 testes atualizados em `test_adversarial_tools.py`. Total da suíte: 50 testes.
 
 ## Loaded Skills
-- Nenhuma skill externa necessária
+- None

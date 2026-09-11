@@ -40,8 +40,11 @@ out/
 .env.local
 .env.*.local
 *.pem
-credentials.json
-service_account.json
+*.bak
+*credentials*.json
+*service_account*.json
+*token*.json
+0.26.0
 
 # IDEs e Ferramentas
 .vscode/
@@ -84,4 +87,8 @@ projects/canvas_ide/
 projects/keepdocs-workspace/
 projects/WAOE/
 projects/remix-prescmed-new/
+
+# Catalogo plano sincronizado (gerado por scripts/sync_flat_catalog.py)
+published_skills/
+
 

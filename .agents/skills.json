@@ -1,10 +1,16 @@
 {
   "entries": [
     { "path": "skills" },
+    { "path": "skills/analytics" },
+    { "path": "skills/arquitetura" },
     { "path": "skills/auditoria" },
-    { "path": "skills/research" },
+    { "path": "skills/engenharia" },
+    { "path": "skills/governanca" },
+    { "path": "skills/deep-research-hub" },
     { "path": "skills/ui-engineering" },
+    { "path": "skills/custom" },
     { "path": "skills/check-updates" },
-    { "path": "skills/skill-prompt-generator" }
+    { "path": "skills/skill-prompt-generator" },
+    { "path": ".agents/skills" }
   ]
 }

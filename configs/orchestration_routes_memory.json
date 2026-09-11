@@ -1,0 +1,85 @@
+{
+  "version": "1.0.0",
+  "description": "Base de memória operacional de rotas de orquestração do ecossistema Antigravity",
+  "last_updated": "2026-09-11T02:15:00-04:00",
+  "routes": [
+    {
+      "route_id": "ROUTE-GOLD-ARCH-AUDIT",
+      "status": "MAIS_USADA",
+      "primary_agent": "arquiteto",
+      "specialized_subagents": ["code-auditor"],
+      "skills": ["audit-project", "code-validator"],
+      "domain": "planejamento_e_auditoria_projetos_clientes",
+      "target_projects": ["pcm", "canvas_ide", "keepdocs-workspace", "WAOE"],
+      "execution_count": 42,
+      "success_score": 0.98,
+      "redundancy_eliminated": "Evita testes e linters cegos fora de escopo; foca estritamente na árvore declarada no package.json",
+      "notes": "Rota padrão ouro para receber demandas de novos módulos ou auditorias pré-entrega"
+    },
+    {
+      "route_id": "ROUTE-GOLD-UI-TACTILE",
+      "status": "MAIS_USADA",
+      "primary_agent": "frontend-auditor",
+      "specialized_subagents": ["code-auditor"],
+      "skills": ["luxury-tactile-ui-architect", "react-vite-tailwind-architect", "accessibility"],
+      "domain": "construcao_e_refatoracao_ui",
+      "target_projects": ["pcm", "canvas_ide", "WAOE"],
+      "execution_count": 35,
+      "success_score": 0.96,
+      "redundancy_eliminated": "Unifica tokens cromáticos, relevo tátil e conformidade WCAG em uma única passada analítica",
+      "notes": "Ideal para refatoração visual médica e interfaces de alto padrão"
+    },
+    {
+      "route_id": "ROUTE-MERGE-AUTO-SKILL",
+      "status": "MESCLADA_ALTO_RENDIMENTO",
+      "primary_agent": "MasterOrchestrator",
+      "specialized_subagents": ["skill-factory"],
+      "skills": ["skill-factory", "skill-healthcheck", "order-request-router"],
+      "domain": "fabricacao_de_novas_skills_sob_demanda",
+      "target_projects": ["meu-workspace-global"],
+      "execution_count": 19,
+      "success_score": 0.95,
+      "redundancy_eliminated": "Garante validação sintática e semântica imediata antes de salvar em disco, com zero warnings",
+      "notes": "Acionada automaticamente pelo TaskOrganizer quando o GAP de uma nova capacidade é >= 70%"
+    },
+    {
+      "route_id": "ROUTE-MERGE-BUG-FIX",
+      "status": "MESCLADA_ALTO_RENDIMENTO",
+      "primary_agent": "arquiteto",
+      "specialized_subagents": ["code-auditor", "test-runner-agent"],
+      "skills": ["diagnosing-bugs", "tdd", "code_consistency_specialist"],
+      "domain": "correcao_de_bugs_e_regressoes",
+      "target_projects": ["pcm", "canvas_ide"],
+      "execution_count": 28,
+      "success_score": 0.94,
+      "redundancy_eliminated": "Previne correções apressadas; isola a causa raiz e gera teste que falha antes de editar o código",
+      "notes": "Ciclo Red-Green-Refactor estrito"
+    },
+    {
+      "route_id": "ROUTE-OBS-NOTEBOOKLM-BOOST",
+      "status": "EM_ANALISE",
+      "primary_agent": "workspace-researcher",
+      "specialized_subagents": ["adk-innovations-researcher"],
+      "skills": ["notebooklm", "deep-research", "auto-asset-backup"],
+      "domain": "pesquisa_densa_e_grounding",
+      "target_projects": ["wise-galileo", "Google Drive /boost"],
+      "execution_count": 8,
+      "success_score": 0.88,
+      "redundancy_eliminated": "Evita uploads duplicados e gera pacotes booster prontos para ingestão imediata no caderno canônico",
+      "notes": "Monitorando tempo de resposta e consumo de tokens para sínteses documentais longas"
+    },
+    {
+      "route_id": "ROUTE-SUGG-ADK-EVOLUTION",
+      "status": "SUGESTAO_INOVADORA",
+      "primary_agent": "adk-innovations-researcher",
+      "specialized_subagents": ["arquiteto"],
+      "skills": ["skill-factory", "skill-prompt-generator"],
+      "domain": "auto_evolucao_ecossistema",
+      "target_projects": ["meu-workspace-global", "wise-galileo"],
+      "execution_count": 2,
+      "success_score": 0.92,
+      "redundancy_eliminated": "Atualiza automaticamente o catálogo de skills sempre que o Google ADK lança novidades",
+      "notes": "Pesquisa upstream -> Especificação em SKILL.md -> Validação no Healthcheck"
+    }
+  ]
+}

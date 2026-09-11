@@ -87,7 +87,8 @@ Write-Step "2. Removendo ambiente virtual orfao da raiz do usuario..."
 Remover-Seguro (Join-Path $Perfil '.venv') "Venv criado por engano com Python Store na raiz do perfil"
 
 Write-Step "3. Removendo instalacoes legadas paradas..."
-Remover-Seguro (Join-Path $Perfil '.antigravity-ide') "Instalacao congelada de 15/08 (ativa em AppData\Local\Programs\Antigravity IDE)"
+# PRESERVADO: .antigravity-ide contem as extensoes e configuracoes ativas do Antigravity IDE (NAO REMOVER!)
+# Remover-Seguro (Join-Path $Perfil '.antigravity-ide') "Instalacao congelada de 15/08 (ativa em AppData\Local\Programs\Antigravity IDE)"
 Remover-Seguro (Join-Path $Perfil 'free-vscode-csharp') "Ambiente de testes C# de 11/08 descontinuado"
 Remover-Seguro (Join-Path $Perfil 'vscode-antigravity-cockpit') "Ambiente de testes de cockpit descontinuado"
 

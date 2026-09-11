@@ -40,3 +40,38 @@ O projeto deve fornecer uma interface de linha de comando (`cli.py`) e uma class
 - [ ] `pytest` executado com 100% de aprovação nas fixtures locais.
 - [ ] Geração comprovada do mapa diferencial (`diff_result.png` / `diff_<selector>.png`) quando há divergência visual intencional nos testes.
 - [ ] Nenhum erro de lint (`ruff check .` limpo).
+
+## 2026-09-11T07:05:21Z
+
+Construir um sistema autônomo de inteligência e engenharia de código (Code Intelligence & Tool Calling) para ambiente de produção, integrando o Google Agent Development Kit (ADK) e o Google Antigravity SDK, dotado de guardrails de segurança, ferramentas com validação robusta e uma suíte completa de avaliação automatizada baseada no Quality Flywheel (`agents-cli eval`).
+
+Working directory: C:\Users\melki\meu-workspace-global\projects\code_intelligence_agent
+Integrity mode: development
+
+## Requirements
+
+### R1. Sistema de Agente de Engenharia e Inteligência de Código
+O agente deve ser capaz de inspecionar bases de código, identificar anomalias, propor modificações precisas e orquestrar ferramentas de navegação e análise estática via tool calling determinístico. Deve gerenciar estado conversacional e histórico de raciocínio de forma transparente.
+
+### R2. Guardrails e Políticas de Segurança (HITL & Sanitização)
+O sistema deve implementar interceptadores de ciclo de vida (hooks/callbacks) para impedir comandos destrutivos no sistema operacional, mascarar credenciais ou tokens sensíveis e assegurar integridade de fronteiras de diretório.
+
+### R3. Suíte de Avaliação Automatizada (Quality Flywheel)
+Implementação de dataset canônico em `tests/eval/datasets/` cobrindo cenários multi-turn de análise de código e arquivo `eval_config.yaml` parametrizando métricas de qualidade (`multi_turn_task_success`, `multi_turn_tool_use_quality`).
+
+### R4. Interface de Execução e Gerenciamento de Ambiente
+Configuração de ambiente isolado gerenciado por `uv`, compatibilidade com FastAPI / ADK API Server para invocação programática e entrada CLI padrão para interação em terminal.
+
+## Acceptance Criteria
+
+### Verificação Funcional e Qualidade de Código
+- [ ] A suíte de testes automatizados (`uv run pytest`) executa e passa com 100% de sucesso no diretório do projeto.
+- [ ] O código passa na checagem estática e linter (`uv run ruff check`) com zero erros.
+
+### Verificação da Suíte de Avaliação (Eval Flywheel)
+- [ ] Execução de `agents-cli eval run` atinge `multi_turn_task_success >= 0.85`.
+- [ ] Métrica `multi_turn_tool_use_quality` atinge pontuação >= 0.80 sem chamadas errôneas ou redundantes de ferramentas.
+- [ ] Relatórios de avaliação (`results_*.json` e `.html`) são gerados com sucesso na pasta de artefatos de teste.
+
+### Guardrails de Segurança
+- [ ] Comandos potencialmente destrutivos ou violações de fronteira de diretório são interceptados e bloqueados com feedback explicativo.

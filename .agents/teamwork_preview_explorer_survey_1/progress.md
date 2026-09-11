@@ -1,16 +1,12 @@
-# Progresso da Investigação — teamwork_preview_explorer_survey_1
+# Progress — Explorer 1 (Mapeamento de Escopo, ADK e Antigravity SDK)
 
-- **Last visited**: 2026-09-03T03:58:50Z
-- **Status atual**: Missão de survey e diagnóstico de ambiente 100% concluída. Handoff e survey_env_report.md entregues. Notificando orquestrador.
+Last visited: 2026-09-11T07:12:45Z
 
-## Checklist de Tarefas:
-- [x] Inicialização de DISPATCH.md, BRIEFING.md, progress.md
-- [x] Leitura do arquivo ORIGINAL_REQUEST.md
-- [x] Checagem das configurações do workspace (pyproject.toml, AGENTS.md, GEMINI.md)
-- [x] Verificação da existência e estado de projects/web_visual_auditor (inexistente; a ser criado)
-- [x] Verificação via shell / inspeção de venv das ferramentas (uv, Python 3.12.10, pytest 9.1.1, ruff 0.16.5, patchright 1.55.2, chromium-1234, httpx 0.28.1, requests 2.34.2, pydantic 2.13.5, bs4 ausente, pillow ausente, duckduckgo_search ausente)
-- [x] Identificação de restrições de ambiente do Windows PowerShell e caminhos
-- [x] Elaboração do survey_env_report.md
-- [x] Elaboração do handoff.md
-- [x] Atualização do BRIEFING.md
-- [x] Envio de mensagem final ao orquestrador parent
+- [x] Inicialização do workspace e criação dos arquivos de governança (DISPATCH.md, BRIEFING.md, progress.md)
+- [x] Leitura de ORIGINAL_REQUEST.md (seção 2026-09-11T07:05:21Z) e inspeção de projects/code_intelligence_agent
+- [x] Leitura das skills relevantes (google-agents-cli-adk-code, google-agents-cli-workflow, google-antigravity-sdk, gemini-api-dev, google-agents-cli-eval)
+- [x] Investigação técnica dos padrões ADK no runtime (ADK 2.9.0, google.antigravity, agents-cli 1.5.0)
+- [x] Investigação técnica de empacotamento com uv, FastAPI (get_fast_api_app), CLI, guardrails e Quality Flywheel
+- [x] Redação do relatório estruturado em handoff.md
+- [x] Atualização final de BRIEFING.md
+- [x] Notificação do orquestrador via send_message

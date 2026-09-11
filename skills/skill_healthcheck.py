@@ -38,6 +38,10 @@ STOPWORDS = {
     "skill",
     "agente",
     "ecossistema",
+    "teste",
+    "testes",
+    "test",
+    "tests",
 }
 
 
@@ -95,7 +99,7 @@ class SkillHealthChecker:
                     multiline = []
                 k, v = line.split(":", 1)
                 k, v = k.strip(), v.strip().strip('"').strip("'")
-                if v in (">", "|", ""):
+                if v in (">", "|", "", ">-", "|-", ">+", "|+"):
                     current_key = k
                 else:
                     data[k] = v
@@ -124,11 +128,24 @@ class SkillHealthChecker:
         syntax_failures: list[str] = []
         name_mismatches: list[str] = []
         missing_sections: list[str] = []
+        description_warnings: list[str] = []
 
-        skill_files = list(self.skills_dir.glob("**/SKILL.md"))
+        search_dirs = [self.skills_dir]
+        agents_skills_dir = self.skills_dir.parent / ".agents" / "skills"
+        if agents_skills_dir.exists() and agents_skills_dir != self.skills_dir:
+            search_dirs.append(agents_skills_dir)
 
-        for file_path in skill_files:
-            rel_path = file_path.relative_to(self.skills_dir).as_posix()
+        skill_files: list[tuple[Path, Path]] = []
+        seen_resolved: set[Path] = set()
+        for sdir in search_dirs:
+            for f in sorted(sdir.glob("**/SKILL.md")):
+                resolved = f.resolve()
+                if resolved not in seen_resolved:
+                    seen_resolved.add(resolved)
+                    skill_files.append((f, sdir))
+
+        for file_path, base_dir in skill_files:
+            rel_path = file_path.relative_to(base_dir).as_posix()
             folder_name = file_path.parent.name
             try:
                 content = file_path.read_text(encoding="utf-8")
@@ -154,6 +171,10 @@ class SkillHealthChecker:
 
             if not desc or len(desc) < 20:
                 syntax_failures.append(f"{rel_path}: 'description' ausente ou curta (<20 chars).")
+            elif len(desc) > 500:
+                description_warnings.append(
+                    f"{rel_path}: 'description' extensa ({len(desc)} chars > 500 max). Considere mover detalhes do processo para o corpo do SKILL.md."
+                )
 
             # Hubs (bundles com sub-skills) e skills vendorizadas de terceiros seguem
             # convenções próprias e são isentos da cobrança da seção de restrições.
@@ -202,6 +223,7 @@ class SkillHealthChecker:
             "syntax_failures": syntax_failures,
             "name_mismatches": name_mismatches,
             "missing_sections_warnings": missing_sections,
+            "description_warnings": description_warnings,
             "semantic_redundancies": redundancies,
         }
 

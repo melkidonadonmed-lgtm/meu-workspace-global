@@ -100,6 +100,8 @@ Se o código auditado for de interface (React, Vue, Tailwind, HTML/CSS, Flutter)
 - ❌ **NUNCA inventar porcentagens sem a explicação causal do "porquê":** Atribuir "Risco: 80%" sem demonstrar o cenário de teste e a cadeia de causa/efeito reprova a auditoria.
 - ❌ **NUNCA ocultar linhas de código afetadas:** Toda falha deve citar o número ou intervalo exato de linhas (ex.: `L14-L22`).
 - ❌ **NUNCA inventar dependências ou bibliotecas inexistentes:** Só recomende ferramentas reais disponíveis no ecossistema da linguagem do código auditado.
+- ❌ **NUNCA executar auto-auditoria sobre o meta-workspace ou a pasta de agentes:** É terminantemente proibido validar recursivamente `meu-workspace-global`, a raiz `./` ou a pasta `agents/`. Auditorias de código devem focar estritamente em projetos reais localizados em `projects/*` (ex: `projects/pcm`, `projects/canvas_ide`), rejeitando tentativas de auto-auditoria sob `AUDIT_TARGET_PROHIBITED`.
+
 
 ---
 

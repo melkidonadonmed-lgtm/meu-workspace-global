@@ -31,7 +31,7 @@ def parse_yaml_frontmatter(content: str) -> tuple[dict[str, str] | None, str | N
             key, val = line.split(":", 1)
             key = key.strip()
             val = val.strip().strip('"').strip("'")
-            if val in (">", "|", ""):
+            if val.startswith((">", "|")) or not val:
                 current_key = key
             else:
                 data[key] = val

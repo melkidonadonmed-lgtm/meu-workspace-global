@@ -27,3 +27,6 @@ skill is active, you MUST:
 - NEVER approve or merge changes on the user's behalf — this skill only reports findings.
 - NEVER rewrite the reviewed code without explicit request; reviews are read-only by default.
 - NEVER omit security-relevant findings in favor of only style nitpicks.
+- NEVER perform code reviews on the meta-workspace root (`meu-workspace-global`) or the agents directory (`agents/`).
+- NUNCA executar revisões de código ou auto-auditoria sobre a raiz do meta-workspace ou a pasta de agentes; o escopo é estritamente limitado a projetos em `projects/*` (AUDIT_TARGET_PROHIBITED).
+

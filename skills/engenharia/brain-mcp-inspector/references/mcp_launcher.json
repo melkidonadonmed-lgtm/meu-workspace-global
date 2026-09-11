@@ -1,0 +1,16 @@
+{
+  "mcpServers": {
+    "brain-inspector-local": {
+      "command": "python",
+      "args": [
+        ".agents/skills/brain-mcp-inspector/scripts/mcp_server.py",
+        "--transport",
+        "stdio"
+      ]
+    },
+    "brain-inspector-remote-sse": {
+      "url": "http://127.0.0.1:8000/sse",
+      "transport": "sse"
+    }
+  }
+}

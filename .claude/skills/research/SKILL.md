@@ -1,28 +1,12 @@
 ---
 name: research
-version: 1.0.0
-description: Hub de pesquisa e recuperação de informação fundamentada com citações. Ponto de entrada para as sub-skills deep-research (pesquisa web multi-fonte com sub-agentes) e notebooklm (consulta aos cadernos NotebookLM do usuário).
-has-sub-skill: true
-triggers:
-  - "pesquise sobre"
-  - "deep dive"
-  - "consulte meus cadernos"
-  - "análise de cenário"
+description: Investigate a question against high-trust primary sources and capture the findings as a Markdown file in the repo. Use when the user wants a topic researched, docs or API facts gathered, or reading legwork delegated to a background agent.
 ---
 
-# Research — Hub de Pesquisa
+Spin up a **background agent** to do the research, so you keep working while it reads.
 
-Bundle de habilidades de pesquisa e recuperação de informação. Ambas as filhas produzem respostas fundamentadas com citações e são frequentemente encadeadas.
+Its job:
 
-## Sub-skills
-
-| Sub-skill | Quando usar |
-|---|---|
-| [`deep-research`](deep-research/SKILL.md) | Pesquisa ampla na web aberta: mercado, domínio, técnica, competitiva, acadêmica, financeira, legal etc. Relatório citado em Markdown. |
-| [`notebooklm`](notebooklm/SKILL.md) | Consulta source-grounded aos cadernos NotebookLM do usuário (documentos privados), via automação de navegador. |
-
-## Como rotear
-
-- Fonte pública/web → `deep-research`.
-- Documentos do usuário no NotebookLM → `notebooklm`.
-- Pergunta que exige cruzar web aberta com documentos privados → encadear as duas, citando a origem de cada evidência.
+1. Investigate the question against **primary sources** (official docs, source code, specs, first-party APIs), not a secondary write-up of them. Follow every claim back to the source that owns it.
+2. Write the findings to a single Markdown file, citing each claim's source.
+3. Save it where the repo already keeps such notes; match the existing convention, and if there is none, put it somewhere sensible and say where.

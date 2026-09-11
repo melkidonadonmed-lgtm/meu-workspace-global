@@ -1,48 +1,49 @@
-# BRIEFING — 2026-09-03T04:08:00Z
+# BRIEFING — 2026-09-11T07:12:00Z
 
 ## Mission
-Projetar a arquitetura técnica modular limpa, contratos de interfaces, modelos de dados e estratégia de empacotamento do pacote `projects/web_visual_auditor`.
+Investigar e mapear ferramentas determinísticas de inteligência de código e guardrails de segurança (R2) para a suíte Antigravity / ADK no ecossistema global.
 
 ## 🔒 My Identity
 - Archetype: explorer
-- Roles: technical-architect, survey-lead
+- Roles: explorer, synthesis, code intelligence & security survey
 - Working directory: c:\Users\melki\meu-workspace-global\.agents\teamwork_preview_explorer_survey_2
-- Original parent: ccc2ab57-1e80-4064-8e39-4de9a6ee1c52
-- Milestone: survey_and_architecture_design
+- Original parent: 75db6599-789c-4d74-9bf5-be981121c059
+- Milestone: survey_code_engineering_and_guardrails
 
 ## 🔒 Key Constraints
-- Read-only investigation — do NOT implement code in projects/ or root
-- Idioma obrigatório: Português (BR)
-- Escrever relatórios e artefatos exclusivamente em c:\Users\melki\meu-workspace-global\.agents\teamwork_preview_explorer_survey_2
-- Manter progress.md atualizado com heartbeat 'Last visited'
-- Comunicar conclusões e relatórios ao orquestrador parent via send_message
+- Read-only investigation — do NOT implement
+- Somente leitura em código de produção; NÃO modificar nem criar código de produção
+- Responder sempre em Português BR
+- Gravar apenas na pasta própria: c:\Users\melki\meu-workspace-global\.agents\teamwork_preview_explorer_survey_2
+- NUNCA colocar código de produção ou testes dentro de .agents/
 
 ## Current Parent
-- Conversation ID: ccc2ab57-1e80-4064-8e39-4de9a6ee1c52
-- Updated: 2026-09-03T04:08:00Z
+- Conversation ID: 75db6599-789c-4d74-9bf5-be981121c059
+- Updated: not yet
 
 ## Investigation State
 - **Explored paths**:
-  - `c:\Users\melki\meu-workspace-global\.agents\ORIGINAL_REQUEST.md`
-  - `c:\Users\melki\meu-workspace-global\pyproject.toml`
-  - `c:\Users\melki\meu-workspace-global\.agents\teamwork_preview_orchestrator_main_1\BRIEFING.md`
-  - `c:\Users\melki\meu-workspace-global\.agents\teamwork_preview_spec_miner_survey_3\BRIEFING.md`
+  - `c:\Users\melki\meu-workspace-global\.agents\ORIGINAL_REQUEST.md` (seção `## 2026-09-11T07:05:21Z`)
+  - `c:\Users\melki\meu-workspace-global\agents\specialized\security_guard.py`
+  - `c:\Users\melki\meu-workspace-global\agents\specialized\code_consistency_specialist.py`
+  - `c:\Users\melki\meu-workspace-global\configs\guardrails.yaml`
+  - `c:\Users\melki\meu-workspace-global\scripts\hooks\pre_tool_guard.py` e `post_tool_reporter.py`
+  - `c:\Users\melki\meu-workspace-global\plugins\antigravity-governance\hooks.json`
+  - `c:\Users\melki\meu-workspace-global\docs\adr\0005-lifecycle-hooks-and-sdk-subagents.md`
+  - `C:\Users\melki\.gemini\config\skills\google-agents-cli-adk-code\SKILL.md` e referências
 - **Key findings**:
-  - Modelos de dados canônicos em Pydantic v2 especificados: `SourceReference`, `DOMNodeSummary`, `ComputedElementGeometry`, `VisualDiffResult`, `ComponentSnapshot`, `ComponentDiffReport`, além de `SuiteAuditReport`.
-  - Contratos de métodos mapeados para os 5 subsistemas: `researcher.py`, `dom_auditor.py`, `visual_regression.py`, `component_auditor.py`, `suite.py` e `cli.py`.
-  - Tolerância canal a canal `max(|R1-R2|, |G1-G2|, |B1-B2|) > 15`, cálculo exato percentual `(diff_pixels / total_pixels) * 100.0`, máscara gerada em `#FF0000` (RGBA `(255, 0, 0, 255)`).
-  - Inspeção geométrica com nós-chave e `getBoundingClientRect()`, Playwright com `wait_until='domcontentloaded'` e fallback.
-  - Arquitetura 100% determinística para testes locais sem dependência de internet ativa.
-- **Unexplored areas**: Nenhuma pendência na etapa de arquitetura técnica.
+  - Mapeadas 5 ferramentas determinísticas de engenharia de código: `search_files`, `grep_search`, `view_code`, `analyze_code_ast`, `propose_code_patch` (com dry-run AST pré-aplicação).
+  - Mapeados guardrails de segurança em 5 eixos: Interceptadores Pre/PostTool (ADK e Antigravity), Bloqueio Destrutivo de 10 padrões de shell, Mascaramento de chaves AIza/Bearer e PII, Boundary Guard com resolução canônica de path traversal, e matriz HITL em 3 níveis.
+  - Linha de base de testes existente validada com 100% de aprovação (12/12 testes em 10.82s).
+- **Unexplored areas**: Nenhuma no escopo de exploração.
 
 ## Key Decisions Made
-- Utilizar Pydantic v2 (`BaseModel`) com `frozen=True` para imutabilidade e validação estrita dos 6 modelos solicitados.
-- Criar hierarquia de exceções personalizadas em `exceptions.py`.
-- Interface CLI modular baseada em `argparse` nativo com subcomandos (`search`, `dom-inspect`, `visual-diff`, `component-diff`, `suite`).
-- Empacotamento autônomo do pacote `projects/web_visual_auditor` com seu próprio `pyproject.toml` baseado em `hatchling`.
+- Estruturar o relatório com a especificação de API exata para as 5 ferramentas determinísticas e para os guardrails R2.
+- Adotar a validação prévia de sintaxe em memória (`ast.parse`) antes de qualquer gravação em disco no `propose_code_patch`.
+- Documentar métodos independentes de reprodução e condições de invalidação.
 
 ## Artifact Index
-- `c:\Users\melki\meu-workspace-global\.agents\teamwork_preview_explorer_survey_2\survey_arch_report.md` — Relatório de Arquitetura Técnica e Contratos de Interfaces
-- `c:\Users\melki\meu-workspace-global\.agents\teamwork_preview_explorer_survey_2\handoff.md` — Relatório de handoff formal de 5 seções
-- `c:\Users\melki\meu-workspace-global\.agents\teamwork_preview_explorer_survey_2\progress.md` — Heartbeat de progresso
-- `c:\Users\melki\meu-workspace-global\.agents\teamwork_preview_explorer_survey_2\DISPATCH.md` — Registro da solicitação inicial
+- c:\Users\melki\meu-workspace-global\.agents\teamwork_preview_explorer_survey_2\DISPATCH.md — Registro cronológico do despacho
+- c:\Users\melki\meu-workspace-global\.agents\teamwork_preview_explorer_survey_2\BRIEFING.md — Memória de trabalho situacional persistente
+- c:\Users\melki\meu-workspace-global\.agents\teamwork_preview_explorer_survey_2\progress.md — Heartbeat de progresso e atividade
+- c:\Users\melki\meu-workspace-global\.agents\teamwork_preview_explorer_survey_2\handoff.md — Relatório estruturado de handoff (5 componentes)
