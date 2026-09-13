@@ -77,14 +77,19 @@ def check_hook_contract(
     if not hook_path.is_file():
         return False, f"Caminho de hook inválido: {hook_path}"
 
-    proc = subprocess.run(
-        [sys.executable, str(hook_path)],
-        input=json.dumps(payload, ensure_ascii=False),
-        capture_output=True,
-        text=True,
-        encoding="utf-8",
-        check=False,
-    )
+    try:
+        proc = subprocess.run(
+            [sys.executable, str(hook_path)],
+            input=json.dumps(payload, ensure_ascii=False),
+            capture_output=True,
+            text=True,
+            encoding="utf-8",
+            check=False,
+            timeout=10,
+        )
+    except subprocess.TimeoutExpired:
+        return False, f"Hook excedeu o tempo limite: {hook_path}"
+
     if proc.returncode != 0:
         return False, f"Hook retornou código {proc.returncode}: {hook_path}"
 

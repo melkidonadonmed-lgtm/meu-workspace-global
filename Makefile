@@ -2,6 +2,8 @@
 
 PYTHONPATH := .
 CI_PYTEST_BASETEMP := /tmp/pytest_tmp
+# Suíte autocontida e determinística compatível com o runner Linux do GitHub Actions.
+# Testes acoplados ao ambiente Windows/local do autor continuam fora desse escopo.
 CI_TEST_FILES := \
 	tests/unit/test_code_consistency_specialist.py \
 	tests/unit/test_custom_agents_healthcheck.py \
