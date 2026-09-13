@@ -99,6 +99,10 @@ def check_hook_contract(
     return True, f"Contrato de execução válido: {hook_path}"
 
 
+# Alias de compatibilidade
+test_hook_contract = check_hook_contract
+
+
 def _repo_root_from(base_dir: Path | None) -> Path:
     if base_dir is not None:
         return base_dir

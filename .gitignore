@@ -81,6 +81,7 @@ artifacts/
 # Links e Pastas Locais do Usuário
 google-drive-ia/
 skills-e-agentes/
+/meu-workspace-global/
 
 # Projetos externos (residem canonicamente em C:/Users/melki/Projetos/)
 projects/pcm/
