@@ -13,7 +13,7 @@ import re
 import stat
 import tomllib
 from pathlib import Path
-from typing import Any, Self
+from typing import Any, ClassVar, Self
 
 from pydantic import BaseModel, ConfigDict, Field, model_validator
 
@@ -348,6 +348,45 @@ class ProjectTargetResolver:
 
     CANONICAL_PROJECTS_JSON = CANONICAL_PROJECTS_JSON
     CANONICAL_EXTERNAL_PROJECTS_DIR = CANONICAL_EXTERNAL_PROJECTS_DIR
+    _projects_cache: ClassVar[dict[tuple[str, bool, tuple[Any, ...]], list[ProjectTargetInfo]]] = {}
+
+    @classmethod
+    def clear_cache(cls) -> None:
+        """Descarta o registro derivado para refletir alterações no ecossistema."""
+        cls._projects_cache.clear()
+
+    @classmethod
+    def _registry_signature(cls, root: Path) -> tuple[Any, ...]:
+        """Retorna uma assinatura barata dos metadados que controlam o registro."""
+        watched_paths = [
+            cls.CANONICAL_PROJECTS_JSON,
+            cls.CANONICAL_EXTERNAL_PROJECTS_DIR,
+            root / "projects",
+        ]
+        signature: list[Any] = []
+        for path in watched_paths:
+            try:
+                stat_result = path.stat()
+                signature.append((str(path), stat_result.st_mtime_ns, stat_result.st_size))
+            except OSError:
+                signature.append((str(path), None, None))
+
+        for projects_dir in (cls.CANONICAL_EXTERNAL_PROJECTS_DIR, root / "projects"):
+            if not projects_dir.is_dir():
+                continue
+            try:
+                children = sorted(child for child in projects_dir.iterdir() if child.is_dir())
+            except OSError:
+                continue
+            for child in children:
+                signature.append((str(child), child.stat().st_mtime_ns))
+                for manifest_name in ("package.json", "pyproject.toml", "requirements.txt", "go.mod"):
+                    manifest = child / manifest_name
+                    try:
+                        signature.append((str(manifest), manifest.stat().st_mtime_ns, manifest.stat().st_size))
+                    except OSError:
+                        pass
+        return tuple(signature)
 
     @classmethod
     def _extract_tech_stack_tags(cls, stack: StackDetails) -> list[str]:
@@ -665,6 +704,11 @@ class ProjectTargetResolver:
     ) -> list[ProjectTargetInfo]:
         """Lista todos os projetos canônicos consolidados a partir de projects.json e do sistema de arquivos."""
         root = workspace_root or Path(__file__).resolve().parents[1]
+        signature = cls._registry_signature(root)
+        cache_key = (str(root.resolve()), include_system, signature)
+        cached = cls._projects_cache.get(cache_key)
+        if cached is not None:
+            return [project.model_copy(deep=True) for project in cached]
         local_projects_dir = root / "projects"
 
         # Mapa consolidado por chave canônica
@@ -860,7 +904,13 @@ class ProjectTargetResolver:
                 aliases=meta.get("aliases", ["customer_issue_reviewer_go"]),
             )
 
-        return list(projects_map.values())
+        projects = list(projects_map.values())
+        cls._projects_cache = {
+            key: value for key, value in cls._projects_cache.items()
+            if key[0] != str(root.resolve()) or key[1] != include_system
+        }
+        cls._projects_cache[cache_key] = [project.model_copy(deep=True) for project in projects]
+        return projects
 
     @classmethod
     def get_project(cls, name_or_alias: str | Path, workspace_root: Path | None = None) -> ProjectTargetInfo | None:

@@ -79,6 +79,30 @@ def test_list_all_projects_loads_projects_json():
     assert "tactile-ui-studio" in keys
 
 
+def test_list_all_projects_reuses_cached_registry(tmp_path: Path, monkeypatch):
+    """Garante que resoluções repetidas não reanalisam todos os projetos."""
+    workspace_dir = _create_workspace_projects(tmp_path)
+    ProjectTargetResolver.clear_cache()
+    calls = 0
+    original_detect_stack = ProjectTargetResolver.detect_stack
+
+    def counting_detect_stack(directory: Path) -> StackDetails:
+        nonlocal calls
+        calls += 1
+        return original_detect_stack(directory)
+
+    monkeypatch.setattr(ProjectTargetResolver, "detect_stack", counting_detect_stack)
+
+    first = ProjectTargetResolver.list_all_projects(workspace_root=workspace_dir)
+    calls_after_first = calls
+    second = ProjectTargetResolver.list_all_projects(workspace_root=workspace_dir)
+
+    assert first
+    assert second
+    assert calls_after_first > 0
+    assert calls == calls_after_first
+
+
 def test_deep_stack_detection_react_vite():
     """Valida detecção rica de dependências para pcm e canvas_ide."""
     pcm = ProjectTargetResolver.get_project("pcm")

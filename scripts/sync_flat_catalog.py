@@ -11,6 +11,7 @@ import io
 import re
 import subprocess
 import sys
+from collections.abc import Iterable
 from pathlib import Path
 
 WORKSPACE_ROOT = Path(__file__).resolve().parents[1]
@@ -55,15 +56,14 @@ def create_dir_link(link_path: Path, target_path: Path) -> bool:
     return True
 
 
-def sync_catalog() -> int:
-    """Sincroniza o catálogo plano e retorna a quantidade de skills vinculadas."""
-    TARGET_DIR.mkdir(parents=True, exist_ok=True)
-
+def discover_skills() -> tuple[dict[str, Path], list[str]]:
+    """Descobre skills válidas e retorna o índice por nome e os conflitos encontrados."""
     search_dirs = [SKILLS_DIR]
     if AGENTS_SKILLS_DIR.exists() and AGENTS_SKILLS_DIR != SKILLS_DIR:
         search_dirs.append(AGENTS_SKILLS_DIR)
 
-    indexed = 0
+    discovered: dict[str, Path] = {}
+    conflicts: list[str] = []
     seen_names: set[str] = set()
 
     for sdir in search_dirs:
@@ -72,28 +72,70 @@ def sync_catalog() -> int:
             skill_name = parse_skill_name(skill_path)
 
             if not skill_name or skill_name in seen_names:
+                if skill_name and skill_name in seen_names:
+                    conflicts.append(f"{skill_name}: {skill_path}")
                 continue
 
             # Valida que o nome coincide com a pasta para respeitar o padrão de skill folha
             if skill_name != parent.name:
+                conflicts.append(f"{skill_name}: pasta esperada {skill_name}, encontrada {parent.name}")
                 continue
 
-            dest_link = TARGET_DIR / skill_name
-            if not dest_link.exists():
-                if create_dir_link(dest_link, parent):
-                    indexed += 1
-            else:
-                indexed += 1
-
+            discovered[skill_name] = parent
             seen_names.add(skill_name)
+
+    return discovered, conflicts
+
+
+def _iter_existing_links() -> Iterable[Path]:
+    if not TARGET_DIR.is_dir():
+        return ()
+    return (entry for entry in TARGET_DIR.iterdir() if entry.is_dir())
+
+
+def sync_catalog(*, check_only: bool = False) -> int:
+    """Sincroniza ou valida o catálogo plano e retorna a quantidade de skills válidas."""
+    discovered, conflicts = discover_skills()
+    stale_links = [entry.name for entry in _iter_existing_links() if entry.name not in discovered]
+
+    if conflicts:
+        for conflict in conflicts:
+            print(f"[ERRO] Conflito de skill: {conflict}", file=sys.stderr)
+        return 1
+
+    if check_only:
+        missing_links: list[str] = []
+        divergent_links: list[str] = []
+        for skill_name, skill_path in discovered.items():
+            link_path = TARGET_DIR / skill_name
+            if not link_path.is_dir():
+                missing_links.append(skill_name)
+                print(f"[CHECK] Ausente: {skill_name} -> {skill_path}")
+            elif link_path.resolve() != skill_path.resolve():
+                divergent_links.append(skill_name)
+                print(f"[CHECK] Divergente: {skill_name} -> {link_path.resolve()}")
+        for stale_name in stale_links:
+            print(f"[CHECK] Obsoleto: {stale_name}")
+        status = "OK" if not (missing_links or divergent_links or stale_links) else "FALHA"
+        print(f"[{status}] Catalogo verificado: {len(discovered)} skills validas")
+        return 0 if status == "OK" else 1
+
+    TARGET_DIR.mkdir(parents=True, exist_ok=True)
+    indexed = 0
+    for skill_name, skill_path in discovered.items():
+        dest_link = TARGET_DIR / skill_name
+        if not dest_link.exists() and not create_dir_link(dest_link, skill_path):
+            print(f"[ERRO] Falha ao vincular {skill_name} -> {skill_path}", file=sys.stderr)
+            return 1
+        indexed += 1
 
     try:
         sys.stdout.reconfigure(encoding="utf-8")
     except (AttributeError, io.UnsupportedOperation):
         pass
-    print(f"[OK] Catalogo plano sincronizado: {len(seen_names)} skills ativas em {TARGET_DIR}")
-    return len(seen_names)
+    print(f"[OK] Catalogo plano sincronizado: {indexed} skills ativas em {TARGET_DIR}")
+    return indexed
 
 
 if __name__ == "__main__":
-    sync_catalog()
+    sys.exit(sync_catalog(check_only="--check" in sys.argv))

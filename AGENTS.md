@@ -104,6 +104,7 @@ O Claude Code e o OpenCode são os motores de execução direta:
 - **Knowledge Base & Grounding**: `C:\Users\melki\Documents\antigravity\wise-galileo` (`INDEX.md` SSoT e pasta `/boost`), ancorado no Caderno do NotebookLM (`974e4f94-1caf-4828-b90e-3da5c499d1e6`).
 - **Lifecycle Hooks**: Devem residir em `C:\Users\melki\.gemini\scripts\hooks\` ou `scripts/hooks/` (`pre_tool_guard.py`, `post_tool_reporter.py`, `pre_invocation_reminder.py`, `stop_verifier.py`). Proibido registrar hooks no-op que introduzam spawn desnecessário de subprocessos no Windows.
 - **GCP Orchestration & PySpark**: Pipelines seguem modelo de 3 níveis (Python -> Dataproc Serverless PySpark -> BigQuery SQL), com tag `job:datacloud:antigravity` e URIs `gs://` resolvidas pelo driver do Spark (nunca `os.path.exists`).
+- **Anti-Middlewares Fantasma e Padrão Oficial Direto**: Proibido rodar intermediários, stubs ou servidores MCP locais órfãos sem persistência real (ex.: o legado `brain-mcp-inspector`). Operações de Git/GitHub, leitura de arquivos e testes devem ser executadas diretamente via ferramentas canônicas nativas (`run_command` com `git`/`gh`, `view_file`, `replace_file_content`), sem sandboxes burocráticos artificiais ou simulações rasas.
 - **Escopo de Skills**: Skills de governança (`skill-healthcheck`, `skill-factory`) devem ser usadas no contexto deste workspace.
 
 ---
@@ -157,4 +158,18 @@ O único projeto PresCMed em uso é `C:\Users\melki\Projetos\pcm`. As variantes 
 ## Canvas IDE & KeepDocs — decisão de 13/09/2026
 
 Os projetos `canvas_ide` e `keepdocs-workspace` foram unificados e substituídos pelo repositório oficial MDK (`C:\Users\melki\Projetos\mdk`). Suas pastas legadas foram arquivadas com segurança em `_Arquivo/organizacao-20260913` por solicitação do usuário. Não recriar essas variantes ou seus atalhos.
+
+## Agent skills
+
+### Issue tracker
+
+Issues are tracked in GitHub Issues for `melkidonadonmed-lgtm/meu-workspace-global`, using the `gh` CLI. See `docs/agents/issue-tracker.md`.
+
+### Triage labels
+
+Triage uses the default labels `needs-triage`, `needs-info`, `ready-for-agent`, `ready-for-human`, and `wontfix`. See `docs/agents/triage-labels.md`.
+
+### Domain docs
+
+This repository uses a single-context layout with `CONTEXT.md` and `docs/adr/`. See `docs/agents/domain.md`.
 
