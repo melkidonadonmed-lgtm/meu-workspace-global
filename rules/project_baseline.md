@@ -56,6 +56,7 @@ nome-do-projeto/
 ### C. Git & GitHub
 - [ ] **Checagem Prévia Obrigatória do Git Online**: Antes de editar qualquer arquivo, executar `git status` e `git fetch` para verificar a situação do repositório remoto (garantindo que commits remotos não sejam sobrescritos e identificando divergências ou conflitos prévios).
 - [ ] `.gitignore` específico e correto para a stack (sem arquivos compilados, `node_modules/`, `.venv/`, `.env`, arquivos temporários de IDE).
+- [ ] **Salvaguarda de Versionamento TypeScript em `.gitignore`**: Em projetos Node/TypeScript híbridos ou monorepos, certificar-se de que regras genéricas como `lib/` não ocultem acidentalmente pastas de código de biblioteca como `src/lib/` (adicione explicitamente `!src/lib/` ou prefixe como `/lib/`).
 - [ ] Branch principal protegida (`main`) contra commits diretos e force push.
 - [ ] Pull Request (PR) obrigatório para fusão com a branch principal.
 - [ ] Template de Pull Request (`.github/PULL_REQUEST_TEMPLATE.md`).
