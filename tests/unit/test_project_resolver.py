@@ -19,8 +19,13 @@ def _create_workspace_projects(tmp_path: Path) -> Path:
     (projects_dir / "pcm").mkdir(parents=True)
     (projects_dir / "canvas_ide").mkdir(parents=True)
     (projects_dir / "keepdocs-workspace").mkdir(parents=True)
+    (projects_dir / "mdk").mkdir(parents=True)
     (projects_dir / "pcm" / "package.json").write_text(
         '{"dependencies":{"react":"18.0.0","vite":"5.0.0"}}',
+        encoding="utf-8",
+    )
+    (projects_dir / "mdk" / "package.json").write_text(
+        '{"dependencies":{"next":"14.2.5","react":"18.3.1"}}',
         encoding="utf-8",
     )
     return tmp_path
@@ -40,21 +45,21 @@ def test_target_project_resolver_prioritizes_workspace(tmp_path: Path):
 
 
 def test_target_project_resolver_canvas_and_keepdocs(tmp_path: Path):
-    """Valida deteccao correta de canvas_ide e keepdocs-workspace."""
+    """Valida redirecionamento canônico de canvas_ide e keepdocs-workspace para mdk."""
     resolver = ProjectTargetResolver()
     workspace_dir = _create_workspace_projects(tmp_path)
 
     info_canvas = resolver.resolve_target("reorganize o layout no canvas_ide", workspace_dir)
     assert info_canvas is not None
-    assert info_canvas.name == "canvas_ide"
+    assert info_canvas.name == "mdk"
     assert info_canvas.exists
-    assert info_canvas.target_path == workspace_dir / "projects" / "canvas_ide"
+    assert info_canvas.target_path == workspace_dir / "projects" / "mdk"
 
     info_keepdocs = resolver.resolve_target("atualize a documentacao no keepdocs-workspace", workspace_dir)
     assert info_keepdocs is not None
-    assert info_keepdocs.name == "keepdocs-workspace"
+    assert info_keepdocs.name == "mdk"
     assert info_keepdocs.exists
-    assert info_keepdocs.target_path == workspace_dir / "projects" / "keepdocs-workspace"
+    assert info_keepdocs.target_path == workspace_dir / "projects" / "mdk"
 
 
 def test_target_project_resolver_returns_none_for_unknown():
@@ -69,7 +74,7 @@ def test_list_all_projects_loads_projects_json():
     assert len(projects) >= 9
     keys = [p.key.lower() for p in projects]
     assert "pcm" in keys
-    assert any("canvas" in k for k in keys)
+    assert "mdk" in keys
     assert "waoe" in keys
     assert "tactile-ui-studio" in keys
 
@@ -171,11 +176,11 @@ def test_resolve_aliases_comprehensive():
         assert p is not None, f"Falha ao resolver alias: {alias}"
         assert p.key == "pcm"
 
-    canvas_aliases = ["canvas_ide", "canvas-ide", "canvas"]
-    for alias in canvas_aliases:
+    mdk_and_canvas_aliases = ["mdk", "mdk-cockpit", "canvas_ide", "canvas-ide", "canvas"]
+    for alias in mdk_and_canvas_aliases:
         p = ProjectTargetResolver.get_project(alias)
         assert p is not None, f"Falha ao resolver alias: {alias}"
-        assert "canvas" in p.key
+        assert p.key == "mdk"
 
     tactile_aliases = ["tactile-ui-studio", "tactile", "atlas-ui-kit"]
     for alias in tactile_aliases:

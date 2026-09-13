@@ -12,8 +12,7 @@ Workspace de ferramentas para **trabalhar em outros projetos** — ele não é, 
 | Projeto | Caminho Canônico | Symlink / Local | Tech Stack | Dev Server / Execução |
 |---|---|---|---|---|
 | PresCMed (PCM) | `C:\Users\melki\Projetos\pcm` | `projects/pcm` | React 18, Vite, TS, Tailwind, IndexedDB | `npm run dev` (porta 3000) |
-| Canvas IDE | `C:\Users\melki\Projetos\canvas_ide` | `projects/canvas_ide` | React, Vite, TS, Tailwind, Canvas API | `npm run dev` (porta 5173 ou `canvas_preview.html`) |
-| KeepDocs Workspace | `C:\Users\melki\Projetos\keepdocs-workspace` | `projects/keepdocs-workspace` | React, TS, Streamlit, Python | `npm run dev` (porta 5173) |
+| MDK Cockpit | `C:\Users\melki\Projetos\mdk` | `projects/mdk` | Next.js, FastAPI, Google ADK, GenAI SDK, Cloud Run | `npm run dev` (porta 3000) / `start_canvas.ps1` |
 | WAOE | `C:\Users\melki\Projetos\WAOE` | `projects/WAOE` | React, TS, Tailwind | `npm run dev` |
 | Web Visual Auditor | — (interno) | `projects/web_visual_auditor` | Python 3.11+, Playwright, Pillow, Pydantic | Suíte offline determinística |
 | Customer Issue Reviewer | — (interno) | `agents/specialized/customer_issue_reviewer_go` | Go 1.27+, Google ADK v2 | `go run main.go` (porta CLI/Web ADK) |
@@ -78,6 +77,7 @@ O Claude Code e o OpenCode são os motores de execução direta:
 - `workspace-researcher.md`: Pesquisador estrutural local (leitura estrita de código e arquivos).
 - `adk-innovations-researcher.md`: Pesquisa técnica de ponta no ecossistema Google ADK, Gemini API e skills.
 - `web-researcher.md`: Pesquisa web geral de bibliotecas externas e documentações sem inflar o contexto raiz.
+- `agente-conversacional-autonomo-proativo.md`: Agente conversacional autônomo com auto-reflexão pré-entrega, proatividade e mitigação de context rot.
 
 ### Padrão de Ferramentas de Subagentes (`CANONICAL_TOOLS`):
 - Subagentes em `.agents/agents/*.md` devem declarar estritamente ferramentas canônicas (`search_web`, `read_url_content`, `view_file`, `grep_search`, `find_by_name`, `list_dir`, `run_command`, `write_to_file`, `replace_file_content`, `ask_question`), prevenindo falhas de contrato em `test_custom_agents_healthcheck.py`.
@@ -106,6 +106,55 @@ O Claude Code e o OpenCode são os motores de execução direta:
 - **GCP Orchestration & PySpark**: Pipelines seguem modelo de 3 níveis (Python -> Dataproc Serverless PySpark -> BigQuery SQL), com tag `job:datacloud:antigravity` e URIs `gs://` resolvidas pelo driver do Spark (nunca `os.path.exists`).
 - **Escopo de Skills**: Skills de governança (`skill-healthcheck`, `skill-factory`) devem ser usadas no contexto deste workspace.
 
+---
+
+## 5. Padrão Canônico Mínimo para Projetos (GitHub, Deploy & Produção)
+
+Todo projeto alvo gerenciado a partir deste workspace que será submetido ao GitHub ou preparado para qualquer ambiente de produção/deploy DEVE atender ao baseline canônico:
+
+### Estrutura de Pastas Padrão:
+```text
+nome-do-projeto/
+├─ src/                     # código fonte
+├─ tests/                   # testes
+├─ docs/                    # documentação complementar
+├─ scripts/                 # automações (build, seed, deploy helpers)
+├─ .github/
+│  ├─ workflows/
+│  │  └─ ci.yml             # pipeline CI
+│  ├─ ISSUE_TEMPLATE/
+│  └─ PULL_REQUEST_TEMPLATE.md
+├─ .env.example             # exemplo de variáveis de ambiente
+├─ .gitignore
+├─ README.md
+├─ CONTRIBUTING.md
+├─ LICENSE
+└─ CHANGELOG.md
+```
+
+### Checklist Obrigatório dos 6 Pilares:
+1. **Documentação Mínima**: `README.md` completo (objetivo, stack, requisitos/versões, setup local, testes, deploy, env vars), `CHANGELOG.md` e `CONTRIBUTING.md`.
+2. **Qualidade de Código**: Linter e Formatter configurados, testes automatizados (mínimo smoke test) e script local de validação (`lint`, `test`, `build`).
+3. **Git/GitHub**: **Checagem prévia obrigatória da situação do Git online** (`git status`, `git fetch`, checagem de commits remotos antes de editar arquivos), `.gitignore` adequado à stack, branch `main` protegida, PR obrigatório para merge, templates de PR e Issue (`bug_report`, `feature_request`), e `CODEOWNERS` (se equipe).
+4. **CI/CD**: Pipeline em PR (`install` -> `lint` -> `test` -> `build`), pipeline de deploy definido e secrets isolados por ambiente (`dev`/`stg`/`prod`).
+5. **Configuração e Segurança**: `.env.example` atualizado, NUNCA versionar segredos ou `.env` real, Dependabot/SCA ativo, licença declarada (`LICENSE`) e versionamento SemVer.
+6. **Operação e Manutenção**: Dono/responsável definido, Definition of Done, critério de release e checklist de rollback.
+
+### Ordem Prática de Organização (80/20):
+1. `README.md`
+2. `.env.example` + `.gitignore`
+3. CI (`.github/workflows/ci.yml`)
+4. PR/Issue templates
+5. `CONTRIBUTING.md` + `CHANGELOG.md`
+6. Proteção de branch + secrets + pipeline de deploy
+
+---
+
 ## PresCMed — decisão de 08/09/2026
 
 O único projeto PresCMed em uso é `C:\Users\melki\Projetos\pcm`. As variantes remix-prescmed-new, PresCMed-new e pessoal-med-web foram retiradas por solicitação do usuário, com cópias de recuperação em `_Arquivo/organizacao-20260908`. Não recriar essas variantes ou seus atalhos.
+
+## Canvas IDE & KeepDocs — decisão de 13/09/2026
+
+Os projetos `canvas_ide` e `keepdocs-workspace` foram unificados e substituídos pelo repositório oficial MDK (`C:\Users\melki\Projetos\mdk`). Suas pastas legadas foram arquivadas com segurança em `_Arquivo/organizacao-20260913` por solicitação do usuário. Não recriar essas variantes ou seus atalhos.
+
