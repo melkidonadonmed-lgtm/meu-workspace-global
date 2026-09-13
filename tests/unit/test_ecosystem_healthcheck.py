@@ -59,7 +59,7 @@ def test_test_hook_contract():
             "args": {"CommandLine": "dir"},
         }
     }
-    ok, msg = eh.test_hook_contract(hook_path, mock_payload, "decision")
+    ok, msg = eh.check_hook_contract(hook_path, mock_payload, "decision")
     assert ok is True
     assert "Contrato de execução válido" in msg
 

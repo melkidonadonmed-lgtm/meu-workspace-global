@@ -6,7 +6,6 @@ from pathlib import Path
 
 import pytest
 
-
 REPO_ROOT = Path(__file__).resolve().parents[2]
 
 
@@ -17,13 +16,11 @@ def _tracked_gitlinks(ls_files_output: str) -> list[str]:
 
 def test_tracked_gitlinks_filters_only_mode_160000():
     """Valida o parsing determinístico das entradas de gitlink."""
-    output = "\n".join(
-        [
-            "100644 abc 0\tREADME.md",
-            "160000 def 0\tmeu-workspace-global",
-            "100755 ghi 0\tscripts/test.sh",
-            "160000 jkl 0\tvendor/lib",
-        ]
+    output = (
+        "100644 abc 0\tREADME.md\n"
+        "160000 def 0\tmeu-workspace-global\n"
+        "100755 ghi 0\tscripts/test.sh\n"
+        "160000 jkl 0\tvendor/lib"
     )
     assert _tracked_gitlinks(output) == [
         "160000 def 0\tmeu-workspace-global",
