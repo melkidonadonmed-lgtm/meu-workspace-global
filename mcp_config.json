@@ -223,15 +223,6 @@
         "tools.mcp_server"
       ],
       "cwd": "C:/Users/melki/mdk-teste"
-    },
-    "brain-mcp-inspector": {
-      "command": "python",
-      "args": [
-        "C:/Users/melki/Brain/.agents/skills/brain-mcp-inspector/scripts/mcp_server.py",
-        "--transport",
-        "stdio"
-      ],
-      "cwd": "C:/Users/melki/Brain"
     }
   }
 }

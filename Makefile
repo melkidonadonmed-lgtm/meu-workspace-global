@@ -26,10 +26,7 @@ help:
 	@echo "  make clean          - Remove caches e temporários"
 
 setup:
-	@test -f .env || cp configs/.env.example .env
-	pip install -e ".[dev]"
-	@if [ -d "agents/specialized/customer_issue_reviewer_go" ]; then cd agents/specialized/customer_issue_reviewer_go && go mod tidy; fi
-	@if [ -d "projects/canvas_ide" ]; then cd projects/canvas_ide && npm install; fi
+	uv sync --extra dev
 
 agent-go:
 	cd agents/specialized/customer_issue_reviewer_go && go run main.go
@@ -48,7 +45,7 @@ test:
 	@if [ -d "agents/specialized/customer_issue_reviewer_go" ]; then cd agents/specialized/customer_issue_reviewer_go && go test ./... -v; fi
 
 lint:
-	ruff check .
+	uv run ruff check agents scripts tests ecosystem_healthcheck.py
 
 ci-lint:
 	uv run ruff check $(CI_RUFF_TARGETS)

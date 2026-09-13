@@ -52,6 +52,7 @@ Executados a partir da raiz de `meu-workspace-global` via **PowerShell**:
 5. **Orçamento de Contexto Estrito**: Limitar matching de progressive disclosure a no máximo 2 skills contextuais simultâneas.
 6. **Contrato Canônico de Ferramentas de Subagentes**: Subagentes em `.agents/agents/*.md` devem declarar estritamente ferramentas canônicas (`search_web`, `read_url_content`, `view_file`, `grep_search`, `find_by_name`, `list_dir`, `run_command`, `write_to_file`, `replace_file_content`, `ask_question`).
 7. **Memória de Rotas com Persistência em Lote**: Contadores e scores de execução de rotas devem ser acumulados em memória no `shared/task_organizer.py` e persistidos em batch (`configs/orchestration_routes_memory.json`) para evitar gargalos de I/O em tempo real.
+8. **Padrão Oficial Direto & Tolerância Zero para Middlewares Fantasma**: Proibido rodar intermediários, stubs ou servidores MCP locais órfãos sem persistência real. Operações técnicas devem ser realizadas diretamente via ferramentas canônicas nativas e comandos diretos (`git`, `gh`, `uv`), sem sandboxes burocráticos artificiais ou simulações rasas.
 
 ---
 

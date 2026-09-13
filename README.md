@@ -94,7 +94,12 @@ meu-workspace-global/
 make setup
 ```
 
-(Windows sem `make` disponível: rode os passos equivalentes direto — `pip install -e ".[dev]"`.)
+No Windows, se `make` não estiver disponível, use o fluxo nativo com `uv`:
+
+```powershell
+uv sync --extra dev
+uv run python scripts/sync_flat_catalog.py --check
+```
 
 ### 3. Configuração de Credenciais
 Adicione sua chave de API do Gemini no arquivo `.env`:
@@ -110,7 +115,19 @@ BRAIN_STATE_DB_PATH=shared/state/sessions.db
 ### 4. Execução da Suíte de Testes
 
 ```bash
-make test
+uv run pytest tests/unit -v --tb=short --basetemp="C:\Users\melki\AppData\Local\Temp\opencode\pytest_tmp"
+```
+
+Para validar o catálogo de skills sem alterá-lo:
+
+```powershell
+uv run python scripts/sync_flat_catalog.py --check
+```
+
+Para lint do núcleo:
+
+```powershell
+uv run ruff check agents scripts tests ecosystem_healthcheck.py
 ```
 
 ---
