@@ -25,31 +25,10 @@ jobs:
         run: uv sync --extra dev
 
       - name: Lint & Code Style (Ruff)
-        run: >
-          uv run ruff check
-          agents
-          ecosystem_healthcheck.py
-          tests/unit/test_code_consistency_specialist.py
-          tests/unit/test_custom_agents_healthcheck.py
-          tests/unit/test_ecosystem_healthcheck.py
-          tests/unit/test_headless_runner.py
-          tests/unit/test_html_output.py
-          tests/unit/test_plugins_and_skills_spec.py
-          tests/unit/test_repository_git_hygiene.py
-          tests/unit/test_skills_healthcheck.py
+        run: make ci-lint
 
       - name: Skill Catalog Healthcheck
         run: uv run python skills/skill_healthcheck.py
 
       - name: Automated Tests (Pytest)
-        run: >
-          uv run pytest
-          tests/unit/test_code_consistency_specialist.py
-          tests/unit/test_custom_agents_healthcheck.py
-          tests/unit/test_ecosystem_healthcheck.py
-          tests/unit/test_headless_runner.py
-          tests/unit/test_html_output.py
-          tests/unit/test_plugins_and_skills_spec.py
-          tests/unit/test_repository_git_hygiene.py
-          tests/unit/test_skills_healthcheck.py
-          -v --tb=short --basetemp=/tmp/pytest_tmp
+        run: make ci-test-workspace

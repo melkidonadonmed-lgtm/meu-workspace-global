@@ -68,7 +68,7 @@ def check_python_ast(path: Path) -> tuple[bool, str]:
     return True, f"AST 100% válida: {path}"
 
 
-def test_hook_contract(
+def check_hook_contract(
     hook_path: Path, payload: dict[str, Any], expected_field: str
 ) -> tuple[bool, str]:
     """Executa um hook Python e verifica se o contrato JSON esperado foi respeitado."""
@@ -146,7 +146,7 @@ def run_hub_healthcheck(base_dir: Path | None = None) -> HealthcheckReport:
             )
         )
 
-    hook_contract_ok, hook_contract_message = test_hook_contract(
+    hook_contract_ok, hook_contract_message = check_hook_contract(
         root / "scripts" / "hooks" / "pre_tool_guard.py",
         {"toolCall": {"name": "run_command", "args": {"CommandLine": "dir"}}},
         "decision",
